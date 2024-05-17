@@ -113,7 +113,7 @@ function DF.Math.GetNinePoints(object)
 		local point = ninePoints[i]
 
 		local t = f:CreateTexture(nil, "overlay")
-		t:SetColorTexture(1, 0, 0, 1)
+		t:SetTexture(1, 0, 0, 1)
 		t:SetSize(2, 2)
 		t:SetPoint("bottomleft", UIParent, "bottomleft", point.x, point.y)
 	end

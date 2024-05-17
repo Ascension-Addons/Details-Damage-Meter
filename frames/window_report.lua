@@ -313,23 +313,6 @@ local createDropdown = function(thisFrame)
 			reportChannelsTable[#reportChannelsTable + 1] = {iconsize = iconsize, value = "CHANNEL|" .. channels[i+1], label = channels[i] .. ". " .. channels[i+1], onclick = onClick, icon = [[Interface\FriendsFrame\UI-Toast-ToastIcons]], texcoord = {0.3046875, 0.4453125, 0.109375, 0.390625}, iconcolor = {149/255, 112/255, 112/255}}
 		end
 
-		if (not DetailsFramework.IsTimewalkWoW()) then
-			local _, numBNetOnline = BNGetNumFriends()
-			for i = 1, numBNetOnline do
-				local accountInfo = C_BattleNet.GetFriendAccountInfo(i)
-				local gameAccountInfo = accountInfo and accountInfo.gameAccountInfo
-
-				if (gameAccountInfo) then
-					local isOnline = gameAccountInfo.isOnline
-					if (isOnline) then
-						local bTag = accountInfo.battleTag
-						local bTagNoNumber = bTag:gsub("#.*", "")
-						reportChannelsTable[#reportChannelsTable + 1] = {iconsize = iconsize, value = "REALID|" .. accountInfo.bnetAccountID, label = bTagNoNumber, onclick = onClick, icon = [[Interface\FriendsFrame\Battlenet-Battleneticon]], texcoord = {0.125, 0.875, 0.125, 0.875}, iconcolor = {1, 1, 1}}
-					end
-				end
-			end
-		end
-
 		return reportChannelsTable
 	end
 
@@ -759,12 +742,12 @@ local createDropdown = function(thisFrame)
 		window.recently_report_buttons = {}
 
 		local historyBlockBackground = window:CreateTexture(nil, "background")
-		historyBlockBackground:SetColorTexture(0, 0, 0, .3)
+		historyBlockBackground:SetTexture(0, 0, 0, .3)
 		historyBlockBackground:SetSize(160, 158)
 		historyBlockBackground:SetPoint("topleft", window, "topleft", 3, -25)
 
 		local separator = window:CreateTexture(nil, "border")
-		separator:SetColorTexture(0, 0, 0, .6)
+		separator:SetTexture(0, 0, 0, .6)
 		separator:SetSize(2, 158)
 		separator:SetPoint("topleft", historyBlockBackground, "topright", 0, 0)
 
@@ -834,7 +817,7 @@ local createDropdown = function(thisFrame)
 	--scritps
 
 		local flashTexture = window:CreateTexture(nil, "background")
-		flashTexture:SetColorTexture(1, 1, 1)
+		flashTexture:SetTexture(1, 1, 1)
 		flashTexture:SetPoint("topleft", window, "topleft", -2, 2)
 		flashTexture:SetPoint("bottomright", window, "bottomright", 2, -2)
 

@@ -75,7 +75,6 @@ local createAuraTabOnBreakdownWindow = function(tab, frame)
         local iconTexture = line:CreateTexture("$parentIcon", "overlay")
         iconTexture:SetSize(scroll_line_height -2 , scroll_line_height - 2)
         iconTexture:SetAlpha(0.924)
-        detailsFramework:SetMask(iconTexture, Details:GetTextureAtlas("iconmask"))
 
         local nameLabel = line:CreateFontString("$parentName", "overlay", "GameFontNormal")
         local uptimeLabel = line:CreateFontString("$parentUptime", "overlay", "GameFontNormal")
@@ -248,22 +247,6 @@ local aurasTabFillCallback = function(tab, player, combat)
                     local uptime = spellTable.uptime or 0
                     if (not Details.BuffUptimeSpellsToIgnore[spellId]) then
                         table.insert(newAuraTable, {spellIcon, spellName, uptime, spellTable.appliedamt, spellTable.refreshamt, uptime / combatTime * 100, spellID = spellId})
-                    end
-                end
-            end
-
-            --check if this player has a augmentation buff container
-            local augmentedBuffContainer = utilityActor.received_buffs_spells
-            if (augmentedBuffContainer) then
-                for sourceNameSpellId, spellTable in augmentedBuffContainer:ListSpells() do
-                    local sourceName, spellId = strsplit("@", sourceNameSpellId)
-                    spellId = tonumber(spellId)
-                    local spellName, _, spellIcon = Details.GetSpellInfo(spellId)
-
-                    if (spellName) then
-                        sourceName = detailsFramework:RemoveRealmName(sourceName)
-                        local uptime = spellTable.uptime or 0
-                        table.insert(newAuraTable, {spellIcon, spellName .. " [" .. sourceName .. "]", uptime, spellTable.appliedamt, spellTable.refreshamt, uptime / combatTime * 100, spellID = spellId, bReceived = true})
                     end
                 end
             end

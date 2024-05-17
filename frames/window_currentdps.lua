@@ -1,9 +1,7 @@
 
 
 local Details = _G.Details
-local libwindow = LibStub("LibWindow-1.1")
 local DF = DetailsFramework
-local isDragonflight = DF.IsDragonflight()
 
 local green_team_color
 local yellow_team_color
@@ -47,7 +45,7 @@ function Details:OpenCurrentRealDPSOptions(from_options_panel)
 
 		--add an extra background
 		local backgroundTexture = f:CreateTexture("$parentBackgroundTexture", "background")
-		backgroundTexture:SetColorTexture(.2, .2, .2, .2)
+		backgroundTexture:SetTexture(.2, .2, .2, .2)
 		backgroundTexture:SetAllPoints()
 
 
@@ -393,27 +391,6 @@ function Details:CreateCurrentDpsFrame(parent, name)
 			end
 		end
 
-		C_Timer.After(10, function()
-			--f:SetPoint("top", UIParent, "top", 0, -110)
-			--LibWindow.SavePosition(f)
-		end)
-
-		if(isDragonflight) then
-			GhostFrame:HookScript("OnShow", function(ghostFrame)
-				if (f:IsShown()) then
-					local p1, p2, p3, p4, p5 = ghostFrame:GetPoint(1)
-					f.GhostFrameY = f.GhostFrameY or 0
-					if (DF:IsNearlyEqual(p5, f.GhostFrameY, 0.1)) then
-						return
-					end
-
-					local newY = p5-45
-					ghostFrame:SetPoint(p1, p2, p3, p4, newY)
-					f.GhostFrameY = newY
-				end
-			end)
-		end
-
 	--arena dps bars
 		--code for the dps bars shown in arenas
 
@@ -447,7 +424,7 @@ function Details:CreateCurrentDpsFrame(parent, name)
 			f.movemeLabel:SetPoint("center", barFrame.splitBar.widget, "center", 0, 0)
 
 			local backgroundText = barFrame.borderFrame:CreateTexture(nil, "background")
-			backgroundText:SetColorTexture(0, 0, 0, 0.5)
+			backgroundText:SetTexture(0, 0, 0, 0.5)
 			backgroundText:SetAllPoints()
 
 			local fff = CreateFrame("frame", "nopnopnopnopnop", barFrame.splitBar.widget, "BackdropTemplate")
@@ -934,7 +911,7 @@ function DetailsTestSplitBar()
 		f:SetPoint("center")
 		local backgroundTexture = f:CreateTexture(nil, "overlay")
 		backgroundTexture:SetAllPoints()
-		backgroundTexture:SetColorTexture(.1, .1, .1, .7)
+		backgroundTexture:SetTexture(.1, .1, .1, .7)
 
 		local barFrame = CreateFrame("frame", "DetailsArenaDpsBars", f, "BackdropTemplate")
 		f.dpsBarFrame = barFrame

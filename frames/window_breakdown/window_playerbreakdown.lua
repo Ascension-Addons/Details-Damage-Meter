@@ -799,7 +799,7 @@ function Details:CreateBreakdownWindow()
 	breakdownWindowFrame.SummaryWindowWidgets:Hide()
 
 	local scaleBar = detailsFramework:CreateScaleBar(breakdownWindowFrame, Details.player_details_window)
-	scaleBar.label:AdjustPointsOffset(-6, 3)
+	scaleBar.label:SetPointOffset(-6, 3)
 	breakdownWindowFrame:SetScale(Details.player_details_window.scale)
 
 	--class icon

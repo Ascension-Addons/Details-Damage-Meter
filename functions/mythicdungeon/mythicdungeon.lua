@@ -27,13 +27,11 @@ local DetailsMythicPlusFrame = _G.CreateFrame("frame", "DetailsMythicPlusFrame",
 DetailsMythicPlusFrame.DevelopmentDebug = false
 
 --disabling the mythic+ feature if the user is playing in wow classic
-if (not DF.IsTimewalkWoW()) then
-    DetailsMythicPlusFrame:RegisterEvent("CHALLENGE_MODE_START")
-    DetailsMythicPlusFrame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-    DetailsMythicPlusFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-    DetailsMythicPlusFrame:RegisterEvent("ENCOUNTER_END")
-    DetailsMythicPlusFrame:RegisterEvent("START_TIMER")
-end
+DetailsMythicPlusFrame:RegisterEvent("MYTHIC_PLUS_STARTED")
+DetailsMythicPlusFrame:RegisterEvent("MYTHIC_PLUS_COMPLETE")
+DetailsMythicPlusFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+DetailsMythicPlusFrame:RegisterEvent("ENCOUNTER_END")
+DetailsMythicPlusFrame:RegisterEvent("START_TIMER")
 
 function Details222.MythicPlus.LogStep(log)
     local today = date("%d/%m/%y %H:%M:%S")
@@ -131,10 +129,11 @@ function DetailsMythicPlusFrame.MythicDungeonStarted()
     --this counter is individual for each character
     Details.mythic_dungeon_id = Details.mythic_dungeon_id + 1
 
-    local mythicLevel = C_ChallengeMode.GetActiveKeystoneInfo()
+    local activeKeystone = C_MythicPlus.IsKeystoneActive() and C_MythicPlus.GetActiveKeystoneInfo()
+	local mythicLevel = activeKeystone and activeKeystone.keystoneLevel
     local zoneName, _, _, _, _, _, _, currentZoneID = GetInstanceInfo()
 
-    local mapID = C_Map.GetBestMapForUnit("player")
+    local mapID = activeKeystone.dungeonID
 
     if (not mapID) then
         return
@@ -184,7 +183,7 @@ function DetailsMythicPlusFrame.OnChallengeModeStart()
     else
         --print("D! mythic dungeon was already started!")
         --from zone changed
-        local mythicLevel = C_ChallengeMode.GetActiveKeystoneInfo()
+        local mythicLevel = MythicPlusUtil.GetActiveKeystoneLevel()
         local zoneName, _, _, _, _, _, _, currentZoneID = GetInstanceInfo()
 
         if (not Details.MythicPlus.Started and Details.MythicPlus.DungeonID == currentZoneID and Details.MythicPlus.Level == mythicLevel) then
@@ -225,7 +224,8 @@ function DetailsMythicPlusFrame.EventListener.OnDetailsEvent(contextObject, even
                 if (not combatObject.is_boss.killed) then
                     local encounterName = combatObject.is_boss.encounter
                     local zoneName = combatObject.is_boss.zone
-                    local mythicLevel = C_ChallengeMode.GetActiveKeystoneInfo()
+                    local activeKeystone = C_MythicPlus.IsKeystoneActive() and C_MythicPlus.GetActiveKeystoneInfo()
+	                local mythicLevel = activeKeystone and activeKeystone.keystoneLevel
 
                     local currentCombat = Details:GetCurrentCombat()
 
@@ -233,7 +233,8 @@ function DetailsMythicPlusFrame.EventListener.OnDetailsEvent(contextObject, even
                     combatObject.is_boss = nil
 
                     --tag the combat as mythic dungeon trash
-                    local zoneName, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapID, instanceGroupSize = GetInstanceInfo()
+                    local instanceMapID = activeKeystone and activeKeystone.dungeonID
+                    local zoneName = instanceMapID and GetLFGDungeonInfoByID(instanceMapID)
 
                     ---@type mythicdungeoninfo
                     local mythicPlusInfo = {
@@ -315,7 +316,7 @@ function DetailsMythicPlusFrame.EventListener.OnDetailsEvent(contextObject, even
 			end
 		end
 
-        local mythicLevel = C_ChallengeMode.GetActiveKeystoneInfo()
+        local mythicLevel = MythicPlusUtil.GetActiveKeystoneLevel()
         local zoneName, _, _, _, _, _, _, currentZoneID = GetInstanceInfo()
 		Details222.MythicPlus.LogStep("COMBAT_MYTHICDUNGEON_START | settings: " .. result .. " | level: " .. mythicLevel .. " | zone: " .. zoneName .. " | zoneId: " .. currentZoneID)
 
@@ -396,7 +397,7 @@ end)
 
 ---@param combatObject combat
 function DetailsMythicPlusFrame.SaveMythicPlusStats(combatObject)
-    local mapChallengeModeID, mythicLevel, time, onTime, keystoneUpgradeLevels, practiceRun, oldOverallDungeonScore, newOverallDungeonScore, IsMapRecord, IsAffixRecord, PrimaryAffix, isEligibleForScore, members = C_ChallengeMode.GetCompletionInfo()
+    local mapChallengeModeID, mythicLevel, time, onTime = CMythicPlusUtil.GetCompletionInfo(true)
     if (mapChallengeModeID) then
         local statName = "mythicdungeoncompletedDF2"
 
@@ -450,7 +451,7 @@ function DetailsMythicPlusFrame.SaveMythicPlusStats(combatObject)
 
         statsForLevel.history = statsForLevel.history or {}
 
-        local amountDeaths = C_ChallengeMode.GetDeathCount() or 0
+        local amountDeaths = 0
 
         ---@type mythicplusrunstats
         local runStats = {

@@ -805,7 +805,7 @@
 					end)
 
 					local flashTexture = editbox:CreateTexture(nil, "overlay")
-					flashTexture:SetColorTexture(1, 1, 1)
+					flashTexture:SetTexture(1, 1, 1)
 					flashTexture:SetAllPoints()
 					flashTexture:SetAlpha(0)
 
@@ -1709,7 +1709,7 @@
 				codeEditor:SetBackdrop({edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1})
 				codeEditor:SetBackdropBorderColor(0, 0, 0, 1)
 
-				codeEditor.__background:SetColorTexture(0.2317647, 0.2317647, 0.2317647)
+				codeEditor.__background:SetTexture(0.2317647, 0.2317647, 0.2317647)
 				codeEditor.__background:SetVertexColor(0.27, 0.27, 0.27)
 				codeEditor.__background:SetAlpha(0.8)
 				codeEditor.__background:SetVertTile(true)

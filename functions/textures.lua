@@ -47,7 +47,7 @@
             texture:SetPoint(anchor1, anchorFrame, anchor2, x, y)
         end
 
-        fromTexture:SetColorTexture(0.0156, 0.047, 0.1215, 1)
+        fromTexture:SetTexture(0.0156, 0.047, 0.1215, 1)
     end
 
     function Details222.Textures.SavePortraitTextureForUnitID(unitId)

@@ -1,4 +1,4 @@
---[=[
+﻿--[=[
     Dumping logical functions here, make the code of the main file smaller
 --]=]
 
@@ -444,22 +444,12 @@ function openRaidLib.GetFoodTierFromAura(auraInfo)
 end
 
 local isTierPiece = function(itemLink)
-    local tooltipData = C_TooltipInfo.GetHyperlink(itemLink)
-    if (tooltipData) then
-        local lines = tooltipData.lines
-        if (lines and #lines > 0) then
-            for i = 1, #lines do
-                local thisLine = lines[i]
-                local leftText = thisLine.leftText
-                if (type(leftText) == "string") then
-                    if (leftText:match( "%s%(%d%/5%)$" )) then
-                        return true
-                    end
-                end
-            end
+    if GetItemSetID then
+        local itemID = GetItemInfoFromHyperlink(itemLink)
+        if itemID then
+            return GetItemSetID(itemID) ~= nil
         end
     end
-
     return false
 end
 
@@ -507,7 +497,7 @@ function openRaidLib.GearManager.BuildEquipmentItemLinks(equippedGearList)
                     equipmentTable.itemName = itemName
                     equipmentTable.isTier = isTierPiece(itemLink)
 
-                    local _, _, enchantId, gemId1, gemId2, gemId3, gemId4, suffixId, uniqueId, levelOfTheItem, specId, upgradeInfo, instanceDifficultyId, numBonusIds, restLink = strsplit(":", itemLink)
+                    local _, _, enchantId, gemId1, gemId2, gemId3, gemId4 = strsplit(":", itemLink)
 
                     local enchantAttribute = LIB_OPEN_RAID_ENCHANT_SLOTS[slotId]
                     local nEnchantId = 0
@@ -515,11 +505,6 @@ function openRaidLib.GearManager.BuildEquipmentItemLinks(equippedGearList)
                         if (enchantId and enchantId ~= "") then
                             enchantId = tonumber(enchantId)
                             nEnchantId = enchantId
-                        end
-
-                        --6400 and above is dragonflight enchantId number space
-                        if (nEnchantId < 6300 and not LIB_OPEN_RAID_DEATHKNIGHT_RUNEFORGING_ENCHANT_IDS[nEnchantId]) then
-                            nEnchantId = 0
                         end
                     end
                     equipmentTable.enchantId = nEnchantId
@@ -532,7 +517,7 @@ function openRaidLib.GearManager.BuildEquipmentItemLinks(equippedGearList)
                         --check if the socket is empty
                         for gemSlotId = 1, numGemSlots do
                             local gemId = tonumber(gemsIds[gemSlotId])
-                            if (gemId and gemId >= 180000) then
+                            if (gemId) then
                                 nGemId = gemId
                                 break
                             end

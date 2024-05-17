@@ -36,7 +36,7 @@
 	local gump = Details.gump --details local
 
 	function Details:IsInMythicPlus()
-		return C_ChallengeMode and C_ChallengeMode.IsChallengeModeActive and C_ChallengeMode.IsChallengeModeActive()
+		return C_MythicPlus.IsKeystoneActive()
 	end
 
 	local predicateFunc = function(spellIdToFind, casterName, _, name, icon, applications, dispelName, duration, expirationTime, sourceUnitId, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, isFromPlayerOrPlayerPet, nameplateShowAll, timeMod, applications)
@@ -91,9 +91,9 @@
 
 	do
 		function Details:FindBuffCastedBy(unitId, buffSpellId, casterName) --not called anywhere else except the function below
-			local auraName, texture, count, auraType, duration, expTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, playerOrPet, nameplateShowAll, timeMod, v1, v2, v3, v4, v5 = AuraUtil.FindAura(predicateFunc, unitId, "HELPFUL", buffSpellId, casterName)
+			local auraName, rank, texture, count, auraType, duration, expTime, sourceUnit, isStealable, shouldConsolidate, spellId = AuraUtil.FindAura(predicateFunc, unitId, "HELPFUL", buffSpellId, casterName)
 			if (auraName) then
-				return auraName, texture, count, auraType, duration, expTime, sourceUnit, isStealable, nameplateShowPersonal, spellId, canApplyAura, isBossAura, playerOrPet, nameplateShowAll, timeMod, v1, v2, v3, v4, v5
+				return auraName, rank, texture, count, auraType, duration, expTime, sourceUnit, isStealable, shouldConsolidate, spellId
 			end
 		end
 
@@ -1559,13 +1559,11 @@ end
 		FlashAnimation.fadeOut = FlashAnimation:CreateAnimation("Alpha") --fade out anime
 		FlashAnimation.fadeOut:SetOrder (1)
 
-		FlashAnimation.fadeOut:SetFromAlpha (0)
-		FlashAnimation.fadeOut:SetToAlpha (1)
+		FlashAnimation.fadeOut:SetChange(-1)
 
 		FlashAnimation.fadeIn = FlashAnimation:CreateAnimation("Alpha") --fade in anime
 		FlashAnimation.fadeIn:SetOrder (2)
-		FlashAnimation.fadeIn:SetFromAlpha (0)
-		FlashAnimation.fadeIn:SetToAlpha (1)
+		FlashAnimation.fadeIn:SetChange(1)
 
 		frame.FlashAnimation = FlashAnimation
 		FlashAnimation.frame = frame
@@ -1813,12 +1811,11 @@ end
     Details222.BarIconSetList = {
         {value = [[]], label = Loc ["STRING_OPTIONS_BAR_ICONFILE1"], icon = defaultIconTexture, texcoord = defaultClassIconCoords, iconsize = defaultIconSize, iconcolor = {1, 1, 1, .3}},
         {value = [[Interface\AddOns\Details\images\classes_small]], label = Loc ["STRING_OPTIONS_BAR_ICONFILE2"], icon = defaultIconTexture, texcoord = defaultClassIconCoords, iconsize = defaultIconSize},
-        {value = [[Interface\AddOns\Details\images\spec_icons_normal]], label = "Specialization", isSpec = true, icon = [[Interface\AddOns\Details\images\icons]], texcoord = defaultSpecIconCoords, iconsize = defaultIconSize},
-        {value = [[Interface\AddOns\Details\images\spec_icons_normal_alpha]], label = "Specialization Alpha", isSpec = true, icon = [[Interface\AddOns\Details\images\icons]], texcoord = defaultSpecIconCoords, iconsize = defaultIconSize},
         {value = [[Interface\AddOns\Details\images\classes_small_bw]], label = Loc ["STRING_OPTIONS_BAR_ICONFILE3"], icon = defaultIconTexture, texcoord = defaultClassIconCoords, iconsize = defaultIconSize},
         {value = [[Interface\AddOns\Details\images\classes_small_alpha]], label = Loc ["STRING_OPTIONS_BAR_ICONFILE4"], icon = defaultIconTexture, texcoord = defaultClassIconCoords, iconsize = defaultIconSize},
         {value = [[Interface\AddOns\Details\images\classes_small_alpha_bw]], label = Loc ["STRING_OPTIONS_BAR_ICONFILE6"], icon = defaultIconTexture, texcoord = defaultClassIconCoords, iconsize = defaultIconSize},
         {value = [[Interface\AddOns\Details\images\classes]], label = Loc ["STRING_OPTIONS_BAR_ICONFILE5"], icon = defaultIconTexture, texcoord = defaultClassIconCoords, iconsize = defaultIconSize},
+    	{value = [[Interface\AddOns\Details\images\classes_alpha]], label = Loc ["STRING_OPTIONS_BAR_ICONFILE7"], icon = defaultIconTexture, texcoord = defaultClassIconCoords, iconsize = defaultIconSize},
     }
 
     function Details:AddCustomIconSet(path, dropdownLabel, isSpecIcons, dropdownIcon, dropdownIconTexCoords, dropdownIconSize, dropdownIconColor)

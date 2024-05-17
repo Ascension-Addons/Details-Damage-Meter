@@ -34,38 +34,20 @@ function Details:CreateTestBars (alphabet, isArena)
     local pclass = select(2, UnitClass("player"))
 
     local actors_name = {
-            {"Spiro", "EVOKER", 1467},
-            {"Spiro", "EVOKER", 1467},
-            {"Spiro", "EVOKER", 1467},
-            {"Spiro", "EVOKER", 1467},
-            {"Spiro", "EVOKER", 1468},
-            {"Spiro", "EVOKER", 1468},
-            {"Spiro", "EVOKER", 1468},
-            {"Spiro", "EVOKER", 1468},
-            {"Drakaris", "EVOKER", 1468},
-            {"Ragnaros", "MAGE", 63},
-            {"The Lich King", "DEATHKNIGHT", }, 
-            {"Your Neighbor", "SHAMAN", }, 
-            {"Your Raid Leader", "MONK", }, 
-            {"Huffer", "HUNTER", }, 
-            {"Your Internet Girlfriend", "SHAMAN", }, 
-            {"Mr. President", "WARRIOR", }, 
+            {"Ragnaros", "MAGE", 86},
+            {"The Lich King", "DEATHKNIGHT", },
             {"Antonidas", "MAGE"}, 
-            {"Your Math Teacher", "SHAMAN", }, 
             {"King Djoffrey", "PALADIN", }, 
             {UnitName ("player") .. " Snow", pclass, }, 
-            {"A Drunk Dawrf", "MONK", },
-            {"Low Dps Guy", "MONK", }, 
             {"Helvis Phresley", "DEATHKNIGHT", }, 
-            {"Stormwind Guard", "WARRIOR", }, 
-            {"A PvP Player", "ROGUE", 260}, 
+            {"Stormwind Guard", "WARRIOR", },  
             {"Bolvar Fordragon", "PALADIN", },
             {"Malygos", "MAGE", },
             {"Akama", "ROGUE", },
             {"Nozdormu", "MAGE", },
             {"Lady Blaumeux", "DEATHKNIGHT", },
             {"Cairne Bloodhoof", "WARRIOR", },
-            {"Borivar", "ROGUE", 260},
+            {"Borivar", "ROGUE", 75},
             {"C'Thun", "WARLOCK", },
             {"Drek'Thar", "DEATHKNIGHT", },
             {"Durotan", "WARRIOR", },
@@ -76,15 +58,14 @@ function Details:CreateTestBars (alphabet, isArena)
             {"Fritz Fizzlesprocket", "HUNTER", },
             {"Lisa Gallywix", "ROGUE", },
             {"M'uru", "WARLOCK", },
-            {"Priestess MacDonnell", "PRIEST", },
             {"Elune", "PRIEST", },
             {"Nazgrel", "WARRIOR", },
             {"Ner'zhul", "WARLOCK", },
             {"Saria Nightwatcher", "PALADIN", },
-            {"Kael'thas Sunstrider", "MAGE", 63},
+            {"Kael'thas Sunstrider", "MAGE", 86},
             {"Velen", "PRIEST"},
-            {"Tyrande Whisperwind", "PRIEST", 257},
-            {"Sargeras", "WARLOCK", 267},
+            {"Tyrande Whisperwind", "PRIEST", 77},
+            {"Sargeras", "WARLOCK", 89},
             {"Arthas", "PALADIN", },
             {"Orman of Stromgarde", "WARRIOR", },
             {"General Rajaxx", "WARRIOR", },
@@ -92,10 +73,11 @@ function Details:CreateTestBars (alphabet, isArena)
             {"Roland", "MAGE", },
             {"Archmage Trelane", "MAGE", },
             {"Lilian Voss", "ROGUE", },
+            {"Dutch", "HERO", },
         }
         
     local russian_actors_name = { --arial narrow
-        {"Экспортировать", "MAGE", 63},
+        {"Экспортировать", "MAGE", 86},
         {"Готово", "DEATHKNIGHT", },
         {"Создать", "SHAMAN", },
         {"Текущий", "MONK", },
@@ -125,8 +107,8 @@ function Details:CreateTestBars (alphabet, isArena)
     
     local cn_actor_name = { --GBK
         {"打断", "PRIEST"},
-        {"恢复", "PRIEST", 257},
-        {"自动射击", "WARLOCK", 267},
+        {"恢复", "PRIEST", 77},
+        {"自动射击", "WARLOCK", 89},
         {"平均", "PALADIN", },
         {"团队", "WARRIOR", },
         {"当前", "WARRIOR", },
@@ -199,47 +181,13 @@ function Details:CreateTestBars (alphabet, isArena)
                 robot.enemy = true
             end
         end
-        
-        if (who[3]) then
-            robot:SetSpecId(who[3])
-        elseif (robot.classe == "DEATHKNIGHT") then
-            local specs = {250, 251, 252}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "DRUID") then
-            local specs = {102, 103, 104, 105}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "HUNTER") then
-            local specs = {253, 254, 255}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "MAGE") then
-            local specs = {62, 63, 64}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "MONK") then
-            local specs = {268, 269, 270}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "PALADIN") then
-            local specs = {65, 66, 70}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "PRIEST") then
-            local specs = {256, 257, 258}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "ROGUE") then
-            local specs = {259, 260, 261}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "SHAMAN") then
-            local specs = {262, 263, 264}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "WARLOCK") then
-            local specs = {265, 266, 267}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "WARRIOR") then
-            local specs = {71, 72, 73}
-            robot:SetSpecId(specs [math.random(1, #specs)])
+
+        robot.total = math.random(10000000, 20000000)
+        if robot.nome == "Dutch" then
+            robot.total = robot.total * 3 -- real
         end
-        
-        robot.total = math.random(10000000, 60000000)
-        robot.damage_taken = math.random(10000000, 60000000)
-        robot.friendlyfire_total = math.random(10000000, 60000000)
+        robot.damage_taken = math.random(10000000, 20000000)
+        robot.friendlyfire_total = math.random(10000000, 20000000)
         
         total_damage = total_damage + robot.total
         
@@ -262,47 +210,14 @@ function Details:CreateTestBars (alphabet, isArena)
         robot.grupo = true
         robot.classe = who[2]
         
-        if (who[3]) then
-            robot:SetSpecId(who[3])
-        elseif (robot.classe == "DEATHKNIGHT") then
-            local specs = {250, 251, 252}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "DRUID") then
-            local specs = {102, 103, 104, 105}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "HUNTER") then
-            local specs = {253, 254, 255}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "MAGE") then
-            local specs = {62, 63, 64}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "MONK") then
-            local specs = {268, 269, 270}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "PALADIN") then
-            local specs = {65, 66, 70}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "PRIEST") then
-            local specs = {256, 257, 258}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "ROGUE") then
-            local specs = {259, 260, 261}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "SHAMAN") then
-            local specs = {262, 263, 264}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "WARLOCK") then
-            local specs = {265, 266, 267}
-            robot:SetSpecId(specs [math.random(1, #specs)])
-        elseif (robot.classe == "WARRIOR") then
-            local specs = {71, 72, 73}
-            robot:SetSpecId(specs [math.random(1, #specs)])
+        robot.total = math.random(10000000, 20000000)
+        if robot.nome == "Dutch" then
+            robot.total = robot.total * 3 -- real
         end
-        
-        robot.total = math.random(10000000, 60000000)
-        robot.totalover = math.random(10000000, 60000000)
-        robot.totalabsorb = math.random(10000000, 60000000)
-        robot.healing_taken = math.random(10000000, 60000000)
+
+        robot.totalover = math.random(10000000, 20000000)
+        robot.totalabsorb = math.random(10000000, 20000000)
+        robot.healing_taken = math.random(10000000, 20000000)
         
         total_heal = total_heal + robot.total
         

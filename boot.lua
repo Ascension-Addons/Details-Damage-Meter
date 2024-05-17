@@ -4,7 +4,7 @@
 --test if the packager will deploy to wago
 --https://github.com/LuaLS/lua-language-server/wiki/Annotations#documenting-types
 
-		_ = nil
+		local _ = nil
 		_G.Details = LibStub("AceAddon-3.0"):NewAddon("_detalhes", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0", "NickTag-1.0")
 
 		--add the original name to the global namespace
@@ -28,10 +28,7 @@
 		Details.version = Details.userversion .. " (core " .. Details.realversion .. ")" --simple stirng to show to players
 
 		Details.acounter = 1 --in case of a second release with the same .build_counter
-		Details.curseforgeVersion = C_AddOns and C_AddOns.GetAddOnMetadata and C_AddOns.GetAddOnMetadata("Details", "Version")
-		if (not Details.curseforgeVersion and GetAddOnMetadata) then
-			Details.curseforgeVersion = GetAddOnMetadata("Details", "Version")
-		end
+		Details.curseforgeVersion = GetAddOnMetadata("Details", "Version")
 
 		function Details:GetCoreVersion()
 			return Details.realversion
@@ -861,8 +858,7 @@ do
 				Details.StatusBar.NameTable = {}
 
 		--constants
-
-		if (DetailsFramework.IsWotLKWow()) then
+		if (GetExpansionLevel() == Enum.Expansion.WoTLK) then
 			--[[global]] DETAILS_HEALTH_POTION_ID = 33447 -- Runic Healing Potion
 			--[[global]] DETAILS_HEALTH_POTION2_ID = 41166 -- Runic Healing Injector
 			--[[global]] DETAILS_REJU_POTION_ID = 40087 -- Powerful Rejuvenation Potion
@@ -889,26 +885,59 @@ do
 					[DETAILS_MANA_POTION_ID] = true, -- Runic Mana Potion
 					[DETAILS_MANA_POTION2_ID] = true, -- Runic Mana Injector
 				}
-
-		else
-			--[[global]] DETAILS_HEALTH_POTION_ID = 307192 -- spiritual healing potion
-			--[[global]] DETAILS_HEALTH_POTION2_ID = 359867 --cosmic healing potion
-			--[[global]] DETAILS_REJU_POTION_ID = 307194
-			--[[global]] DETAILS_MANA_POTION_ID = 307193
+		elseif GetExpansionLevel() == Enum.Expansion.TBC then
+			--[[global]] DETAILS_HEALTH_POTION_ID = 33447 -- Runic Healing Potion
+			--[[global]] DETAILS_HEALTH_POTION2_ID = 41166 -- Runic Healing Injector
+			--[[global]] DETAILS_REJU_POTION_ID = 40087 -- Powerful Rejuvenation Potion
+			--[[global]] DETAILS_REJU_POTION2_ID = 40077 -- Crazy Alchemist's Potion
+			--[[global]] DETAILS_MANA_POTION_ID = 33448 -- Runic Mana Potion
+			--[[global]] DETAILS_MANA_POTION2_ID = 42545 -- Runic Mana Injector
 			--[[global]] DETAILS_FOCUS_POTION_ID = 307161
-			--[[global]] DETAILS_HEALTHSTONE_ID = 6262
+			--[[global]] DETAILS_HEALTHSTONE_ID = 47875 --Warlock's Healthstone
+			--[[global]] DETAILS_HEALTHSTONE2_ID = 47876 --Warlock's Healthstone (1/2 Talent)
+			--[[global]] DETAILS_HEALTHSTONE3_ID = 47877 --Warlock's Healthstone (2/2 Talent)
 
-			--[[global]] DETAILS_INT_POTION_ID = 307162
-			--[[global]] DETAILS_AGI_POTION_ID = 307159
+			--[[global]] DETAILS_INT_POTION_ID = 40212 --Potion of Wild Magic
+			--[[global]] DETAILS_AGI_POTION_ID = 40211 --Potion of Speed
 			--[[global]] DETAILS_STR_POTION_ID = 307164
-			--[[global]] DETAILS_STAMINA_POTION_ID = 307163
+			--[[global]] DETAILS_STAMINA_POTION_ID = 40093 --Indestructible Potion
 			--[[global]] DETAILS_HEALTH_POTION_LIST = {
-					[DETAILS_HEALTH_POTION_ID] = true, --Healing Potion
+					[DETAILS_HEALTH_POTION_ID] = true, -- Runic Healing Potion
+					[DETAILS_HEALTH_POTION2_ID] = true, -- Runic Healing Injector
 					[DETAILS_HEALTHSTONE_ID] = true, --Warlock's Healthstone
-					[DETAILS_REJU_POTION_ID] = true, --Rejuvenation Potion
-					[DETAILS_MANA_POTION_ID] = true, --Mana Potion
-					[323436] = true, --Phial of Serenity (from Kyrians)
-					[DETAILS_HEALTH_POTION2_ID] = true,
+					[DETAILS_HEALTHSTONE2_ID] = true, --Warlock's Healthstone (1/2 Talent)
+					[DETAILS_HEALTHSTONE3_ID] = true, --Warlock's Healthstone (2/2 Talent)
+					[DETAILS_REJU_POTION_ID] = true, -- Powerful Rejuvenation Potion
+					[DETAILS_REJU_POTION2_ID] = true, -- Crazy Alchemist's Potion
+					[DETAILS_MANA_POTION_ID] = true, -- Runic Mana Potion
+					[DETAILS_MANA_POTION2_ID] = true, -- Runic Mana Injector
+				}
+		else
+			--[[global]] DETAILS_HEALTH_POTION_ID = 33447 -- Runic Healing Potion
+			--[[global]] DETAILS_HEALTH_POTION2_ID = 41166 -- Runic Healing Injector
+			--[[global]] DETAILS_REJU_POTION_ID = 40087 -- Powerful Rejuvenation Potion
+			--[[global]] DETAILS_REJU_POTION2_ID = 40077 -- Crazy Alchemist's Potion
+			--[[global]] DETAILS_MANA_POTION_ID = 33448 -- Runic Mana Potion
+			--[[global]] DETAILS_MANA_POTION2_ID = 42545 -- Runic Mana Injector
+			--[[global]] DETAILS_FOCUS_POTION_ID = 307161
+			--[[global]] DETAILS_HEALTHSTONE_ID = 47875 --Warlock's Healthstone
+			--[[global]] DETAILS_HEALTHSTONE2_ID = 47876 --Warlock's Healthstone (1/2 Talent)
+			--[[global]] DETAILS_HEALTHSTONE3_ID = 47877 --Warlock's Healthstone (2/2 Talent)
+
+			--[[global]] DETAILS_INT_POTION_ID = 40212 --Potion of Wild Magic
+			--[[global]] DETAILS_AGI_POTION_ID = 40211 --Potion of Speed
+			--[[global]] DETAILS_STR_POTION_ID = 307164
+			--[[global]] DETAILS_STAMINA_POTION_ID = 40093 --Indestructible Potion
+			--[[global]] DETAILS_HEALTH_POTION_LIST = {
+					[DETAILS_HEALTH_POTION_ID] = true, -- Runic Healing Potion
+					[DETAILS_HEALTH_POTION2_ID] = true, -- Runic Healing Injector
+					[DETAILS_HEALTHSTONE_ID] = true, --Warlock's Healthstone
+					[DETAILS_HEALTHSTONE2_ID] = true, --Warlock's Healthstone (1/2 Talent)
+					[DETAILS_HEALTHSTONE3_ID] = true, --Warlock's Healthstone (2/2 Talent)
+					[DETAILS_REJU_POTION_ID] = true, -- Powerful Rejuvenation Potion
+					[DETAILS_REJU_POTION2_ID] = true, -- Crazy Alchemist's Potion
+					[DETAILS_MANA_POTION_ID] = true, -- Runic Mana Potion
+					[DETAILS_MANA_POTION2_ID] = true, -- Runic Mana Injector
 				}
 		end
 
@@ -1136,14 +1165,14 @@ do
 
 		SharedMedia:Register("statusbar", "Details Serenity", [[Interface\AddOns\Details\images\bar_serenity]])
 		SharedMedia:Register("statusbar", "BantoBar", [[Interface\AddOns\Details\images\BantoBar]])
-		SharedMedia:Register("statusbar", "Skyline Compact", [[Interface\AddOns\Details\images\bar_textures\bar_skyline_compact.png]])
+		SharedMedia:Register("statusbar", "Skyline Compact", [[Interface\AddOns\Details\images\bar_textures\bar_skyline_compact]])
 		SharedMedia:Register("statusbar", "WorldState Score", [[Interface\WorldStateFrame\WORLDSTATEFINALSCORE-HIGHLIGHT]])
 		SharedMedia:Register("statusbar", "DGround", [[Interface\AddOns\Details\images\bar_background]])
 		SharedMedia:Register("statusbar", "Details Flat", [[Interface\AddOns\Details\images\bar_background]])
 		SharedMedia:Register("statusbar", "Splitbar", [[Interface\AddOns\Details\images\bar_textures\split_bar]])
 		SharedMedia:Register("statusbar", "Details2020", [[Interface\AddOns\Details\images\bar_textures\texture2020]])
 		SharedMedia:Register("statusbar", "Left White Gradient", [[Interface\AddOns\Details\images\bar_textures\gradient_white_10percent_left]])
-		SharedMedia:Register("statusbar", "Details! Slash", [[Interface\AddOns\Details\images\bar_textures\bar_of_bars.png]])
+		SharedMedia:Register("statusbar", "Details! Slash", [[Interface\AddOns\Details\images\bar_textures\bar_of_bars]])
 
 		--window bg and bar order
 		SharedMedia:Register("background", "Details Ground", [[Interface\AddOns\Details\images\background]])
@@ -1193,7 +1222,7 @@ do
 			--check if is an atlas texture
 			local atlas
 			if (type(value) == "string") then
-				atlas = C_Texture.GetAtlasInfo(value)
+				atlas = AtlasUtil:AtlasExists(value) and AtlasUtil:GetAtlasInfo(atlas)
 				if (atlas) then
 					return Details:Dump(atlas)
 				end

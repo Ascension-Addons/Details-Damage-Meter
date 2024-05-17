@@ -144,7 +144,7 @@ detailsFramework:Mixin(ImageMetaFunctions, detailsFramework.ScriptHookMixin)
 	--color
 	local smember_color = function(object, value)
 		local red, green, blue, alpha = detailsFramework:ParseColors(value)
-		object.image:SetColorTexture(red, green, blue, alpha)
+		object.image:SetTexture(red, green, blue, alpha)
 	end
 
 	--vertex color
@@ -181,7 +181,7 @@ detailsFramework:Mixin(ImageMetaFunctions, detailsFramework.ScriptHookMixin)
 	--gradient
 	local smember_gradient = function(object, value)
 		if (type(value) == "table" and value.gradient and value.fromColor and value.toColor) then
-			object.image:SetColorTexture(1, 1, 1, 1)
+			object.image:SetTexture(1, 1, 1, 1)
 			local fromColor = detailsFramework:FormatColor("tablemembers", value.fromColor)
 			local toColor = detailsFramework:FormatColor("tablemembers", value.toColor)
 			object.image:SetGradient(value.gradient, fromColor, toColor)
@@ -346,20 +346,7 @@ detailsFramework:Mixin(ImageMetaFunctions, detailsFramework.ScriptHookMixin)
 					---@type df_gradienttable
 					local gradientTable = texture
 
-					if (detailsFramework.IsDragonflight() or detailsFramework.IsNonRetailWowWithRetailAPI() or detailsFramework.IsWarWow()) then
-						ImageObject.image:SetColorTexture(1, 1, 1, 1)
-						local fromColor = detailsFramework:FormatColor("tablemembers", gradientTable.fromColor)
-						local toColor = detailsFramework:FormatColor("tablemembers", gradientTable.toColor)
-
-						if (gradientTable.invert) then
-							local temp = fromColor
-							fromColor = toColor
-							toColor = temp
-						end
-
-						ImageObject.image:SetGradient(gradientTable.gradient, fromColor, toColor)
-					else
-						local fromR, fromG, fromB, fromA = detailsFramework:ParseColors(gradientTable.fromColor)
+					local fromR, fromG, fromB, fromA = detailsFramework:ParseColors(gradientTable.fromColor)
 						local toR, toG, toB, toA = detailsFramework:ParseColors(gradientTable.toColor)
 
 						if (gradientTable.invert) then
@@ -377,22 +364,21 @@ detailsFramework:Mixin(ImageMetaFunctions, detailsFramework.ScriptHookMixin)
 							toA = temp
 						end
 
-						ImageObject.image:SetColorTexture(1, 1, 1, 1)
+						ImageObject.image:SetTexture(1, 1, 1, 1)
 						ImageObject.image:SetGradientAlpha(gradientTable.gradient, fromR, fromG, fromB, fromA, toR, toG, toB, toA)
-					end
 				else
 					local r, g, b, a = detailsFramework:ParseColors(texture)
-					ImageObject.image:SetColorTexture(r, g, b, a)
+					ImageObject.image:SetTexture(r, g, b, a)
 				end
 
 			elseif (type(texture) == "string") then
-				local isAtlas = C_Texture.GetAtlasInfo(texture)
+				local isAtlas = AtlasUtil:AtlasExists(texture)
 				if (isAtlas) then
 					ImageObject.image:SetAtlas(texture)
 				else
 					if (detailsFramework:IsHtmlColor(texture)) then
 						local r, g, b = detailsFramework:ParseColors(texture)
-						ImageObject.image:SetColorTexture(r, g, b)
+						ImageObject.image:SetTexture(r, g, b)
 					else
 						ImageObject.image:SetTexture(texture)
 					end
@@ -452,7 +438,7 @@ end
 ---@param filterMode texturefilter?
 ---@param resetTexCoords boolean?
 function detailsFramework:SetAtlas(textureObject, atlas, useAtlasSize, filterMode, resetTexCoords)
-	local isAtlas = C_Texture.GetAtlasInfo(type(atlas) == "string" and atlas or "--")
+	local isAtlas = AtlasUtil:AtlasExists(type(atlas) == "string" and atlas or "--")
 	if (isAtlas and type(atlas) == "string") then
 		textureObject:SetAtlas(atlas, useAtlasSize, filterMode, resetTexCoords)
 		return
@@ -464,7 +450,7 @@ function detailsFramework:SetAtlas(textureObject, atlas, useAtlasSize, filterMod
 
 		local atlasName = atlas.atlas
 		if (atlasName) then
-			isAtlas = C_Texture.GetAtlasInfo(atlasName)
+			isAtlas = AtlasUtil:AtlasExists(atlasName)
 			if (isAtlas) then
 				textureObject:SetAtlas(atlasName, useAtlasSize, filterMode, resetTexCoords)
 				return
@@ -490,9 +476,6 @@ function detailsFramework:SetAtlas(textureObject, atlas, useAtlasSize, filterMod
 			textureObject:SetDesaturated(true)
 		else
 			textureObject:SetDesaturated(false)
-			if (atlasInfo.desaturation) then
-				textureObject:SetDesaturation(atlasInfo.desaturation)
-			end
 		end
 
 		if (atlasInfo.colorName) then
@@ -570,7 +553,7 @@ end
 function detailsFramework:ParseTexture(texture, width, height, leftTexCoord, rightTexCoord, topTexCoord, bottomTexCoord, vertexRed, vertexGreen, vertexBlue, vertexAlpha)
 	local isAtlas
 	if (type(texture) == "string") then
-		isAtlas = C_Texture.GetAtlasInfo(texture)
+		isAtlas = AtlasUtil:AtlasExists(texture)
 	end
 
 	if (isAtlas) then
@@ -706,37 +689,3 @@ function detailsFramework:TableIsAtlas(atlasTale)
 	end
 	return false
 end
-
----Receives a texture object and a texture to use as mask
----If the mask texture is not created, it will be created and added to a key named MaskTexture
----@param self table
----@param texture texture
----@param maskTexture string|number|table
-function detailsFramework:SetMask(texture, maskTexture)
-	if (not texture.MaskTexture) then
-		local parent = texture:GetParent()
-		local maskTextureObject = parent:CreateMaskTexture(nil, "artwork")
-		maskTextureObject:SetAllPoints(texture)
-		texture:AddMaskTexture(maskTextureObject)
-		texture.MaskTexture = maskTextureObject
-	end
-
-	--is this a game texture atlas?
-	if (type(maskTexture) == "string") then
-		local isAtlas = C_Texture.GetAtlasInfo(maskTexture)
-		if (isAtlas) then
-			texture.MaskTexture:SetAtlas(maskTexture)
-			return
-		end
-
-	elseif (type(maskTexture) == "table") then
-		local bIsAtlas = detailsFramework:TableIsAtlas(maskTexture)
-		if (bIsAtlas) then
-			detailsFramework:SetAtlas(texture.MaskTexture, maskTexture)
-			return
-		end
-	end
-
-	texture.MaskTexture:SetTexture(maskTexture)
-end
-

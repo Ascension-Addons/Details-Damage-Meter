@@ -210,12 +210,12 @@ function mythicDungeonCharts.ShowChart()
 
 		local leftDivisorLine = dungeonChartFrame.BossWidgetsFrame:CreateTexture(nil, "overlay")
 		leftDivisorLine:SetSize(2, dungeonChartFrame.ChartFrame.Graphic:GetHeight())
-		leftDivisorLine:SetColorTexture(1, 1, 1, 1)
+		leftDivisorLine:SetTexture(1, 1, 1, 1)
 		leftDivisorLine:SetPoint("bottomleft", dungeonChartFrame.ChartFrame.Graphic.TextFrame, "bottomleft", -2, 0)
 
 		local bottomDivisorLine = dungeonChartFrame.BossWidgetsFrame:CreateTexture(nil, "overlay")
 		bottomDivisorLine:SetSize(dungeonChartFrame.ChartFrame.Graphic:GetWidth(), 2)
-		bottomDivisorLine:SetColorTexture(1, 1, 1, 1)
+		bottomDivisorLine:SetTexture(1, 1, 1, 1)
 		bottomDivisorLine:SetPoint("bottomleft", dungeonChartFrame.ChartFrame.Graphic.TextFrame, "bottomleft", 0, 0)
 
 		dungeonChartFrame.ChartFrame.Graphic:SetBackdrop({edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1, bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], tileSize = 64, tile = true})
@@ -238,7 +238,7 @@ function mythicDungeonCharts.ShowChart()
 					newBossWidget.AvatarTexture = bossAvatar
 
 					local verticalLine = Details:GetFramework():CreateImage(newBossWidget, "", 1, dungeonChartFrame.ChartFrame.Graphic:GetHeight(), "overlay")
-					verticalLine:SetColorTexture(1, 1, 1, 0.3)
+					verticalLine:SetTexture(1, 1, 1, 0.3)
 					verticalLine:SetPoint("bottomleft", newBossWidget, "bottomright", 0, 0)
 
 					local timeText = Details:GetFramework():CreateLabel(newBossWidget)
@@ -246,7 +246,7 @@ function mythicDungeonCharts.ShowChart()
 					newBossWidget.TimeText = timeText
 
 					local timeBackground = Details:GetFramework():CreateImage(newBossWidget, "", 30, 12, "artwork")
-					timeBackground:SetColorTexture(0, 0, 0, 0.5)
+					timeBackground:SetTexture(0, 0, 0, 0.5)
 					timeBackground:SetPoint("topleft", timeText, "topleft", -2, 2)
 					timeBackground:SetPoint("bottomright", timeText, "bottomright", 2, 0)
 
@@ -579,10 +579,6 @@ mythicDungeonCharts.ClassColors = {
 	["DEMONHUNTER1"] = { r = 0.64, g = 0.19, b = 0.79, colorStr = "ffa330c9" },
 	["DEMONHUNTER2"] = { r = 0.44, g = 0.09, b = 0.59, colorStr = "ffa330c9" },
 	["DEMONHUNTER3"] = { r = 0.24, g = 0.09, b = 0.39, colorStr = "ffa330c9" },
-
-	["EVOKER1"] = { r = 0.0, g = 1.00 , b = 0.59, colorStr = "FF205F45" },
-	["EVOKER2"] = { r = 0.0, g = 0.8 , b = 0.39, colorStr = "FF126442" },
-	["EVOKER3"] = { r = 0.0, g = 0.6 , b = 0.19, colorStr = "FF274B3C" },
 };
 
 if (debugmode) then

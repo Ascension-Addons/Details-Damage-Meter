@@ -17,22 +17,11 @@ local CreateFrame = CreateFrame
 
 -- TWW compatibility:
 local GetSpellInfo = GetSpellInfo or function(spellID) if not spellID then return nil end local si = C_Spell.GetSpellInfo(spellID) if si then return si.name, nil, si.iconID, si.castTime, si.minRange, si.maxRange, si.spellID, si.originalIconID end end
-local GetNumSpellTabs = GetNumSpellTabs or C_SpellBook.GetNumSpellBookSkillLines
-local GetSpellTabInfo = GetSpellTabInfo or function(tabLine) local skillLine = C_SpellBook.GetSpellBookSkillLineInfo(tabLine) if skillLine then return skillLine.name, skillLine.iconID, skillLine.itemIndexOffset, skillLine.numSpellBookItems, skillLine.isGuild, skillLine.offSpecID end end
-local SpellBookItemTypeMap = Enum.SpellBookItemType and {[Enum.SpellBookItemType.Spell] = "SPELL", [Enum.SpellBookItemType.None] = "NONE", [Enum.SpellBookItemType.Flyout] = "FLYOUT", [Enum.SpellBookItemType.FutureSpell] = "FUTURESPELL", [Enum.SpellBookItemType.PetAction] = "PETACTION" } or {}
-local GetSpellBookItemInfo = GetSpellBookItemInfo or function(...) local si = C_SpellBook.GetSpellBookItemInfo(...) if si then return SpellBookItemTypeMap[si.itemType] or "NONE", si.spellID end end
+local GetNumSpellTabs = GetNumSpellTabs
+local GetSpellTabInfo = GetSpellTabInfo
+local GetSpellBookItemInfo = GetSpellBookItemInfo
 
-local IS_WOW_PROJECT_MAINLINE = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-local IS_WOW_PROJECT_NOT_MAINLINE = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
-local IS_WOW_PROJECT_CLASSIC_ERA = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-
-local CastInfo = detailsFramework.CastInfo
-
-local PixelUtil = PixelUtil or DFPixelUtil
-
-local UnitGroupRolesAssigned = detailsFramework.UnitGroupRolesAssigned
-
-local cleanfunction = function() end
+local PixelUtil = PixelUtil
 local APIFrameFunctions
 
 do
@@ -1631,7 +1620,7 @@ function detailsFramework:IconPick (callback, close_when_select, param1, param2)
 		local preview_image_bg = detailsFramework:NewImage(detailsFramework.IconPickFrame.preview, nil, 76, 76)
 		preview_image_bg:SetDrawLayer("background", 0)
 		preview_image_bg:SetAllPoints(detailsFramework.IconPickFrame.preview)
-		preview_image_bg:SetColorTexture(0, 0, 0)
+		preview_image_bg:SetTexture(0, 0, 0)
 
 		local preview_image = detailsFramework:NewImage(detailsFramework.IconPickFrame.preview, nil, 76, 76)
 		preview_image:SetAllPoints(detailsFramework.IconPickFrame.preview)
@@ -1998,7 +1987,6 @@ function detailsFramework:CreateScaleBar(frame, config, bNoRightClick) --~scale
 	local scaleBar, text = detailsFramework:CreateSlider(frame, 120, 14, 0.6, 1.6, 0.1, config.scale, true, "ScaleBar", nil, "Scale:", detailsFramework:GetTemplate("slider", "OPTIONS_SLIDER_TEMPLATE"), detailsFramework:GetTemplate("font", "ORANGE_FONT_TEMPLATE"))
 	scaleBar.thumb:SetWidth(24)
 	scaleBar:SetValueStep(0.05)
-	scaleBar:SetObeyStepOnDrag(true)
 	scaleBar.mouseDown = false
 	rawset(scaleBar, "lockdown", true)
 
@@ -2512,7 +2500,7 @@ function detailsFramework:ShowPromptPanel(message, trueCallback, falseCallback, 
 		detailsFramework:CreateAnimation(promptFrame.ShowAnimation, "scale", 2, .075, 1, 1, .90, .90, "center", 0, 0)
 
 		promptFrame.FlashTexture = promptFrame:CreateTexture(nil, "overlay")
-		promptFrame.FlashTexture:SetColorTexture(1, 1, 1, 1)
+		promptFrame.FlashTexture:SetTexture(1, 1, 1, 1)
 		promptFrame.FlashTexture:SetAllPoints()
 
 		promptFrame.FlashAnimation = detailsFramework:CreateAnimationHub(promptFrame.FlashTexture, function() promptFrame.FlashTexture:Show() end, function() promptFrame.FlashTexture:Hide() end)
@@ -2878,7 +2866,7 @@ local chart_panel_add_label = function(self, color, name, type, number)
 	thisbox.type = type
 	thisbox.index = number
 
-	thisbox.box:SetColorTexture(unpack(color))
+	thisbox.box:SetTexture(unpack(color))
 	thisbox.text:SetText(name)
 
 	thisbox.check:Show()
@@ -2919,7 +2907,7 @@ local draw_overlay = function(self, this_overlay, overlayData, color)
 			this_block:SetWidth(pixel*5)
 		end
 
-		this_block:SetColorTexture(r, g, b, a or 0.25)
+		this_block:SetTexture(r, g, b, a or 0.25)
 		this_block:Show()
 
 		index = index + 1
@@ -3321,7 +3309,7 @@ function detailsFramework:CreateChartPanel(parent, width, height, name)
 	--div lines
 		for i = 1, 8, 1 do
 			local line = g:CreateTexture(nil, "overlay")
-			line:SetColorTexture(1, 1, 1, .05)
+			line:SetTexture(1, 1, 1, .05)
 			line:SetWidth(670)
 			line:SetHeight(1.1)
 
@@ -3347,14 +3335,14 @@ function detailsFramework:CreateChartPanel(parent, width, height, name)
 
 			local line = chartFrame:CreateTexture(nil, "border")
 			line:SetSize(1, height-45)
-			line:SetColorTexture(1, 1, 1, .1)
+			line:SetTexture(1, 1, 1, .1)
 			line:SetPoint("bottomleft", timeString, "topright", 0, -10)
 			line:Hide()
 			timeString.line = line
 		end
 
 		local bottom_texture = detailsFramework:NewImage(chartFrame, nil, 702, 25, "background", nil, nil, "$parentBottomTexture")
-		bottom_texture:SetColorTexture(.1, .1, .1, .7)
+		bottom_texture:SetTexture(.1, .1, .1, .7)
 		bottom_texture:SetPoint("topright", g, "bottomright", 0, 0)
 		bottom_texture:SetPoint("bottomleft", chartFrame, "bottomleft", 8, 12)
 
@@ -3433,7 +3421,7 @@ local gframe_create_line = function(self)
 	t:SetWidth(1)
 	t:SetPoint("topright", f, "topright")
 	t:SetPoint("bottomright", f, "bottomright")
-	t:SetColorTexture(1, 1, 1, .1)
+	t:SetTexture(1, 1, 1, .1)
 	f.grid = t
 
 	local b = f:CreateTexture(nil, "overlay")
@@ -3452,7 +3440,7 @@ local gframe_create_line = function(self)
 	local text = f:CreateFontString(nil, "overlay", "GameFontNormal")
 	local textBackground = f:CreateTexture(nil, "artwork")
 	textBackground:SetSize(30, 16)
-	textBackground:SetColorTexture(0, 0, 0, 0.5)
+	textBackground:SetTexture(0, 0, 0, 0.5)
 	textBackground:SetPoint("bottom", f.ball, "top", 0, -6)
 	text:SetPoint("center", textBackground, "center")
 	detailsFramework:SetFontSize(text, 10)
@@ -3959,7 +3947,7 @@ function detailsFramework:ApplyStandardBackdrop(frame, bUseSolidColor, alphaScal
 
 	if (not frame.__background) then
 		frame.__background = frame:CreateTexture(nil, "border", nil, -6)
-		frame.__background:SetColorTexture(red, green, blue)
+		frame.__background:SetTexture(red, green, blue)
 		frame.__background:SetAllPoints()
 	end
 
@@ -4253,21 +4241,6 @@ detailsFramework.RadioGroupCoreFunctions = {
 				checkbox.Icon:SetTexCoord(unpack(optionTable.texcoord))
 			else
 				checkbox.Icon:SetTexCoord(0, 1, 0, 1)
-			end
-
-			if (optionTable.mask) then
-				if (not checkbox.Icon.Mask) then
-					checkbox.Icon.Mask = checkbox:CreateMaskTexture(nil, "overlay")
-					checkbox.Icon.Mask:SetAllPoints(checkbox.Icon.widget)
-					checkbox.Icon.Mask:SetTexture(optionTable.mask)
-					checkbox.Icon:AddMaskTexture(checkbox.Icon.Mask)
-				end
-				checkbox.Icon.Mask:SetTexture(optionTable.mask)
-			else
-				--checkbox.Icon:SetMask("")
-				if (checkbox.Icon.Mask) then
-					checkbox.Icon.Mask:SetTexture("")
-				end
 			end
 		else
 			checkbox.Icon:SetTexture("")
@@ -4810,7 +4783,7 @@ function detailsFramework:CreateBorderFrame(parent, name)
 	--create left border
 		local leftBorder = f:CreateTexture(nil, "overlay")
 		leftBorder:SetDrawLayer("overlay", 7)
-		leftBorder:SetColorTexture(1, 1, 1, 1)
+		leftBorder:SetTexture(1, 1, 1, 1)
 		table.insert(f.allTextures, leftBorder)
 		f.leftBorder = leftBorder
 		PixelUtil.SetPoint(leftBorder, "topright", f, "topleft", 0, 1, 0, 1)
@@ -4820,7 +4793,7 @@ function detailsFramework:CreateBorderFrame(parent, name)
 	--create right border
 		local rightBorder = f:CreateTexture(nil, "overlay")
 		rightBorder:SetDrawLayer("overlay", 7)
-		rightBorder:SetColorTexture(1, 1, 1, 1)
+		rightBorder:SetTexture(1, 1, 1, 1)
 		table.insert(f.allTextures, rightBorder)
 		f.rightBorder = rightBorder
 		PixelUtil.SetPoint(rightBorder, "topleft", f, "topright", 0, 1, 0, 1)
@@ -4830,7 +4803,7 @@ function detailsFramework:CreateBorderFrame(parent, name)
 	--create top border
 		local topBorder = f:CreateTexture(nil, "overlay")
 		topBorder:SetDrawLayer("overlay", 7)
-		topBorder:SetColorTexture(1, 1, 1, 1)
+		topBorder:SetTexture(1, 1, 1, 1)
 		table.insert(f.allTextures, topBorder)
 		f.topBorder = topBorder
 		PixelUtil.SetPoint(topBorder, "bottomleft", f, "topleft", 0, 0, 0, 0)
@@ -4840,7 +4813,7 @@ function detailsFramework:CreateBorderFrame(parent, name)
 	--create  border
 		local bottomBorder = f:CreateTexture(nil, "overlay")
 		bottomBorder:SetDrawLayer("overlay", 7)
-		bottomBorder:SetColorTexture(1, 1, 1, 1)
+		bottomBorder:SetTexture(1, 1, 1, 1)
 		table.insert(f.allTextures, bottomBorder)
 		f.bottomBorder = bottomBorder
 		PixelUtil.SetPoint(bottomBorder, "topleft", f, "bottomleft", 0, 0, 0, 0)
@@ -4924,7 +4897,7 @@ detailsFramework.TimeLineElapsedTimeFunctions = {
 		if (not label) then
 			label = self:CreateFontString(nil, "artwork", "GameFontNormal")
 			label.line = self:CreateTexture(nil, "artwork")
-			label.line:SetColorTexture(1, 1, 1)
+			label.line:SetTexture(1, 1, 1)
 			label.line:SetPoint("topleft", label, "bottomleft", 0, -2)
 			self.labels [index] = label
 		end
@@ -5149,7 +5122,7 @@ detailsFramework.TimeLineBlockFunctions = {
 			self.blocks [index] = block
 
 			local background = block:CreateTexture(nil, "background")
-			background:SetColorTexture(1, 1, 1, 1)
+			background:SetTexture(1, 1, 1, 1)
 			local icon = block:CreateTexture(nil, "artwork")
 			local text = block:CreateFontString(nil, "artwork")
 			local auraLength = block:CreateTexture(nil, "border")
@@ -5159,7 +5132,7 @@ detailsFramework.TimeLineBlockFunctions = {
 			text:SetPoint("left", icon, "left", 2, 0)
 			auraLength:SetPoint("topleft", icon, "topleft", 0, 0)
 			auraLength:SetPoint("bottomleft", icon, "bottomleft", 0, 0)
-			auraLength:SetColorTexture(1, 1, 1, 1)
+			auraLength:SetTexture(1, 1, 1, 1)
 			auraLength:SetVertexColor(1, 1, 1, 0.1)
 
 			block.icon = icon
@@ -5575,7 +5548,7 @@ function detailsFramework:ShowErrorMessage (errorMessage, titleText)
 		detailsFramework:CreateAnimation(f.ShowAnimation, "scale", 2, .075, 1, 1, .90, .90, "center", 0, 0)
 
 		f.FlashTexture = f:CreateTexture(nil, "overlay")
-		f.FlashTexture:SetColorTexture(1, 1, 1, 1)
+		f.FlashTexture:SetTexture(1, 1, 1, 1)
 		f.FlashTexture:SetAllPoints()
 
 		f.FlashAnimation = detailsFramework:CreateAnimationHub (f.FlashTexture, function() f.FlashTexture:Show() end, function() f.FlashTexture:Hide() end)

@@ -204,15 +204,7 @@ local createPlayerScrollBox = function(breakdownWindowFrame, breakdownSideMenu, 
 				self.specIcon:SetTexture(specIcon)
 				self.specIcon:SetTexCoord(L, R, T, B)
 
-				if (DetailsFramework.IsTimewalkWoW()) then
-					specRole = "NONE"
-				else
-					---@type number
-					local spec = self.playerObject.spec
-					if (spec) then
-						specRole = select(5, GetSpecializationInfoByID(self.playerObject.spec))
-					end
-				end
+				specRole = "NONE"
 			else
 				self.specIcon:SetTexture("")
 			end
@@ -340,7 +332,6 @@ local createPlayerScrollBox = function(breakdownWindowFrame, breakdownSideMenu, 
 		local specIcon = OTTFrame:CreateTexture("$parentSpecIcon", "artwork")
 		specIcon:SetSize(headerTable[1].width - 1, headerTable[1].width - 1)
 		specIcon:SetAlpha(0.834)
-		detailsFramework:SetMask(specIcon, Details:GetTextureAtlas("iconmask"))
 
 		local roleIcon = OTTFrame:CreateTexture("$parentRoleIcon", "overlay")
 		roleIcon:SetSize((player_line_height-2) / 2, (player_line_height-2) / 2)
@@ -420,7 +411,7 @@ local createPlayerScrollBox = function(breakdownWindowFrame, breakdownSideMenu, 
 	breakdownWindowFrame.PlayerSelectionHeader:SetPoint("topright", playerSelectionHeaderFrame, "bottomright", 0, -2)
 
 	detailsFramework:ApplyStandardBackdrop(breakdownWindowFrame.PlayerSelectionHeader)
-	breakdownWindowFrame.PlayerSelectionHeader.__background:SetColorTexture(.60, .60, .60)
+	breakdownWindowFrame.PlayerSelectionHeader.__background:SetTexture(.60, .60, .60)
 
 	--create the scrollbox lines
 	for i = 1, scrollbox_lines do

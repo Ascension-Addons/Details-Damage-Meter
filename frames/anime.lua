@@ -91,8 +91,15 @@ function _detalhes.PlayBestDamageOnGuild (damage)
 	DetailsNewDamageRecord:SetSize(300, 300)
 
 	--single animation group
-	local MainAnimationGroup = DetailsNewDamageRecord:CreateAnimationGroup ("DetailsNewDamageRecordAnimationGroup")
-	MainAnimationGroup:SetLooping ("NONE")
+	local MainAnimationGroup = {
+		Play = function()
+			for _, animGroup in ipairs(self) do
+				if animGroup.Play then
+					animGroup.Play()
+				end
+			end
+		end
+	}
 
 	--widgets:
 
@@ -107,23 +114,30 @@ function _detalhes.PlayBestDamageOnGuild (damage)
 	
 	--animations for BaseTexture
 
-	BaseTexture.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	BaseTexture.alpha:SetTarget (BaseTexture)
-	BaseTexture.alpha:SetOrder (1)
-	BaseTexture.alpha:SetDuration(0.14869952201843)
-	BaseTexture.alpha:SetStartDelay (0)
-	BaseTexture.alpha:SetEndDelay (0)
-	BaseTexture.alpha:SetFromAlpha (0)
-	BaseTexture.alpha:SetToAlpha (1)
-	BaseTexture.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	BaseTexture.alpha:SetTarget (BaseTexture)
-	BaseTexture.alpha:SetOrder (2)
-	BaseTexture.alpha:SetDuration(1)
-	BaseTexture.alpha:SetStartDelay (5)
-	BaseTexture.alpha:SetEndDelay (0)
-	BaseTexture.alpha:SetFromAlpha (1)
-	BaseTexture.alpha:SetToAlpha (0)
+	do
+		local animGroup = BaseTexture:CreateAnimationGroup()
+		tinsert(MainAnimationGroup, animGroup)
+		local alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (1)
+		alpha:SetDuration(0)
+		alpha:SetStartDelay (0)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-1)
+		
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (2)
+		alpha:SetDuration(0.14869952201843)
+		alpha:SetStartDelay (0)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(1)
 
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (3)
+		alpha:SetDuration(1)
+		alpha:SetStartDelay (5)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-1)
+	end
 	----------------------------------------------
 
 	local BigFlash  = DetailsNewDamageRecord:CreateTexture("BigFlashTexture", "OVERLAY")
@@ -141,23 +155,30 @@ function _detalhes.PlayBestDamageOnGuild (damage)
 	BigFlash:SetBlendMode("ADD")
 
 	--animations for BigFlash
+	do
+		local animGroup = BigFlash:CreateAnimationGroup()
+		tinsert(MainAnimationGroup, animGroup)
+		local alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (1)
+		alpha:SetDuration(0)
+		alpha:SetStartDelay (0)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-1)
 
-	BigFlash.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	BigFlash.alpha:SetTarget (BigFlash)
-	BigFlash.alpha:SetOrder (1)
-	BigFlash.alpha:SetDuration(0.11600000411272)
-	BigFlash.alpha:SetStartDelay (0)
-	BigFlash.alpha:SetEndDelay (0)
-	BigFlash.alpha:SetFromAlpha (0)
-	BigFlash.alpha:SetToAlpha (1)
-	BigFlash.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	BigFlash.alpha:SetTarget (BigFlash)
-	BigFlash.alpha:SetOrder (2)
-	BigFlash.alpha:SetDuration(0.31600001454353)
-	BigFlash.alpha:SetStartDelay (0)
-	BigFlash.alpha:SetEndDelay (0)
-	BigFlash.alpha:SetFromAlpha (1)
-	BigFlash.alpha:SetToAlpha (0)
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (2)
+		alpha:SetDuration(0.11600000411272)
+		alpha:SetStartDelay (0)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(1)
+
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (3)
+		alpha:SetDuration(0.31600001454353)
+		alpha:SetStartDelay (0)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-1)
+	end
 
 	----------------------------------------------
 
@@ -176,30 +197,38 @@ function _detalhes.PlayBestDamageOnGuild (damage)
 	FlashSwipe:SetBlendMode("ADD")
 
 	--animations for FlashSwipe
+	do
+		local animGroup = FlashSwipe:CreateAnimationGroup()
+		tinsert(MainAnimationGroup, animGroup)
+		local alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetTarget (FlashSwipe)
+		alpha:SetOrder (1)
+		alpha:SetDuration()
+		alpha:SetStartDelay ()
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-1)
 
-	FlashSwipe.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	FlashSwipe.alpha:SetTarget (FlashSwipe)
-	FlashSwipe.alpha:SetOrder (1)
-	FlashSwipe.alpha:SetDuration(0.31600001454353)
-	FlashSwipe.alpha:SetStartDelay (0.20000000298023)
-	FlashSwipe.alpha:SetEndDelay (0)
-	FlashSwipe.alpha:SetFromAlpha (0)
-	FlashSwipe.alpha:SetToAlpha (0.501051902771)
-	FlashSwipe.translation = MainAnimationGroup:CreateAnimation("TRANSLATION")
-	FlashSwipe.translation:SetTarget (FlashSwipe)
-	FlashSwipe.translation:SetOrder (1)
-	FlashSwipe.translation:SetDuration(0.81599998474121)
-	FlashSwipe.translation:SetStartDelay (0.20000000298023)
-	FlashSwipe.translation:SetEndDelay (0)
-	FlashSwipe.translation:SetOffset (200, 0)
-	FlashSwipe.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	FlashSwipe.alpha:SetTarget (FlashSwipe)
-	FlashSwipe.alpha:SetOrder (1)
-	FlashSwipe.alpha:SetDuration(0.31600001454353)
-	FlashSwipe.alpha:SetStartDelay (0.69999998807907)
-	FlashSwipe.alpha:SetEndDelay (0)
-	FlashSwipe.alpha:SetFromAlpha (0.501051902771)
-	FlashSwipe.alpha:SetToAlpha (0)
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (2)
+		alpha:SetDuration(0.31600001454353)
+		alpha:SetStartDelay (0.20000000298023)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(0.501051902771)
+
+		local translation = animGroup:CreateAnimation("TRANSLATION")
+		translation:SetOrder (2)
+		translation:SetDuration(0.81599998474121)
+		translation:SetStartDelay (0.20000000298023)
+		translation:SetEndDelay (0)
+		translation:SetOffset (200, 0)
+
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (3)
+		alpha:SetDuration(0.31600001454353)
+		alpha:SetStartDelay (0.69999998807907)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-0.501051902771)
+	end
 
 	----------------------------------------------
 
@@ -218,39 +247,47 @@ function _detalhes.PlayBestDamageOnGuild (damage)
 	Portrait:SetBlendMode("BLEND")
 
 	--animations for Portrait
+	do
+		local animGroup = Portrait:CreateAnimationGroup()
+		tinsert(MainAnimationGroup, animGroup)
+		local alpha = animGroup:CreateAnimation("ALPHA")
 
-	Portrait.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	Portrait.alpha:SetTarget (Portrait)
-	Portrait.alpha:SetOrder (1)
-	Portrait.alpha:SetDuration(0.41600000858307)
-	Portrait.alpha:SetStartDelay (0)
-	Portrait.alpha:SetEndDelay (0)
-	Portrait.alpha:SetFromAlpha (0)
-	Portrait.alpha:SetToAlpha (1)
-	Portrait.scale = MainAnimationGroup:CreateAnimation("SCALE")
-	Portrait.scale:SetTarget (Portrait)
-	Portrait.scale:SetOrder (1)
-	Portrait.scale:SetDuration(0.21600000560284)
-	Portrait.scale:SetStartDelay (0)
-	Portrait.scale:SetEndDelay (0)
+		alpha:SetOrder (1)
+		alpha:SetDuration(0)
+		alpha:SetStartDelay (0)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-1)
 
-	if (DetailsFramework.IsDragonflight() or DetailsFramework.IsNonRetailWowWithRetailAPI()) then
-		Portrait.scale:SetScaleFrom (0, 0)
-		Portrait.scale:SetScaleTo (1, 1)
-	else
-		Portrait.scale:SetFromScale (0, 0)
-		Portrait.scale:SetToScale (1, 1)
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (2)
+		alpha:SetDuration(0.41600000858307)
+		alpha:SetStartDelay (0)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(1)
+
+		local scale = animGroup:CreateAnimation("SCALE")
+		scale:SetOrder (1)
+		scale:SetDuration(0)
+		scale:SetStartDelay (0)
+		scale:SetEndDelay (0)
+		scale:SetScale (0.01, 0.01)
+		scale:SetOrigin ("center", 0, 0)
+
+		scale = animGroup:CreateAnimation("SCALE")
+		scale:SetOrder (2)
+		scale:SetDuration(0.21600000560284)
+		scale:SetStartDelay (0)
+		scale:SetEndDelay (0)
+		scale:SetScale(100, 100)
+		scale:SetOrigin ("center", 0, 0)
+
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (3)
+		alpha:SetDuration(1)
+		alpha:SetStartDelay (4.7000002861023)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-1)
 	end
-	
-	Portrait.scale:SetOrigin ("center", 0, 0)
-	Portrait.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	Portrait.alpha:SetTarget (Portrait)
-	Portrait.alpha:SetOrder (2)
-	Portrait.alpha:SetDuration(1)
-	Portrait.alpha:SetStartDelay (4.7000002861023)
-	Portrait.alpha:SetEndDelay (0)
-	Portrait.alpha:SetFromAlpha (1)
-	Portrait.alpha:SetToAlpha (0)
 
 	----------------------------------------------
 
@@ -269,23 +306,30 @@ function _detalhes.PlayBestDamageOnGuild (damage)
 	DamageIcon:SetBlendMode("BLEND")
 
 	--animations for DamageIcon
+	do 
+		local animGroup = DamageIcon:CreateAnimationGroup()
+		tinsert(MainAnimationGroup, animGroup)
+		local alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (1)
+		alpha:SetDuration(0)
+		alpha:SetStartDelay (0)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-1)
 
-	DamageIcon.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	DamageIcon.alpha:SetTarget (DamageIcon)
-	DamageIcon.alpha:SetOrder (1)
-	DamageIcon.alpha:SetDuration(0.51599997282028)
-	DamageIcon.alpha:SetStartDelay (0)
-	DamageIcon.alpha:SetEndDelay (0)
-	DamageIcon.alpha:SetFromAlpha (0)
-	DamageIcon.alpha:SetToAlpha (1)
-	DamageIcon.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	DamageIcon.alpha:SetTarget (DamageIcon)
-	DamageIcon.alpha:SetOrder (2)
-	DamageIcon.alpha:SetDuration(1)
-	DamageIcon.alpha:SetStartDelay (4.5999999046326)
-	DamageIcon.alpha:SetEndDelay (0)
-	DamageIcon.alpha:SetFromAlpha (1)
-	DamageIcon.alpha:SetToAlpha (0)
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (2)
+		alpha:SetDuration(0.51599997282028)
+		alpha:SetStartDelay (0)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(1)
+
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (3)
+		alpha:SetDuration(1)
+		alpha:SetStartDelay (4.5999999046326)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-1)
+	end
 
 	----------------------------------------------
 
@@ -300,32 +344,29 @@ function _detalhes.PlayBestDamageOnGuild (damage)
 	NewDamageRecord:SetJustifyH("CENTER")
 
 	--animations for NewDamageRecord
+	do
+		local animGroup = NewDamageRecord:CreateAnimationGroup()
+		tinsert(MainAnimationGroup, animGroup)
+		local alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (1)
+		alpha:SetStartDelay (0)
+		alpha:SetEndDelay (0.016000000759959)
+		alpha:SetChange(-1)
 
-	NewDamageRecord.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	NewDamageRecord.alpha:SetTarget (NewDamageRecord)
-	NewDamageRecord.alpha:SetOrder (1)
-	NewDamageRecord.alpha:SetDuration(0.016000000759959)
-	NewDamageRecord.alpha:SetStartDelay (0)
-	NewDamageRecord.alpha:SetEndDelay (0)
-	NewDamageRecord.alpha:SetFromAlpha (0)
-	NewDamageRecord.alpha:SetToAlpha (0)
-	NewDamageRecord.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	NewDamageRecord.alpha:SetTarget (NewDamageRecord)
-	NewDamageRecord.alpha:SetOrder (2)
-	NewDamageRecord.alpha:SetDuration(0.51599997282028)
-	NewDamageRecord.alpha:SetStartDelay (0.40000000596046)
-	NewDamageRecord.alpha:SetEndDelay (4.0999999046326)
-	NewDamageRecord.alpha:SetFromAlpha (0)
-	NewDamageRecord.alpha:SetToAlpha (1)
-	NewDamageRecord.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	NewDamageRecord.alpha:SetTarget (NewDamageRecord)
-	NewDamageRecord.alpha:SetOrder (3)
-	NewDamageRecord.alpha:SetDuration(1)
-	NewDamageRecord.alpha:SetStartDelay (0.10000000149012)
-	NewDamageRecord.alpha:SetEndDelay (0)
-	NewDamageRecord.alpha:SetFromAlpha (1)
-	NewDamageRecord.alpha:SetToAlpha (0)
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (2)
+		alpha:SetDuration(0.51599997282028)
+		alpha:SetStartDelay (0.40000000596046)
+		alpha:SetEndDelay (4.0999999046326)
+		alpha:SetChange(1)
 
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (3)
+		alpha:SetDuration(1)
+		alpha:SetStartDelay (0.10000000149012)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-1)
+	end
 	----------------------------------------------
 
 	local DamageAmount  = DetailsNewDamageRecord:CreateFontString("DamageAmountFontString", "OVERLAY")
@@ -339,34 +380,30 @@ function _detalhes.PlayBestDamageOnGuild (damage)
 	DamageAmount:SetJustifyH("CENTER")
 
 	--animations for DamageAmount
+	do
+		local animGroup = DamageAmount:CreateAnimationGroup()
+		tinsert(MainAnimationGroup, animGroup)
+		local alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (1)
+		alpha:SetDuration(0)
+		alpha:SetStartDelay (0)
+		alpha:SetEndDelay (0.016000000759959)
+		alpha:SetChange(-1)
 
-	DamageAmount.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	DamageAmount.alpha:SetTarget (DamageAmount)
-	DamageAmount.alpha:SetOrder (1)
-	DamageAmount.alpha:SetDuration(0.016000000759959)
-	DamageAmount.alpha:SetStartDelay (0)
-	DamageAmount.alpha:SetEndDelay (0)
-	DamageAmount.alpha:SetFromAlpha (0)
-	DamageAmount.alpha:SetToAlpha (0)
-	DamageAmount.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	DamageAmount.alpha:SetTarget (DamageAmount)
-	DamageAmount.alpha:SetOrder (2)
-	DamageAmount.alpha:SetDuration(0.51599997282028)
-	DamageAmount.alpha:SetStartDelay (0.40000000596046)
-	DamageAmount.alpha:SetEndDelay (0)
-	DamageAmount.alpha:SetFromAlpha (0)
-	DamageAmount.alpha:SetToAlpha (1)
-	DamageAmount.alpha = MainAnimationGroup:CreateAnimation("ALPHA")
-	DamageAmount.alpha:SetTarget (DamageAmount)
-	DamageAmount.alpha:SetOrder (3)
-	DamageAmount.alpha:SetDuration(1.0160000324249)
-	DamageAmount.alpha:SetStartDelay (4.2000002861023)
-	DamageAmount.alpha:SetEndDelay (0)
-	DamageAmount.alpha:SetFromAlpha (1)
-	DamageAmount.alpha:SetToAlpha (0)
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (2)
+		alpha:SetDuration(0.51599997282028)
+		alpha:SetStartDelay (0.40000000596046)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(1)
 
+		alpha = animGroup:CreateAnimation("ALPHA")
+		alpha:SetOrder (3)
+		alpha:SetDuration(1.0160000324249)
+		alpha:SetStartDelay (4.2000002861023)
+		alpha:SetEndDelay (0)
+		alpha:SetChange(-1)
+	end
 	--test the animation
 	MainAnimationGroup:Play()
-
-
 end

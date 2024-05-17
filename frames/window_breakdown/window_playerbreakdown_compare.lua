@@ -1950,7 +1950,7 @@ function Details:InitializeCompareTab()
                         local flashAnimation = tabOBject:CreateTexture(nil, "overlay")
                         flashAnimation:SetPoint("topleft", tabOBject.widget, "topleft", 1, -1)
                         flashAnimation:SetPoint("bottomright", tabOBject.widget, "bottomright", -1, 1)
-                        flashAnimation:SetColorTexture(1, 1, 1)
+                        flashAnimation:SetTexture(1, 1, 1)
 
                         local flashHub = DetailsFramework:CreateAnimationHub (flashAnimation, function() flashAnimation:Show() end, function() flashAnimation:Hide() end)
                         DetailsFramework:CreateAnimation(flashHub, "alpha", 1, 1, 0, 0.3)

@@ -1255,7 +1255,6 @@ function DF:NewSlider (parent, container, name, member, width, height, minValue,
 		SliderObject.slider:SetValueStep(0.01)
 	else
 		SliderObject.slider:SetValueStep(step)
-		SliderObject.slider:SetObeyStepOnDrag(true)
 	end
 
 	if (not APISliderFunctions) then

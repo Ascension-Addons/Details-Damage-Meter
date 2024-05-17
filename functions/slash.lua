@@ -125,12 +125,15 @@ function SlashCmdList.DETAILS (msg, editbox)
 	elseif (command == "mythic+") then
 		local statName = "mythicdungeoncompletedDF2"
 		local mythicDungeonRuns = Details222.PlayerStats:GetStat(statName)
+		if mythicDungeonRuns then
+			dumpt(mythicDungeonRuns)
 
-		dumpt(mythicDungeonRuns)
-
-		for mapChallengeModeID, mapChallengeModeData in pairs(mythicDungeonRuns) do
-			local mapName = C_ChallengeMode.GetMapUIInfo(mapChallengeModeID)
-			print(mapName, mapChallengeModeData.level, mapChallengeModeData.completed, mapChallengeModeData.time)
+			for mapChallengeModeID, mapChallengeModeData in pairs(mythicDungeonRuns) do
+				local mapName = LFGGetDungeonInfoByID(mapChallengeModeID)
+				print(mapName, mapChallengeModeData.level, mapChallengeModeData.completed, mapChallengeModeData.time)
+			end
+		else
+			Details:Msg("No Mythic Dungeon Runs to Report!")
 		end
 
 	elseif (command == "mergepetspells") then --deprecated
@@ -2229,7 +2232,7 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 							local coords = CLASS_ICON_TCOORDS
 							local _, class = GetClassInfo(classId)
 
-							local mapName = C_ChallengeMode.GetMapUIInfo(keystoneInfo.mythicPlusMapID) or ""
+							local mapName = LFGGetDungeonInfoByID(keystoneInfo.mythicPlusMapID) or ""
 
 							--local mapInfoChallenge = C_Map.GetMapInfo(keystoneInfo.challengeMapID)
 							--local mapNameChallenge = mapInfoChallenge and mapInfoChallenge.name or ""
@@ -2237,14 +2240,13 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 							local isInMyParty = UnitInParty(unitName) and (string.byte(unitName, 1) + string.byte(unitName, 2)) or 0
 							local isGuildMember = guildName and guildUsers[unitName] and true
 
-							if (keystoneInfo.level > 0 or keystoneInfo.rating > 0) then
+							if (keystoneInfo.level > 0) then
 								local keystoneTable = {
 									unitName,
 									keystoneInfo.level,
 									keystoneInfo.mapID,
 									keystoneInfo.challengeMapID,
 									keystoneInfo.classID,
-									keystoneInfo.rating,
 									keystoneInfo.mythicPlusMapID,
 									classIcon,
 									coords[class],

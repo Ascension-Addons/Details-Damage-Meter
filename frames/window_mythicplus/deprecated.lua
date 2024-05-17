@@ -49,7 +49,7 @@ if (false and Details222.MythicPlus.Level and Details222.MythicPlus.Level < 28 a
         readyFrame.ShowChartButton = DetailsFramework:CreateButton(readyFrame, function() mythicDungeonCharts.ShowChart(); readyFrame:Hide() end, 80, 20, "Show Damage Graphic")
         readyFrame.ShowChartButton:SetTemplate(DetailsFramework:GetTemplate("button", "DETAILS_PLUGIN_BUTTON_TEMPLATE"))
         readyFrame.ShowChartButton:SetPoint("topleft", readyFrame, "topleft", 5, -30)
-        readyFrame.ShowChartButton:SetIcon([[Interface\AddOns\Details\images\icons2.png]], 16, 16, "overlay", {42/512, 75/512, 153/512, 187/512}, {.7, .7, .7, 1}, nil, 0, 0)
+        readyFrame.ShowChartButton:SetIcon([[Interface\AddOns\Details\images\icons2]], 16, 16, "overlay", {42/512, 75/512, 153/512, 187/512}, {.7, .7, .7, 1}, nil, 0, 0)
         readyFrame.ShowChartButton.textcolor = textColor
 
         --disable feature check box (dont show this again)

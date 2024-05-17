@@ -379,7 +379,7 @@ detailsFramework.EditorMixin = {
         }
 
         for side, texture in pairs(self.moverGuideLines) do
-            texture:SetColorTexture(.8, .8, .8, 0.1)
+            texture:SetTexture(.8, .8, .8, 0.1)
             texture:SetSize(1, 1)
             texture:SetDrawLayer("overlay", 7)
             texture:Hide()
@@ -456,7 +456,7 @@ detailsFramework.EditorMixin = {
                 editorFrame.AnchorFrames:SetNotInUseForAllAnchors()
 
                 --change the color of the anchor point to show it's selected
-                anchorFrame.Texture:SetColorTexture(1, 0, 0, 0.5)
+                anchorFrame.Texture:SetTexture(1, 0, 0, 0.5)
 
                 --get the object being edited in the editor
                 local object = editorFrame:GetEditingObject()
@@ -502,11 +502,11 @@ detailsFramework.EditorMixin = {
             end,
 
             SetNotInUse = function(self, anchorFrame)
-                anchorFrame.Texture:SetColorTexture(1, 1, 1, 0.5)
+                anchorFrame.Texture:SetTexture(1, 1, 1, 0.5)
             end,
 
             SetInUse = function(self, anchorFrame)
-                anchorFrame.Texture:SetColorTexture(1, 0, 0, 0.5)
+                anchorFrame.Texture:SetTexture(1, 0, 0, 0.5)
             end,
 
             CreateNineAnchors = function(self)
@@ -527,7 +527,7 @@ detailsFramework.EditorMixin = {
                     self.anchorFrames[i] = anchorFrame
 
                     anchorFrame.Texture = anchorFrame:CreateTexture("$parentTexture", "border")
-                    anchorFrame.Texture:SetColorTexture(1, 1, 1, 0.5)
+                    anchorFrame.Texture:SetTexture(1, 1, 1, 0.5)
                     anchorFrame.Texture:SetAllPoints(anchorFrame)
                 end
             end,
@@ -671,7 +671,7 @@ detailsFramework.EditorMixin = {
         end
 
         movers.ObjectBackgroundTexture = movers[1]:CreateTexture("$parentMoverObjectBackground", "artwork")
-        movers.ObjectBackgroundTexture:SetColorTexture(1, 1, 1, 0.25)
+        movers.ObjectBackgroundTexture:SetTexture(1, 1, 1, 0.25)
 
         return movers
     end,
@@ -1226,7 +1226,7 @@ detailsFramework.EditorMixin = {
         detailsFramework:ReskinSlider(selectObjectScrollBox)
 
         local selectionTexture = selectObjectScrollBox:CreateTexture(nil, "overlay")
-        selectionTexture:SetColorTexture(1, 1, 0, 0.2)
+        selectionTexture:SetTexture(1, 1, 0, 0.2)
         selectObjectScrollBox.SelectionTexture = selectionTexture
 
 		function selectObjectScrollBox:RefreshMe()

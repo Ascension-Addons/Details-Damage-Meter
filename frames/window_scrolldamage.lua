@@ -231,8 +231,8 @@ function Details:ScrollDamage()
 		local combatLogReader = CreateFrame("frame")
 		local playerSerial = UnitGUID("player")
 
-		combatLogReader:SetScript("OnEvent", function(self)
-			local timew, token, hidding, sourceSerial, sourceName, sourceFlag, sourceFlag2, targetSerial, targetName, targetFlag, targetFlag2, spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical = CombatLogGetCurrentEventInfo()
+		combatLogReader:SetScript("OnEvent", function(self, event, ...)
+			local timew, token, hidding, sourceSerial, sourceName, sourceFlag, sourceFlag2, targetSerial, targetName, targetFlag, targetFlag2, spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical = CombatLogGetCurrentEventInfo(...)
 			if (sourceSerial == playerSerial) then
 				if (token == "SPELL_DAMAGE" or token == "SPELL_PERIODIC_DAMAGE" or token == "RANGE_DAMAGE" or token == "DAMAGE_SHIELD") then
 					if (not DetailsScrollDamage.Data.Started) then

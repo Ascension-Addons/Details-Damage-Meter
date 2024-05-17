@@ -2129,7 +2129,7 @@ function _detalhes:OpenAuraPanel (spellid, spellname, spellicon, encounterid, tr
         f.OnSelectAuraType = OnSelectAuraType
         
         local AuraTypeBackground = f:CreateTexture(nil, "border")
-        AuraTypeBackground:SetColorTexture(.4, .4, .4, .1)
+        AuraTypeBackground:SetTexture(.4, .4, .4, .1)
         AuraTypeBackground:SetHeight(64)
         AuraTypeBackground:SetPoint("topleft", f, "topleft", 10, -79)
         AuraTypeBackground:SetPoint("topright", f, "topright", -10, -79)
@@ -2753,8 +2753,8 @@ function _detalhes:OpenAuraPanel (spellid, spellname, spellicon, encounterid, tr
     DetailsAuraPanel.AuraSpellId.text = tostring(spellid)
     DetailsAuraPanel.icon.texture = spellicon
     
-    DetailsAuraPanel.UseGlow.glow_test.animIn:Stop()
-    DetailsAuraPanel.UseGlow.glow_test.animOut:Play()
+    ---DetailsAuraPanel.UseGlow.glow_test.animIn:Stop()
+    ---DetailsAuraPanel.UseGlow.glow_test.animOut:Play()
     DetailsAuraPanel.UseGlow:SetValue(false)
     
     DetailsAuraPanel.StackSlider:SetValue(0)

@@ -620,7 +620,7 @@ function spellsTab.OnCreateTabCallback(tabButton, tabFrame) --~init
 		backgroundTexture:SetPoint("bottomright", ROB, "bottomright", 0, 0)
 		ROB.backgroundTexture = backgroundTexture
 
-		backgroundTexture:SetColorTexture(.1, .1, .1, 0.834)
+		backgroundTexture:SetTexture(.1, .1, .1, 0.834)
 
 		local text = ROB:CreateFontString(nil, "overlay", "GameFontNormal")
 		text:SetText("REPORT")
@@ -666,7 +666,7 @@ function spellsTab.UpdateBarSettings(bar)
 		--bar.statusBar:GetStatusBarTexture():SetTexture(Details.breakdown_spell_tab.statusbar_texture)
 		Details222.BreakdownWindow.ApplyTextureSettings(bar.statusBar)
 
-		--bar.statusBar.backgroundTexture:SetColorTexture(unpack(Details.breakdown_spell_tab.statusbar_background_color))
+		--bar.statusBar.backgroundTexture:SetTexture(unpack(Details.breakdown_spell_tab.statusbar_background_color))
 		--bar.statusBar.backgroundTexture:SetAlpha(Details.breakdown_spell_tab.statusbar_background_alpha)
 
 		detailsFramework:SetTemplate(bar.statusBar.backgroundTexture, "STANDARD_GRAY")

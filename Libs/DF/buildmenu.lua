@@ -156,13 +156,13 @@ local createOptionHighlightTexture = function(frame, label, widgetWidth)
     highlightFrame:SetScript("OnLeave", onLeaveHighlight)
 
     local highlightTexture = highlightFrame:CreateTexture(nil, "overlay")
-    highlightTexture:SetColorTexture(1, 1, 1, 0.1)
+    highlightTexture:SetTexture(1, 1, 1, 0.1)
     PixelUtil.SetPoint(highlightTexture, "topleft", highlightFrame, "topleft", 0, 0)
     PixelUtil.SetPoint(highlightTexture, "bottomright", highlightFrame, "bottomright", 0, 0)
     highlightTexture:Hide()
 
     local backgroundTexture = highlightFrame:CreateTexture(nil, "artwork")
-    backgroundTexture:SetColorTexture(1, 1, 1)
+    backgroundTexture:SetTexture(1, 1, 1)
     backgroundTexture:SetVertexColor(.25, .25, .25, 0.5)
     PixelUtil.SetPoint(backgroundTexture, "topleft", highlightFrame, "topleft", 0, 0)
     PixelUtil.SetPoint(backgroundTexture, "bottomright", highlightFrame, "bottomright", 0, 0)
@@ -1587,7 +1587,7 @@ function detailsFramework:CreateInCombatTexture(frame)
     end
 
     local inCombatBackgroundTexture = detailsFramework:CreateImage(frame)
-    inCombatBackgroundTexture:SetColorTexture(.6, 0, 0, .1)
+    inCombatBackgroundTexture:SetTexture(.6, 0, 0, .1)
     inCombatBackgroundTexture:Hide()
 
     local inCombatLabel = detailsFramework:CreateLabel(frame, "you are in combat", 24, "silver")

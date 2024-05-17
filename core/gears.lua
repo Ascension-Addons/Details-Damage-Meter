@@ -725,8 +725,8 @@ _detalhes.storage = {}
 
 function _detalhes.storage:OpenRaidStorage()
 	--check if the storage is already loaded
-	if (not C_AddOns.IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
-		local loaded, reason = C_AddOns.LoadAddOn(CONST_ADDONNAME_DATASTORAGE)
+	if (not IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
+		local loaded, reason = LoadAddOn(CONST_ADDONNAME_DATASTORAGE)
 		if (not loaded) then
 			return
 		end
@@ -1429,8 +1429,8 @@ function _detalhes.ScheduleLoadStorage()
 		_detalhes.schedule_storage_load = true
 		return
 	else
-		if (not C_AddOns.IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
-			local loaded, reason = C_AddOns.LoadAddOn(CONST_ADDONNAME_DATASTORAGE)
+		if (not IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
+			local loaded, reason = LoadAddOn(CONST_ADDONNAME_DATASTORAGE)
 			if (not loaded) then
 				if (_detalhes.debug) then
 					print("|cFFFFFF00Details! Storage|r: can't load storage, may be the addon is disabled.")
@@ -1442,7 +1442,7 @@ function _detalhes.ScheduleLoadStorage()
 		end
 	end
 
-	if (C_AddOns.IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
+	if (IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
 		_detalhes.schedule_storage_load = nil
 		_detalhes.StorageLoaded = true
 		if (_detalhes.debug) then
@@ -1467,7 +1467,7 @@ function _detalhes.OpenStorage()
 	do return end
 
 	--check if the storage is already loaded
-	if (not C_AddOns.IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
+	if (not IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
 		--can't open it during combat
 		if (InCombatLockdown() or UnitAffectingCombat("player")) then
 			if (_detalhes.debug) then
@@ -1476,7 +1476,7 @@ function _detalhes.OpenStorage()
 			return false
 		end
 
-		local loaded, reason = C_AddOns.LoadAddOn(CONST_ADDONNAME_DATASTORAGE)
+		local loaded, reason = LoadAddOn(CONST_ADDONNAME_DATASTORAGE)
 		if (not loaded) then
 			if (_detalhes.debug) then
 				print("|cFFFFFF00Details! Storage|r: can't load storage, may be the addon is disabled.")
@@ -1486,7 +1486,7 @@ function _detalhes.OpenStorage()
 
 		local db = createStorageTables()
 
-		if (db and C_AddOns.IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
+		if (db and IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
 			_detalhes.StorageLoaded = true
 		end
 
@@ -1503,8 +1503,8 @@ function Details.Database.LoadDB()
 	do return end
 
 	--check if the storage is already loaded
-	if (not C_AddOns.IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
-		local loaded, reason = C_AddOns.LoadAddOn(CONST_ADDONNAME_DATASTORAGE)
+	if (not IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
+		local loaded, reason = LoadAddOn(CONST_ADDONNAME_DATASTORAGE)
 		if (not loaded) then
 			if (_detalhes.debug) then
 				print("|cFFFFFF00Details! Storage|r: can't save the encounter, couldn't load DataStorage, may be the addon is disabled.")
@@ -1988,35 +1988,6 @@ function ilvl_core:CalcItemLevel (unitid, guid, shout)
 			end
 		end
 
-		local spec
-		local talents = {}
-
-		if (not DetailsFramework.IsTimewalkWoW()) then
-			spec = GetInspectSpecialization (unitid)
-			if (spec and spec ~= 0) then
-				_detalhes.cached_specs [guid] = spec
-				Details:SendEvent("UNIT_SPEC", nil, unitid, spec, guid)
-			end
-
-			--------------------------------------------------------------------------------------------------------
-
-			for i = 1, 7 do
-				for o = 1, 3 do
-					--need to review this in classic
-					local talentID, name, texture, selected, available = GetTalentInfo (i, o, 1, true, unitid)
-					if (selected) then
-						tinsert(talents, talentID)
-						break
-					end
-				end
-			end
-
-			if (talents [1]) then
-				_detalhes.cached_talents [guid] = talents
-				Details:SendEvent("UNIT_TALENTS", nil, unitid, talents, guid)
-			end
-		end
-
 		--------------------------------------------------------------------------------------------------------
 
 		if (ilvl_core.forced_inspects [guid]) then
@@ -2082,18 +2053,12 @@ function ilvl_core:ReGetItemLevel (t)
 end
 
 function ilvl_core:GetItemLevel (unitid, guid, is_forced, try_number)
-
-	--disable for timewalk wow ~timewalk
-	if (DetailsFramework.IsTimewalkWoW()) then
-		return
-	end
-
 	--ddouble check
 	if (not is_forced and (UnitAffectingCombat("player") or InCombatLockdown())) then
 		return
 	end
 
-	if (InCombatLockdown() or not unitid or not CanInspect(unitid) or not UnitPlayerControlled(unitid) or not CheckInteractDistance(unitid, CONST_INSPECT_ACHIEVEMENT_DISTANCE)) then
+	if (AscensionInspectFrame and AscensionInspectFrame:IsShown() or InCombatLockdown() or not unitid or not CanInspect(unitid) or not UnitPlayerControlled(unitid) or not CheckInteractDistance(unitid, CONST_INSPECT_ACHIEVEMENT_DISTANCE)) then
 		if (is_forced) then
 			try_number = try_number or 0
 			if (try_number > 18) then
@@ -2109,7 +2074,7 @@ function ilvl_core:GetItemLevel (unitid, guid, is_forced, try_number)
 	inspecting [guid] = {unitid, ilvl_core:ScheduleTimer("InspectTimeOut", 12, guid)}
 	ilvl_core.amt_inspecting = ilvl_core.amt_inspecting + 1
 
-	--NotifyInspect (unitid)
+	NotifyInspect (unitid)
 end
 
 local NotifyInspectHook = function(unitid) --not in use
@@ -2131,7 +2096,7 @@ local NotifyInspectHook = function(unitid) --not in use
 		end
 	end
 end
---hooksecurefunc ("NotifyInspect", NotifyInspectHook)
+hooksecurefunc ("NotifyInspect", NotifyInspectHook)
 
 function ilvl_core:Reset()
 	ilvl_core.raid_id = 1
@@ -2144,11 +2109,6 @@ function ilvl_core:Reset()
 end
 
 function ilvl_core:QueryInspect (unitName, callback, param1)
-	--disable for timewalk wow ~timewalk
-	if (DetailsFramework.IsTimewalkWoW()) then
-		return
-	end
-
 	local unitid
 
 	if (IsInRaid()) then
@@ -2201,11 +2161,6 @@ function ilvl_core:ClearQueryInspectQueue()
 end
 
 function ilvl_core:Loop()
-	--disable for timewalk wow ~timewalk
-	if (DetailsFramework.IsTimewalkWoW()) then
-		return
-	end
-
 	if (ilvl_core.amt_inspecting >= MAX_INSPECT_AMOUNT) then
 		return
 	end
@@ -2253,11 +2208,6 @@ function ilvl_core:EnterCombat()
 end
 
 local can_start_loop = function()
-	--disable for timewalk wow ~timewalk
-	if (DetailsFramework.IsTimewalkWoW()) then
-		return false
-	end
-
 	if ((_detalhes:GetZoneType() ~= "raid" and _detalhes:GetZoneType() ~= "party") or ilvl_core.loop_process or _detalhes.in_combat or not _detalhes.track_item_level) then
 		return false
 	end
@@ -2421,371 +2371,39 @@ function Details:DecompressData (data, dataType)
 	end
 end
 
-Details.specToRole = {
-	--DRUID
-	[102] = "DAMAGER", --BALANCE
-	[103] = "DAMAGER", --FERAL DRUID
-	[105] = "HEALER", --RESTORATION
+local function GetRoleFromSpecInfo(specInfo)
+	if specInfo.Healer then
+		return "HEALER"
+	elseif specInfo.Tank then
+		return "TANK"
+	else
+		return "DAMAGER"
+	end
+end
 
-	--HUNTER
-	[253] = "DAMAGER", --BM
-	[254] = "DAMAGER", --MM
-	[255] = "DAMAGER", --SURVIVOR
+Details.specToRole = {}
+Details.validSpecIds = {}
 
-	--MAGE
-	[62] = "DAMAGER", --ARCANE
-	[64] = "DAMAGER", --FROST
-	[63] = "DAMAGER", ---FIRE
+Details.textureToSpec = {}
+Details.specToTexture = {}
 
-	--PALADIN
-	[70] = "DAMAGER", --RET
-	[65] = "HEALER", --HOLY
-	[66] = "TANK", --PROT
-
-	--PRIEST
-	[257] = "HEALER", --HOLY
-	[256] = "HEALER", --DISC
-	[258] = "DAMAGER", --SHADOW
-
-	--ROGUE
-	[259] = "DAMAGER", --ASSASSINATION
-	[260] = "DAMAGER", --COMBAT
-	[261] = "DAMAGER", --SUB
-
-	--SHAMAN
-	[262] = "DAMAGER", --ELEMENTAL
-	[263] = "DAMAGER", --ENHAN
-	[264] = "HEALER", --RESTO
-
-	--WARLOCK
-	[265] = "DAMAGER", --AFF
-	[266] = "DAMAGER", --DESTRO
-	[267] = "DAMAGER", --DEMO
-
-	--WARRIOR
-	[71] = "DAMAGER", --ARMS
-	[72] = "DAMAGER", --FURY
-	[73] = "TANK", --PROT
-
-	--DK
-	[250] = "TANK", --Blood
-	[251] = "DAMAGER", --Frost
-	[252] = "DAMAGER", --Unholy
-
-	--MONK
-	[268] = "TANK", -- Brewmaster Monk
-	[269] = "DAMAGER", -- Windwalker Monk
-	[270] = "HEALER", -- Mistweaver Monk
-
-	--DH
-	[577] = "DAMAGER", -- Havoc Demon Hunter
-	[581] = "TANK", -- Vengeance Demon Hunter
-
-	--EVOKER
-	[1467] = "DAMAGER", --Devastation Evoker
-	[1468] = "HEALER", --Preservation Evoker
-	[1473] = "DAMAGER", --Augmentation Evoker
-}
+for _, class in ipairs(CLASS_SORT_ORDER) do
+    local specs = C_ClassInfo.GetAllSpecs(class)
+    for _, spec in ipairs(specs) do
+        local specInfo = C_ClassInfo.GetSpecInfo(class, spec)
+		local thumbnail = ClassTalentUtil.GetThumbnailAtlas(class, spec)
+		Details.validSpecIds[specInfo.ID] = true
+        Details.specToRole[specInfo.ID] = GetRoleFromSpecInfo(specInfo)
+		Details.textureToSpec[thumbnail] = specInfo.ID
+		Details.specToTexture[specInfo.ID] = thumbnail
+    end
+end
 
 --oldschool talent tree
-if (DetailsFramework.IsWotLKWow() or DetailsFramework.IsCataWow()) then
-	local talentWatchClassic = CreateFrame("frame")
-	talentWatchClassic:RegisterEvent("CHARACTER_POINTS_CHANGED")
-	talentWatchClassic:RegisterEvent("SPELLS_CHANGED")
-	talentWatchClassic:RegisterEvent("PLAYER_ENTERING_WORLD")
-	talentWatchClassic:RegisterEvent("GROUP_ROSTER_UPDATE")
-
-	talentWatchClassic.cooldown = 0
-
-	C_Timer.NewTicker(600, function()
-		Details:GetOldSchoolTalentInformation()
-	end)
-
-	talentWatchClassic:SetScript("OnEvent", function(self, event, ...)
-		if (talentWatchClassic.delayedUpdate and not talentWatchClassic.delayedUpdate:IsCancelled()) then
-			return
-		else
-			talentWatchClassic.delayedUpdate = C_Timer.NewTimer(5, Details.GetOldSchoolTalentInformation)
-		end
-	end)
-
-	function Details.GetOldSchoolTalentInformation()
-		--cancel any schedule
-		if (talentWatchClassic.delayedUpdate and not talentWatchClassic.delayedUpdate:IsCancelled()) then
-			talentWatchClassic.delayedUpdate:Cancel()
-		end
-		talentWatchClassic.delayedUpdate = nil
-
-		--amount of tabs existing
-		local numTabs = GetNumTalentTabs() or 3
-
-		--store the background textures for each tab
-		local pointsPerSpec = {}
-		local talentsSelected = {}
-
-		for i = 1, (MAX_TALENT_TABS or 3) do
-			if (i <= numTabs) then
-				--tab information
-				local id, name, description, iconTexture, pointsSpent, fileName
-				if DetailsFramework.IsCataWow() then
-					id, name, description, iconTexture, pointsSpent, fileName = GetTalentTabInfo(i)
-				else
-					name, iconTexture, pointsSpent, fileName = GetTalentTabInfo(i)
-				end
-				if (name) then
-					tinsert(pointsPerSpec, {name, pointsSpent, fileName})
-				end
-
-				--talents information
-				local numTalents = GetNumTalents (i) or 20
-				local MAX_NUM_TALENTS = MAX_NUM_TALENTS or 20
-
-				for talentIndex = 1, MAX_NUM_TALENTS do
-					if (talentIndex <= numTalents) then
-						local name, iconTexture, tier, column, rank, maxRank, isExceptional, available = GetTalentInfo (i, talentIndex)
-						if (name and rank and type(rank) == "number") then
-							--send the specID instead of the specName
-							local specID = Details.textureToSpec [fileName]
-							tinsert(talentsSelected, {iconTexture, rank, tier, column, i, specID, maxRank})
-						end
-					end
-				end
-			end
-		end
-
-		local MIN_SPECS = 4
-
-		--put the spec with more talent point to the top
-		table.sort (pointsPerSpec, function(t1, t2) return t1[2] > t2[2] end)
-
-		--get the spec with more points spent
-		local spec = pointsPerSpec[1]
-		if (spec and spec[2] >= MIN_SPECS) then
-			local specTexture = spec[3]
-
-			--add the spec into the spec cache
-			Details.playerClassicSpec = {}
-			Details.playerClassicSpec.specs = Details.GetClassicSpecByTalentTexture(specTexture)
-			Details.playerClassicSpec.talents = talentsSelected
-
-			--cache the player specId
-			_detalhes.cached_specs [UnitGUID("player")] = Details.playerClassicSpec.specs
-			--cache the player talents
-			_detalhes.cached_talents [UnitGUID("player")] = talentsSelected
-
-			local role = Details:GetRoleFromSpec(Details.playerClassicSpec.specs, UnitGUID("player"))
-
-			if (Details.playerClassicSpec.specs == 103) then
-				if (role == "TANK") then
-					Details.playerClassicSpec.specs = 104
-					_detalhes.cached_specs [UnitGUID("player")] = Details.playerClassicSpec.specs
-				end
-			end
-
-			_detalhes.cached_roles[UnitGUID("player")] = role
-
-			--gear status
-			local item_amount = 16
-			local item_level = 0
-			local failed = 0
-
-			local two_hand = {
-				["INVTYPE_2HWEAPON"] = true,
-				["INVTYPE_RANGED"] = true,
-				["INVTYPE_RANGEDRIGHT"] = true,
-			}
-
-			for equip_id = 1, 17 do
-				if (equip_id ~= 4) then --shirt slot, trinkets
-					local item = GetInventoryItemLink("player", equip_id)
-					if (item) then
-						local _, _, itemRarity, iLevel, _, _, _, _, equipSlot = GetItemInfo(item)
-						if (iLevel) then
-							item_level = item_level + iLevel
-
-							--16 = main hand 17 = off hand
-							-- if using a two-hand, ignore the off hand slot
-							if (equip_id == 16 and two_hand [equipSlot]) then
-								item_amount = 15
-								break
-							end
-						end
-					else
-						failed = failed + 1
-						if (failed > 2) then
-							break
-						end
-					end
-				end
-			end
-
-    		local itemLevel = floor(item_level / item_amount)
-			local dataToShare = {role or "NONE", Details.playerClassicSpec.specs or 0, itemLevel or 0, talentsSelected, UnitGUID("player")}
-			--local serialized = _detalhes:Serialize(dataToShare)
-			local compressedData = Details:CompressData(dataToShare, "comm")
-
-			if (IsInRaid()) then
-				_detalhes:SendRaidData(DETAILS_PREFIX_TBC_DATA, compressedData)
-				if (_detalhes.debug) then
-					_detalhes:Msg("(debug) sent talents data to Raid")
-				end
-
-			elseif (IsInGroup()) then
-				_detalhes:SendPartyData(DETAILS_PREFIX_TBC_DATA, compressedData)
-				if (_detalhes.debug) then
-					_detalhes:Msg("(debug) sent talents data to Party")
-				end
-			end
-		end
-	end
-
-	function _detalhes:GetRoleFromSpec (specId, unitGUID)
-		if (specId == 103) then --feral druid
-			local talents = _detalhes.cached_talents [unitGUID]
-			if (talents) then
-				local tankTalents = 0
-				for i = 1, #talents do
-					local iconTexture, rank, tier, column = unpack(talents [i])
-					if (tier == 2) then
-						if (column == 1 and rank == 5) then
-							tankTalents = tankTalents + 5
-						end
-						if (column == 3 and rank == 5) then
-							tankTalents = tankTalents + 5
-						end
-
-						if (tankTalents >= 10) then
-							return "TANK"
-						end
-					end
-				end
-			end
-		end
-
+do
+	function _detalhes:GetRoleFromSpec (specId)
 		return Details.specToRole [specId] or "NONE"
 	end
-
-	Details.validSpecIds = {
-		[250] = true,
-		[252] = true,
-		[251] = true,
-		[102] = true,
-		[103] = true,
-		[104] = true,
-		[105] = true,
-		[253] = true,
-		[254] = true,
-		[255] = true,
-		[62] = true,
-		[63] = true,
-		[64] = true,
-		[70] = true,
-		[65] = true,
-		[66] = true,
-		[257] = true,
-		[256] = true,
-		[258] = true,
-		[259] = true,
-		[260] = true,
-		[261] = true,
-		[262] = true,
-		[263] = true,
-		[264] = true,
-		[265] = true,
-		[266] = true,
-		[267] = true,
-		[71] = true,
-		[72] = true,
-		[73] = true,
-	}
-
-	Details.textureToSpec = {
-
-		DruidBalance = 102,
-		DruidFeralCombat = 103,
-		DruidRestoration = 105,
-
-		HunterBeastMastery = 253,
-		HunterMarksmanship = 254,
-		HunterSurvival = 255,
-
-		MageArcane = 62,
-		MageFrost = 64,
-		MageFire = 63,
-
-		PaladinCombat = 70,
-		PaladinHoly = 65,
-		PaladinProtection = 66,
-
-		PriestHoly = 257,
-		PriestDiscipline = 256,
-		PriestShadow = 258,
-
-		RogueAssassination = 259,
-		RogueCombat = 260,
-		RogueSubtlety = 261,
-
-		ShamanElementalCombat = 262,
-		ShamanEnhancement = 263,
-		ShamanRestoration = 264,
-
-		WarlockCurses = 265, --affliction
-		WarlockSummoning = 266, --demo
-		WarlockDestruction = 267, --destruction
-
-		--WarriorArm = 71,
-		WarriorArms = 71,
-		WarriorFury = 72,
-		WarriorProtection = 73,
-
-		DeathKnightBlood = 250,
-		DeathKnightFrost = 251,
-		DeathKnightUnholy = 252,
-	}
-
-
-	Details.specToTexture = {
-		[102] = "DruidBalance",
-		[103] = "DruidFeralCombat",
-		[105] = "DruidRestoration",
-
-		[253] = "HunterBeastMastery",
-		[254] = "HunterMarksmanship",
-		[255] = "HunterSurvival",
-
-		[62] = "MageArcane",
-		[64] = "MageFrost",
-		[63] = "MageFire",
-
-		[70] = "PaladinCombat",
-		[65] = "PaladinHoly",
-		[66] = "PaladinProtection",
-
-		[257] = "PriestHoly",
-		[256] = "PriestDiscipline",
-		[258] = "PriestShadow",
-
-		[259] = "RogueAssassination",
-		[260] = "RogueCombat",
-		[261] = "RogueSubtlety",
-
-		[262] = "ShamanElementalCombat",
-		[263] = "ShamanEnhancement",
-		[264] = "ShamanRestoration",
-
-		[265] = "WarlockCurses",
-		[266] = "WarlockDestruction",
-		[267] = "WarlockSummoning",
-
-		--[71] = "WarriorArm",
-		[71] = "WarriorArms",
-		[72] = "WarriorFury",
-		[73] = "WarriorProtection",
-
-		[250] = "DeathKnightBlood",
-		[251] = "DeathKnightFrost",
-		[252] = "DeathKnightUnholy",
-	}
 
 	function Details.IsValidSpecId (specId)
 		return Details.validSpecIds [specId]
@@ -2796,310 +2414,29 @@ if (DetailsFramework.IsWotLKWow() or DetailsFramework.IsCataWow()) then
 	end
 end
 
-
---dragonflight talents, return {[spellId] = true}
-function Details.GetDragonflightTalentsAsHashTable()
-	local allTalents = {}
-	local configId = C_ClassTalents.GetActiveConfigID()
-	if (not configId) then
-		return allTalents
-	end
-
-	local configInfo = C_Traits.GetConfigInfo(configId)
-
-	for treeIndex, treeId in ipairs(configInfo.treeIDs) do
-		local treeNodes = C_Traits.GetTreeNodes(treeId)
-
-		for nodeIdIndex, treeNodeID in ipairs(treeNodes) do
-			local traitNodeInfo = C_Traits.GetNodeInfo(configId, treeNodeID)
-
-			if (traitNodeInfo) then
-				local activeEntry = traitNodeInfo.activeEntry
-				if (activeEntry) then
-					local entryId = activeEntry.entryID
-					local rank = activeEntry.rank
-					if (rank > 0) then
-						--get the entry info
-						local traitEntryInfo = C_Traits.GetEntryInfo(configId, entryId)
-						local definitionId = traitEntryInfo.definitionID
-
-						--definition info
-						local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
-						local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
-						local spellName, _, spellTexture = GetSpellInfo(spellId)
-						if (spellName) then
-							allTalents[spellId] = true
-						end
-					end
-				end
-			end
-		end
-	end
-
-	return allTalents
-end
-
-
---called from inside the function Details.GenerateSpecSpellList()
-local getSpellList = function(specIndex, completeListOfSpells, sharedSpellsBetweenSpecs, specNames)
-
-	local specId, specName, _, specIconTexture = GetSpecializationInfo(specIndex)
-	completeListOfSpells[specId] = {}
-	specNames[specId] = specName
-
-	--get spells from talents
-	local configId = C_ClassTalents.GetActiveConfigID()
-	if (not configId) then
-		return completeListOfSpells
-	end
-
-	local configInfo = C_Traits.GetConfigInfo(configId)
-	--get the spells from the SPEC from talents
-	for treeIndex, treeId in ipairs(configInfo.treeIDs) do
-		local treeNodes = C_Traits.GetTreeNodes(treeId)
-		for nodeIdIndex, treeNodeID in ipairs(treeNodes) do
-			local traitNodeInfo = C_Traits.GetNodeInfo(configId, treeNodeID)
-			if (traitNodeInfo and traitNodeInfo.posX > 9000) then
-				local entryIds = traitNodeInfo.entryIDs
-				for i = 1, #entryIds do
-					local entryId = entryIds[i] --number
-					local traitEntryInfo = C_Traits.GetEntryInfo(configId, entryId)
-					local borderTypes = Enum.TraitNodeEntryType
-					if (traitEntryInfo.type == borderTypes.SpendSquare) then
-						local definitionId = traitEntryInfo.definitionID
-						local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
-						local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
-						local spellName, _, spellTexture = GetSpellInfo(spellId)
-						if (spellName) then
-							completeListOfSpells[specId][spellId] = specId
-						end
-					end
-				end
-			end
-		end
-	end
-
-    --get spells of the SPEC from the spell book
-    for i = 1, GetNumSpellTabs() do
-        local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(i)
-        if (tabTexture == specIconTexture) then
-            offset = offset + 1
-            local tabEnd = offset + numSpells
-            for entryOffset = offset, tabEnd - 1 do
-                local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
-                if (spellId) then
-                    if (spellType == "SPELL") then
-                        spellId = C_SpellBook.GetOverrideSpell(spellId)
-                        local spellName = GetSpellInfo(spellId)
-                        local isPassive = IsPassiveSpell(entryOffset, "player")
-                        if (spellName and not isPassive) then
-                            completeListOfSpells[specId][spellId] = specId
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    --get shared spells from the spell book
-    local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(CONST_SPELLBOOK_CLASSSPELLS_TABID)
-    offset = offset + 1
-    local tabEnd = offset + numSpells
-    for entryOffset = offset, tabEnd - 1 do
-        local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
-        if (spellId) then
-            if (spellType == "SPELL") then
-                spellId = C_SpellBook.GetOverrideSpell(spellId)
-                local spellName = GetSpellInfo(spellId)
-                local isPassive = IsPassiveSpell(entryOffset, "player")
-                if (spellName and not isPassive) then
-                    sharedSpellsBetweenSpecs[spellId] = true
-                end
-            end
-        end
-    end
-
-	local classNameLoc = UnitClass("player")
-    print(specName .. " " .. classNameLoc .. " spells recorded.")
-	return completeListOfSpells, sharedSpellsBetweenSpecs, specNames
-end
-
-function Details.GenerateSpecSpellList()
-    local dumpSpellTable = 1
-
-    local specId, specName, _, specIconTexture = GetSpecializationInfo(GetSpecialization())
-    local classNameLoc, className, classId = UnitClass("player")
-
-	local completeListOfSpells = {}
-	local sharedSpellsBetweenSpecs = {}
-	local specNames = {}
-
-	local amountSpecs = GetNumSpecializationsForClassID(classId)
-
-	local totalTimeToWait = 0
-	DetailsFramework.Schedules.NewTimer(0, function() SetSpecialization(1) end)
-	DetailsFramework.Schedules.NewTimer(6, getSpellList, 1, completeListOfSpells, sharedSpellsBetweenSpecs, specNames)
-	totalTimeToWait = 7
-	DetailsFramework.Schedules.NewTimer(7, function() SetSpecialization(2) end)
-	DetailsFramework.Schedules.NewTimer(13, getSpellList, 2, completeListOfSpells, sharedSpellsBetweenSpecs, specNames)
-	totalTimeToWait = 14
-
-	if (amountSpecs >= 3) then
-		DetailsFramework.Schedules.NewTimer(14, function() SetSpecialization(3) end)
-		DetailsFramework.Schedules.NewTimer(20, getSpellList, 3, completeListOfSpells, sharedSpellsBetweenSpecs, specNames)
-		totalTimeToWait = 21
-	end
-
-	if (amountSpecs >= 4) then
-		DetailsFramework.Schedules.NewTimer(21, function() SetSpecialization(4) end)
-		DetailsFramework.Schedules.NewTimer(28, getSpellList, 4, completeListOfSpells, sharedSpellsBetweenSpecs, specNames)
-		totalTimeToWait = 29
-	end
-
-	print("Total Time to Wait:", totalTimeToWait)
-	DetailsFramework.Schedules.NewTimer(totalTimeToWait, function()
-		if (dumpSpellTable) then
-			local parsedSpells = {}
-			local sharedSpells = sharedSpellsBetweenSpecs
-
-			for specId, spellTable in pairs(completeListOfSpells) do
-				parsedSpells[specId] = {}
-
-				--create a list of spells which is in use in the other spec talent tree
-				local spellsInUse = {}
-				for specId2, spellTable2 in pairs(completeListOfSpells) do
-					if (specId2 ~= specId) then
-						for spellId in pairs(spellTable2) do
-							spellsInUse[spellId] = true
-						end
-					end
-				end
-				for spellId in pairs(sharedSpells) do
-					spellsInUse[spellId] = true
-				end
-
-				--build the list of spells for this spec
-				for spellId in pairs(spellTable) do
-					if (not spellsInUse[spellId]) then
-						parsedSpells[specId][spellId] = true
-					end
-				end
-			end
-
-			local result = ""
-			for specId, spellsTable in pairs(parsedSpells) do
-				local specName = specNames[specId]
-				result = result .. "\n--" .. specName .. " " .. classNameLoc .. ":\n"
-				for spellId in pairs(spellsTable) do
-					local spellName = GetSpellInfo(spellId)
-					result = result .. "[" .. spellId .. "] = " .. specId .. ", --" .. spellName .. "\n"
-				end
-			end
-
-			Details:Dump({result})
-		end
-	end)
-end
-
-function Details.GenerateRacialSpellList()
-	local racialsSpells = "|n"
-	local locClassName, unitClass = UnitClass("player")
-	local locPlayerRace, playerRace, playerRaceId = UnitRace("player")
-    --get general spells from the spell book
-    local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(CONST_SPELLBOOK_GENERAL_TABID)
-    offset = offset + 1
-    local tabEnd = offset + numSpells
-    for entryOffset = offset, tabEnd - 1 do
-        local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
-        if (spellId) then
-			local spell = Spell:CreateFromSpellID(spellId)
-			local subSpellName = spell:GetSpellSubtext()
-            if (subSpellName == "Racial") then
-                spellId = C_SpellBook.GetOverrideSpell(spellId)
-                local spellName = GetSpellInfo(spellId)
-                local isPassive = IsPassiveSpell(entryOffset, "player")
-                if (spellName and not isPassive) then
-					local cooldownTime = floor(GetSpellBaseCooldown(spellId) / 1000)
-                    racialsSpells = racialsSpells .. "[" .. spellId .. "] = {cooldown = " .. cooldownTime .. ",	duration = 0,	specs = {},			talent = false,	charges = 1, raceid = " .. playerRaceId .. ", race = \"".. playerRace .."\",	class = \"\",	type = 9}, --" .. spellName .. " (" .. playerRace .. ")|n"
-                end
-            end
-        end
-    end
-
-	racialsSpells = racialsSpells .. "|n"
-	dumpt(racialsSpells)
-end
-
 --fill the passed table with spells from talents and spellbook, affect only the active spec
 function Details.FillTableWithPlayerSpells(completeListOfSpells)
-    local specId, specName, _, specIconTexture = GetSpecializationInfo(GetSpecialization())
-    local classNameLoc, className, classId = UnitClass("player")
+	for tab = 2, GetNumSpellTabs() do
+        local name, _, offset, numSpells = GetSpellTabInfo(tab)
 
-	--get spells from talents
-	local configId = C_ClassTalents.GetActiveConfigID()
-	if (configId) then
-		local configInfo = C_Traits.GetConfigInfo(configId)
-		--get the spells from the SPEC from talents
-		for treeIndex, treeId in ipairs(configInfo.treeIDs) do
-			local treeNodes = C_Traits.GetTreeNodes(treeId)
-			for nodeIdIndex, treeNodeID in ipairs(treeNodes) do
-				local traitNodeInfo = C_Traits.GetNodeInfo(configId, treeNodeID)
-				if (traitNodeInfo) then
-					local entryIds = traitNodeInfo.entryIDs
-					for i = 1, #entryIds do
-						local entryId = entryIds[i] --number
-						local traitEntryInfo = C_Traits.GetEntryInfo(configId, entryId)
-						local borderTypes = Enum.TraitNodeEntryType
-						if (traitEntryInfo.type == borderTypes.SpendSquare) then
-							local definitionId = traitEntryInfo.definitionID
-							local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
-							local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
-							local spellName, _, spellTexture = GetSpellInfo(spellId)
-							if (spellName) then
-								completeListOfSpells[spellId] = completeListOfSpells[spellId] or true
-							end
-						end
-					end
-				end
-			end
-		end
-	end
+        if name and name ~= "Internal" and name ~= "Ascension Vanity Items" then
+            for i = offset + 1, offset + numSpells do
+                local spellName, rank = GetSpellInfo(i, BOOKTYPE_SPELL)
 
-	--get spells from the Spec spellbook
-    for i = 1, GetNumSpellTabs() do
-        local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(i)
-        if (tabTexture == specIconTexture) then
-            offset = offset + 1
-            local tabEnd = offset + numSpells
-            for entryOffset = offset, tabEnd - 1 do
-                local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
-                if (spellId) then
-                    if (spellType == "SPELL") then
-                        spellId = C_SpellBook.GetOverrideSpell(spellId)
-                        local spellName = GetSpellInfo(spellId)
-                        local isPassive = IsPassiveSpell(entryOffset, "player")
-                        if (spellName and not isPassive) then
-                            completeListOfSpells[spellId] = completeListOfSpells[spellId] or true
+                if spellName then
+                    local link = GetSpellLink(spellName, rank)
+                    if link then
+                        local spellID = tonumber(link:match("spell:(%d*)"))
+                        if spellID and not IsPassiveSpellID(spellID) then
+                            if LIB_OPEN_RAID_MULTI_OVERRIDE_SPELLS and LIB_OPEN_RAID_MULTI_OVERRIDE_SPELLS[spellID] then
+                                for _, overrideSpellID in pairs(LIB_OPEN_RAID_MULTI_OVERRIDE_SPELLS[spellID]) do
+                                    completeListOfSpells[overrideSpellID] = true
+                                end
+                            else
+                                completeListOfSpells[spellID] = true
+                            end
                         end
                     end
-                end
-            end
-        end
-    end
-
-    --get class shared spells from the spell book
-    local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(CONST_SPELLBOOK_CLASSSPELLS_TABID)
-    offset = offset + 1
-    local tabEnd = offset + numSpells
-    for entryOffset = offset, tabEnd - 1 do
-        local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
-        if (spellId) then
-            if (spellType == "SPELL") then
-                spellId = C_SpellBook.GetOverrideSpell(spellId)
-                local spellName = GetSpellInfo(spellId)
-                local isPassive = IsPassiveSpell(entryOffset, "player")
-                if (spellName and not isPassive) then
-                    completeListOfSpells[spellId] = completeListOfSpells[spellId] or true
                 end
             end
         end
@@ -3161,20 +2498,7 @@ end
 hooksecurefunc("ChatFrame_DisplayTimePlayed", function()
 	if (Details.played_class_time) then
 		C_Timer.After(0, function()
-			local expansionName = _G["EXPANSION_NAME" .. GetExpansionLevel()]
-			for fontString in ChatFrame1.fontStringPool:EnumerateActive() do
-				if (fontString:GetText() and fontString:GetText():find(expansionName)) then
-					return
-				end
-			end
-
-			local levelText = TIME_PLAYED_LEVEL and TIME_PLAYED_LEVEL:gsub("%%s", "") or ""
-			for fontString in ChatFrame1.fontStringPool:EnumerateActive() do
-				if (fontString:GetText() and fontString:GetText():find(levelText)) then
-					print(Details.GetPlayTimeOnClassString() .. " \ncommand: /details playedclass")
-					break
-				end
-			end
+			print(Details.GetPlayTimeOnClassString() .. " \ncommand: /details playedclass")
 		end)
 	end
 end)

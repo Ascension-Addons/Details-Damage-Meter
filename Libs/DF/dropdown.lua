@@ -1455,7 +1455,7 @@ function DF:CreateNewDropdownFrame(parent, name)
 
 	local backgroundTexture = child:CreateTexture(nil, "background")
 	backgroundTexture:SetAllPoints()
-	backgroundTexture:SetColorTexture(0, 0, 0, 1)
+	backgroundTexture:SetTexture(0, 0, 0, 1)
 
 	local selected = child:CreateTexture("$parent_SelectedTexture", "BACKGROUND")
 	selected:SetSize(150, 16)

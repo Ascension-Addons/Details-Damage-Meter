@@ -566,14 +566,14 @@ function spellsTab.CreateTargetBar(self, index) --~create ~target ~createtarget 
 
 	---@type texture shown when the mouse hoverover this bar
 	local hightlightTexture = statusBar:CreateTexture("$parentTextureHighlight", "highlight")
-	hightlightTexture:SetColorTexture(1, 1, 1, 0.2)
+	hightlightTexture:SetTexture(1, 1, 1, 0.2)
 	hightlightTexture:SetAllPoints()
 	statusBar.highlightTexture = hightlightTexture
 
 	---@type texture background texture
 	local backgroundTexture = statusBar:CreateTexture("$parentTextureBackground", "border")
 	backgroundTexture:SetAllPoints()
-	backgroundTexture:SetColorTexture(.05, .05, .05)
+	backgroundTexture:SetTexture(.05, .05, .05)
 	backgroundTexture:SetAlpha(1)
 	statusBar.backgroundTexture = backgroundTexture
 

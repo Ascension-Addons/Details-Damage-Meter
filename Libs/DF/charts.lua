@@ -160,7 +160,7 @@ local createVerticalAxisLabels = function(parent, amountLabels, labelsTable, red
 
         local guideLine = parent:CreateLine("$parentYAxisLabel" .. i .. "GuideLine", "border")
         guideLine:SetThickness(1)
-        guideLine:SetColorTexture(red, green, blue, 0.05)
+        guideLine:SetTexture(red, green, blue, 0.05)
 
         label.circleTexture = circleTexture
         label.guideLine = guideLine
@@ -351,8 +351,8 @@ detailsFramework.ChartFrameSharedMixin = {
 
         --set the color of both axis lines
         red, green, blue, alpha = detailsFramework:ParseColors(red, green, blue, alpha)
-        self.yAxisLine:SetColorTexture(red, green, blue, alpha)
-        self.xAxisLine:SetColorTexture(red, green, blue, alpha)
+        self.yAxisLine:SetTexture(red, green, blue, alpha)
+        self.xAxisLine:SetTexture(red, green, blue, alpha)
 
         --iterage over all labels and set their color
         for i = 1, #self.yAxisLabels do
@@ -520,10 +520,10 @@ detailsFramework.ChartFrameSharedMixin = {
             thisIndicator:SetPoint("bottomright", self.plotFrame, "bottomleft", endX, 0)
 
             thisIndicator.fieldLabel:SetText(labelText)
-            thisIndicator.fieldTexture:SetColorTexture(unpack(color))
+            thisIndicator.fieldTexture:SetTexture(unpack(color))
 
             thisIndicator.indicatorLabel:SetText(labelText)
-            thisIndicator.indicatorTexture:SetColorTexture(unpack(color))
+            thisIndicator.indicatorTexture:SetTexture(unpack(color))
 
             local stringWidth = thisIndicator.indicatorLabel:GetStringWidth()
             local squareWidth = thisIndicator.indicatorTexture:GetWidth()
@@ -712,7 +712,7 @@ detailsFramework.ChartFrameMixin = {
         for i = 1, maxLines do
             local line = self:GetLine()
 
-            line:SetColorTexture(unpack(self.color))
+            line:SetTexture(unpack(self.color))
 
             if (line.thickness ~= self.lineThickness) then
                 line:SetThickness(self.lineThickness)
@@ -971,7 +971,7 @@ detailsFramework.MultiChartFrameMixin = {
                 self.lineNameIndicators[nameIndicatorIndex] = thisIndicator
             end
 
-            thisIndicator.Texture:SetColorTexture(red, green, blue, alpha)
+            thisIndicator.Texture:SetTexture(red, green, blue, alpha)
             thisIndicator.Label:SetText(chartName)
             local textWidth = thisIndicator.Label:GetStringWidth()
             thisIndicator:SetWidth(math.max(textWidth + thisIndicator.Texture:GetWidth() + 4, 85))

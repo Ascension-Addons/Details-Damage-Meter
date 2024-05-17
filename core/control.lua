@@ -385,21 +385,6 @@
 		Details:CatchRaidDebuffUptime("DEBUFF_UPTIME_IN")
 		Details:UptadeRaidMembersCache()
 
-		--is inside a mythic dungeon and running a mythic+?
-
-		if (newCombatObject.is_challenge or Details.debug) then
-			--local bRegisterAuraScanTimeLine = true
-			--Details222.AuraScan.AddAura(395152) --ebon might
-			--Details222.AuraScan.AddAura(395296) --the evoker buff on it self
-			--Details222.AuraScan.AddAura(410089--[[, bRegisterAuraScanTimeLine--]]) --prescience
-			--Details222.AuraScan.AddAura(413984) --Shifting Sands
-			--Details222.AuraScan.AddAura(409560) --Temporal Wound
-			--Details222.AuraScan.AddAura(360827) --Blistering Scales
-			--Details222.AuraScan.AddAura(410263) --Inferno's Blessing
-			--Details222.AuraScan.RegisterCallback(Details222.SpecHelpers[1473].OnAugmentationBuffUpdate)
-			--Details222.AuraScan.Start() --combat started (m+ active)
-		end
-
 		--Details222.TimeCapture.StartCombatTimer(Details.tabela_vigente)
 
 		--we already have boss information? build .is_boss table
@@ -607,7 +592,8 @@
 		end
 
 		--tag as a mythic dungeon segment, can be any type of segment, this tag also avoid the segment to be tagged as trash
-		local mythicLevel = C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo()
+		local activeKeystone = C_MythicPlus.IsKeystoneActive() and C_MythicPlus.GetActiveKeystoneInfo()
+		local mythicLevel = activeKeystone and activeKeystone.keystoneLevel
 		if (mythicLevel and mythicLevel >= 2) then
 			currentCombat.is_mythic_dungeon_segment = true
 			currentCombat.is_mythic_dungeon_run_id = Details.mythic_dungeon_id
@@ -1582,7 +1568,7 @@
 		GameCooltip:SetType("tooltip")
 
 		--GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_background_dark_withline]])
-		GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_textures\bar_rounded.png]])
+		GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_textures\bar_rounded]])
 
 		GameCooltip:SetOption("TextSize", Details.tooltip.fontsize)
 		GameCooltip:SetOption("TextFont",  Details.tooltip.fontface)

@@ -270,9 +270,9 @@ detailsFramework.FrameContainerMixin = {
             frameContainer.sideResizers[i]:SetScript("OnMouseDown", frameContainer.OnResizerMouseDown)
             frameContainer.sideResizers[i]:SetScript("OnMouseUp", frameContainer.OnResizerMouseUp)
 
-            frameContainer.sideResizers[i]:GetNormalTexture():SetColorTexture(1, 1, 1, 0.6)
-            frameContainer.sideResizers[i]:GetHighlightTexture():SetColorTexture(detailsFramework:ParseColors("aqua"))
-            frameContainer.sideResizers[i]:GetPushedTexture():SetColorTexture(1, 1, 1, 1)
+            frameContainer.sideResizers[i]:GetNormalTexture():SetTexture(1, 1, 1, 0.6)
+            frameContainer.sideResizers[i]:GetHighlightTexture():SetTexture(detailsFramework:ParseColors("aqua"))
+            frameContainer.sideResizers[i]:GetPushedTexture():SetTexture(1, 1, 1, 1)
 
             frameContainer.sideResizers[i]:ClearAllPoints()
 

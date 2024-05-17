@@ -7,7 +7,7 @@ local _
 local GetTime = GetTime
 local GetInstanceInfo = GetInstanceInfo
 local time = time
-local C_ChallengeMode = C_ChallengeMode
+local MythicPlusUtil = MythicPlusUtil
 local InCombatLockdown = InCombatLockdown
 
 local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
@@ -42,7 +42,7 @@ function Details222.MythicPlus.OnBossDefeated(encounterID, encounterName)
         SegmentName = (encounterName or Loc["STRING_UNKNOW"]) .. " (" .. string.lower(_G["BOSS"]) .. ")"
     }
 
-    local mythicLevel = C_ChallengeMode.GetActiveKeystoneInfo()
+    local mythicLevel = MythicPlusUtil.GetActiveKeystoneLevel()
     local mPlusTable = currentCombat.is_mythic_dungeon
 
     --logs

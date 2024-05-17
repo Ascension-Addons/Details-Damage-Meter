@@ -321,12 +321,6 @@ function TimeBarMetaFunctions:SetTimer(currentTime, startTime, endTime)
 
     self.statusBar:SetMinMaxValues(self.statusBar.startTime, self.statusBar.endTime)
 
-    if (self.direction == "right") then
-        self.statusBar:SetReverseFill(false)
-    else
-        self.statusBar:SetReverseFill(true)
-    end
-
     if (self.statusBar.dontShowSpark) then
         self.statusBar.spark:Hide()
     else
@@ -418,7 +412,7 @@ function DF:CreateTimeBar(parent, texture, width, height, value, member, name)
 		timeBar.statusBar:EnableMouse(false)
 
         timeBar.statusBar.backgroundTexture = timeBar.statusBar:CreateTexture(nil, "border")
-        timeBar.statusBar.backgroundTexture:SetColorTexture(.1, .1, .1, .6)
+        timeBar.statusBar.backgroundTexture:SetTexture(.1, .1, .1, .6)
         timeBar.statusBar.backgroundTexture:SetAllPoints()
 
         timeBar.statusBar.barTexture = timeBar.statusBar:CreateTexture(nil, "artwork")

@@ -67,7 +67,7 @@ local CreateImageEditorFrame = function()
 		local topCoordTexture = DF:NewImage(editorWindow, nil, nil, nil, "overlay", nil, nil, "$parentImageTopCoord")
 		topCoordTexture:SetPoint("topleft", editorWindow, "topleft")
 		topCoordTexture:SetPoint("topright", editorWindow, "topright")
-		topCoordTexture:SetColorTexture(1, 0, 0)
+		topCoordTexture:SetTexture(1, 0, 0)
 		topCoordTexture.height = 1
 		topCoordTexture.alpha = .2
 
@@ -80,7 +80,7 @@ local CreateImageEditorFrame = function()
 		topSlider:SetHook("OnLeave", function() return true end)
 
 		local topSliderThumpTexture = topSlider:CreateTexture(nil, "overlay")
-		topSliderThumpTexture:SetColorTexture(1, 1, 1)
+		topSliderThumpTexture:SetTexture(1, 1, 1)
 		topSliderThumpTexture:SetWidth(512)
 		topSliderThumpTexture:SetHeight(1)
 		topSlider:SetThumbTexture (topSliderThumpTexture)
@@ -98,7 +98,7 @@ local CreateImageEditorFrame = function()
 		local bottomCoordTexture = DF:NewImage(editorWindow, nil, nil, nil, "overlay", nil, nil, "$parentImageBottomCoord")
 		bottomCoordTexture:SetPoint("bottomleft", editorWindow, "bottomleft", 0, 0)
 		bottomCoordTexture:SetPoint("bottomright", editorWindow, "bottomright", 0, 0)
-		bottomCoordTexture:SetColorTexture(1, 0, 0)
+		bottomCoordTexture:SetTexture(1, 0, 0)
 		bottomCoordTexture.height = 1
 		bottomCoordTexture.alpha = .2
 
@@ -111,7 +111,7 @@ local CreateImageEditorFrame = function()
 		bottomSlider:SetHook("OnLeave", function() return true end)
 
 		local bottomSliderThumpTexture = bottomSlider:CreateTexture(nil, "overlay")
-		bottomSliderThumpTexture:SetColorTexture(1, 1, 1)
+		bottomSliderThumpTexture:SetTexture(1, 1, 1)
 		bottomSliderThumpTexture:SetWidth(512)
 		bottomSliderThumpTexture:SetHeight(1)
 		bottomSlider:SetThumbTexture (bottomSliderThumpTexture)
@@ -130,7 +130,7 @@ local CreateImageEditorFrame = function()
 		local leftCoordTexture = DF:NewImage(editorWindow, nil, nil, nil, "overlay", nil, nil, "$parentImageLeftCoord")
 		leftCoordTexture:SetPoint("topleft", editorWindow, "topleft", 0, 0)
 		leftCoordTexture:SetPoint("bottomleft", editorWindow, "bottomleft", 0, 0)
-		leftCoordTexture:SetColorTexture(1, 0, 0)
+		leftCoordTexture:SetTexture(1, 0, 0)
 		leftCoordTexture.width = 1
 		leftCoordTexture.alpha = .2
 
@@ -142,7 +142,7 @@ local CreateImageEditorFrame = function()
 		leftSlider:SetHook("OnLeave", function() return true end)
 
 		local leftSliderThumpTexture = leftSlider:CreateTexture(nil, "overlay")
-		leftSliderThumpTexture:SetColorTexture(1, 1, 1)
+		leftSliderThumpTexture:SetTexture(1, 1, 1)
 		leftSliderThumpTexture:SetWidth(1)
 		leftSliderThumpTexture:SetHeight(512)
 		leftSlider:SetThumbTexture (leftSliderThumpTexture)
@@ -160,7 +160,7 @@ local CreateImageEditorFrame = function()
 		local rightCoordTexture = DF:NewImage(editorWindow, nil, nil, nil, "overlay", nil, nil, "$parentImageRightCoord")
 		rightCoordTexture:SetPoint("topright", editorWindow, "topright", 0, 0)
 		rightCoordTexture:SetPoint("bottomright", editorWindow, "bottomright", 0, 0)
-		rightCoordTexture:SetColorTexture(1, 0, 0)
+		rightCoordTexture:SetTexture(1, 0, 0)
 		rightCoordTexture.width = 1
 		rightCoordTexture.alpha = .2
 
@@ -172,7 +172,7 @@ local CreateImageEditorFrame = function()
 		rightSlider:SetHook("OnLeave", function() return true end)
 		--[
 		local rightSliderThumpTexture = rightSlider:CreateTexture(nil, "overlay")
-		rightSliderThumpTexture:SetColorTexture(1, 1, 1)
+		rightSliderThumpTexture:SetTexture(1, 1, 1)
 		rightSliderThumpTexture:SetWidth(1)
 		rightSliderThumpTexture:SetHeight(512)
 		rightSlider:SetThumbTexture (rightSliderThumpTexture)
@@ -431,19 +431,19 @@ local CreateImageEditorFrame = function()
 
 	local selectionBoxUp = dragFrame:CreateTexture(nil, "overlay")
 	selectionBoxUp:SetHeight(1)
-	selectionBoxUp:SetColorTexture(1, 1, 1)
+	selectionBoxUp:SetTexture(1, 1, 1)
 
 	local selectionBoxDown = dragFrame:CreateTexture(nil, "overlay")
 	selectionBoxDown:SetHeight(1)
-	selectionBoxDown:SetColorTexture(1, 1, 1)
+	selectionBoxDown:SetTexture(1, 1, 1)
 
 	local selectionBoxLeft = dragFrame:CreateTexture(nil, "overlay")
 	selectionBoxLeft:SetWidth(1)
-	selectionBoxLeft:SetColorTexture(1, 1, 1)
+	selectionBoxLeft:SetTexture(1, 1, 1)
 
 	local selectionBoxRight = dragFrame:CreateTexture(nil, "overlay")
 	selectionBoxRight:SetWidth(1)
-	selectionBoxRight:SetColorTexture(1, 1, 1)
+	selectionBoxRight:SetTexture(1, 1, 1)
 
 	function dragFrame.ClearSelectionBoxPoints()
 		selectionBoxUp:ClearAllPoints()

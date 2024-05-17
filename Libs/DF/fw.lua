@@ -22,22 +22,17 @@ local _
 local type = type
 local unpack = unpack
 
-local IS_WOW_PROJECT_MAINLINE = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-local IS_WOW_PROJECT_NOT_MAINLINE = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
-
 local UnitPlayerControlled = UnitPlayerControlled
 local UnitIsTapDenied = UnitIsTapDenied
 
--- TWW compatibility:
-local GetSpellInfo = GetSpellInfo or function(spellID) if not spellID then return nil end local si = C_Spell.GetSpellInfo(spellID) if si then return si.name, nil, si.iconID, si.castTime, si.minRange, si.maxRange, si.spellID, si.originalIconID end end
-local GetSpellBookItemName = GetSpellBookItemName or C_SpellBook.GetSpellBookItemName
-local GetNumSpellTabs = GetNumSpellTabs or C_SpellBook.GetNumSpellBookSkillLines
-local GetSpellTabInfo = GetSpellTabInfo or function(tabLine) local skillLine = C_SpellBook.GetSpellBookSkillLineInfo(tabLine) if skillLine then return skillLine.name, skillLine.iconID, skillLine.itemIndexOffset, skillLine.numSpellBookItems, skillLine.isGuild, skillLine.offSpecID end end
-local SpellBookItemTypeMap = Enum.SpellBookItemType and {[Enum.SpellBookItemType.Spell] = "SPELL", [Enum.SpellBookItemType.None] = "NONE", [Enum.SpellBookItemType.Flyout] = "FLYOUT", [Enum.SpellBookItemType.FutureSpell] = "FUTURESPELL", [Enum.SpellBookItemType.PetAction] = "PETACTION" } or {}
-local GetSpellBookItemInfo = GetSpellBookItemInfo or function(...) local si = C_SpellBook.GetSpellBookItemInfo(...) if si then return SpellBookItemTypeMap[si.itemType] or "NONE", si.spellID end end
-local SPELLBOOK_BANK_PLAYER = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player or "player"
-local SPELLBOOK_BANK_PET = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Pet or "pet"
-local IsPassiveSpell = IsPassiveSpell or C_Spell.IsSpellPassive
+local GetSpellInfo = GetSpellInfo
+local GetSpellBookItemName = GetSpellBookItemName
+local GetNumSpellTabs = GetNumSpellTabs
+local GetSpellTabInfo = GetSpellTabInfo
+local GetSpellBookItemInfo = GetSpellBookItemInfo
+local SPELLBOOK_BANK_PLAYER = BOOKTYPE_SPELL
+local SPELLBOOK_BANK_PET = BOOKTYPE_PET
+local IsPassiveSpell = IsPassiveSpell
 
 SMALL_NUMBER = 0.000001
 ALPHA_BLEND_AMOUNT = 0.8400251
@@ -67,19 +62,7 @@ DF.DefaultRoundedCornerPreset = {
 
 DF.internalFunctions = DF.internalFunctions or {}
 
-local PixelUtil = PixelUtil or DFPixelUtil
-if (not PixelUtil) then
-	--check if is in classic, TBC, or WotLK wow, if it is, build a replacement for PixelUtil
-	local gameVersion = GetBuildInfo()
-	if (gameVersion:match("%d") == "1" or gameVersion:match("%d") == "2" or gameVersion:match("%d") == "3") then
-		PixelUtil = {
-			SetWidth = function(self, width) self:SetWidth(width) end,
-			SetHeight = function(self, height) self:SetHeight(height) end,
-			SetSize = function(self, width, height) self:SetSize(width, height) end,
-			SetPoint = function(self, ...) self:SetPoint(...) end,
-		}
-	end
-end
+local PixelUtil = PixelUtil
 
 ---return r, g, b, a for the default backdrop color used in addons
 ---@return number
@@ -89,115 +72,6 @@ end
 function DF:GetDefaultBackdropColor()
 	return 0.1215, 0.1176, 0.1294, 0.8
 end
-
----return if the wow version the player is playing is dragonflight
----@return boolean
-function DF.IsDragonflight()
-	if (buildInfo < 110000 and buildInfo >= 100000) then return true end
-	return false
-end
-
----return if the wow version the player is playing is dragonflight or an expansion after it
----@return boolean
-function DF.IsDragonflightAndBeyond()
-	return select(4, GetBuildInfo()) >= 100000
-end
-
----return if the wow version the player is playing is a classic version of wow
----@return boolean
-function DF.IsTimewalkWoW()
-    if (buildInfo < 50000) then        return true    end
-	return false
-end
-
----return if the wow version the player is playing is the vanilla version of wow
----@return boolean
-function DF.IsClassicWow()
-    if (buildInfo < 20000) then        return true    end
-	return false
-end
-
----return true if the player is playing in the TBC version of wow
----@return boolean
-function DF.IsTBCWow()
-    if (buildInfo < 30000 and buildInfo >= 20000) then        return true    end
-	return false
-end
-
----return true if the player is playing in the WotLK version of wow
----@return boolean
-function DF.IsWotLKWow()
-    if (buildInfo < 40000 and buildInfo >= 30000) then        return true    end
-	return false
-end
-
----return true if the player is playing in the Cataclysm version of wow
----@return boolean
-function DF.IsCataWow()
-    if (buildInfo < 50000 and buildInfo >= 40000) then        return true    end
-	return false
-end
-
----return true if the player is playing in the Mists version of wow
----@return boolean
-function DF.IsPandaWow()
-    if (buildInfo < 60000 and buildInfo >= 50000) then        return true    end
-	return false
-end
-
----return true if the player is playing in the Warlords of Draenor version of wow
----@return boolean
-function DF.IsWarlordsWow()
-    if (buildInfo < 70000 and buildInfo >= 60000) then        return true    end
-	return false
-end
-
----return true if the player is playing in the Legion version of wow
----@return boolean
-function DF.IsLegionWow()
-	if (buildInfo < 80000 and buildInfo >= 70000) then		return true	end
-	return false
-end
-
----return true if the player is playing in the BFA version of wow
----@return boolean
-function DF.IsBFAWow()
-	if (buildInfo < 90000 and buildInfo >= 80000) then		return true	end
-	return false
-end
-
----return true if the player is playing in the Shadowlands version of wow
----@return boolean
-function DF.IsShadowlandsWow()
-	if (buildInfo < 100000 and buildInfo >= 90000) then		return true	end
-	return false
-end
-
----return if the wow version the player is playing is dragonflight
----@return boolean
-function DF.IsDragonflightWow()
-	if (buildInfo < 110000 and buildInfo >= 100000) then		return true	end
-	return false
-end
-
----return if the wow version the player is playing is the war within
----@return boolean
-function DF.IsWarWow()
-	if (buildInfo < 120000 and buildInfo >= 110000) then		return true	end
-	return false
-end
-
-
----return true if the player is playing in the WotLK version of wow with the retail api
----@return boolean
-function DF.IsNonRetailWowWithRetailAPI()
-    local _, _, _, buildInfo = GetBuildInfo()
-    if (buildInfo < 50000 and buildInfo >= 30401) or (buildInfo < 20000 and buildInfo >= 11404) then
-        return true
-    end
-	return false
-end
-DF.IsWotLKWowWithRetailAPI = DF.IsNonRetailWowWithRetailAPI -- this is still in use
 
 ---for classic wow, get the role using the texture from the talents frame
 local roleBySpecTextureName = {
@@ -243,96 +117,32 @@ local roleBySpecTextureName = {
 	DeathKnightUnholy = "DAMAGER",
 }
 
----classic, tbc and wotlk role guesser based on the weights of each talent tree
----@return string
-function DF:GetRoleByClassicTalentTree()
-	if (not DF.IsTimewalkWoW()) then
-		return "NONE"
-	end
-
-	--amount of tabs existing
-	local numTabs = GetNumTalentTabs() or 3
-
-	--store the background textures for each tab
-	local pointsPerSpec = {}
-
-	for i = 1, (MAX_TALENT_TABS or 3) do
-		if (i <= numTabs) then
-			--tab information
-			local id, name, description, iconTexture, pointsSpent, fileName
-			if DF.IsCataWow() then
-				id, name, description, iconTexture, pointsSpent, fileName = GetTalentTabInfo(i)
-			else
-				name, iconTexture, pointsSpent, fileName = GetTalentTabInfo(i)
-			end
-			if (name) then
-				table.insert(pointsPerSpec, {name, pointsSpent, fileName})
-			end
-		end
-	end
-
-	local MIN_SPECS = 4
-
-	--put the spec with more talent point to the top
-	table.sort(pointsPerSpec, function(t1, t2) return t1[2] > t2[2] end)
-
-	--get the spec with more points spent
-	local spec = pointsPerSpec[1]
-	if (spec and spec[2] >= MIN_SPECS) then
-		local specName = spec[1]
-		local spentPoints = spec[2]
-		local specTexture = spec[3]
-
-		local role = roleBySpecTextureName[specTexture]
-		return role or "NONE"
-	end
-	return "DAMAGER"
-end
-
 ---return the role of the unit, this is safe to use for all versions of wow
 ---@param unitId string
 ---@param bUseSupport boolean?
 ---@param specId number?
 ---@return string
 function DF.UnitGroupRolesAssigned(unitId, bUseSupport, specId)
-	if (not DF.IsTimewalkWoW()) then --Was function exist check. TBC has function, returns NONE. -Flamanis 5/16/2022
-		local role = UnitGroupRolesAssigned(unitId)
-
-		if (specId == 1473 and bUseSupport) then
-			return "SUPPORT"
-		end
-
-		if (role == "NONE" and UnitIsUnit(unitId, "player")) then
-			local specializationIndex = GetSpecialization() or 0
-			local id, name, description, icon, role, primaryStat = GetSpecializationInfo(specializationIndex)
-			if (id == 1473 and bUseSupport) then
-				return "SUPPORT"
-			end
-			return id and role or "NONE"
-		end
-
-		return role
+	local _, class = UnitClass(unitId)
+	if class == "HERO" then
+		return UnitGroupRolesAssignedKey(unitId)
 	else
-		--attempt to guess the role by the player spec
-		local classLoc, className = UnitClass(unitId)
-		if (className == "MAGE" or className == "ROGUE" or className == "HUNTER" or className == "WARLOCK") then
-			return "DAMAGER"
-		end
+		local specInfo = C_ClassInfo.GetSpecInfoByID(specId)
 
-		if (Details) then
-			--attempt to get the role from Details! Damage Meter
-			local guid = UnitGUID(unitId)
-			if (guid) then
-				local role = Details.cached_roles[guid]
-				if (role) then
-					return role
-				end
+		if specInfo then
+			if bUseSupport and specInfo.Support then
+				return "SUPPORT"
+			elseif specInfo.Healer then
+				return "HEALER"
+			elseif specInfo.Tank then
+				return "TANK"
+			else
+				return "DAMAGER"
 			end
 		end
-
-		local role = DF:GetRoleByClassicTalentTree()
-		return role
 	end
+
+	return "NONE"
 end
 
 ---return the specializationid of the player it self
@@ -1825,7 +1635,6 @@ function DF:GetAvailableSpells()
             if (raceId) then
                 if (type(raceId) == "table") then
                     if (raceId[playerRaceId]) then
-                        spellId = C_SpellBook.GetOverrideSpell(spellId)
                         local spellName = GetSpellInfo(spellId)
                         local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
                         if (spellName and not bIsPassive) then
@@ -1835,7 +1644,6 @@ function DF:GetAvailableSpells()
 
                 elseif (type(raceId) == "number") then
                     if (raceId == playerRaceId) then
-                        spellId = C_SpellBook.GetOverrideSpell(spellId)
                         local spellName = GetSpellInfo(spellId)
                         local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
                         if (spellName and not bIsPassive) then
@@ -1858,7 +1666,6 @@ function DF:GetAvailableSpells()
 			local spellType, spellId = GetSpellBookItemInfo(entryOffset, SPELLBOOK_BANK_PLAYER)
 			if (spellId) then
 				if (spellType == "SPELL") then
-					spellId = C_SpellBook.GetOverrideSpell(spellId)
 					local spellName = GetSpellInfo(spellId)
 					local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
 					if (spellName and not bIsPassive) then
@@ -1879,7 +1686,6 @@ function DF:GetAvailableSpells()
         local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
         if (spellId) then
             if (spellType == "SPELL") then
-                spellId = C_SpellBook.GetOverrideSpell(spellId)
                 local spellName = GetSpellInfo(spellId)
                 local bIsPassive = IsPassiveSpell(spellId, "player")
 
@@ -1902,7 +1708,6 @@ function DF:GetAvailableSpells()
         for i = 1, numPetSpells do
             local spellName, _, unmaskedSpellId = GetSpellBookItemName(i, SPELLBOOK_BANK_PET)
             if (unmaskedSpellId) then
-                unmaskedSpellId = C_SpellBook.GetOverrideSpell(unmaskedSpellId)
                 local bIsPassive = IsPassiveSpell(unmaskedSpellId, SPELLBOOK_BANK_PET)
                 if (spellName and not bIsPassive) then
                     completeListOfSpells[unmaskedSpellId] = true
@@ -1967,13 +1772,11 @@ function DF:CreateFlashAnimation(frame, onFinishFunc, onLoopFunc)
 
 	flashAnimation.fadeOut = flashAnimation:CreateAnimation("Alpha")
 	flashAnimation.fadeOut:SetOrder(1)
-	flashAnimation.fadeOut:SetFromAlpha(0)
-	flashAnimation.fadeOut:SetToAlpha(1)
+	flashAnimation.fadeOut:SetChange(-1)
 
 	flashAnimation.fadeIn = flashAnimation:CreateAnimation("Alpha")
 	flashAnimation.fadeIn:SetOrder(2)
-	flashAnimation.fadeIn:SetFromAlpha(1)
-	flashAnimation.fadeIn:SetToAlpha(0)
+	flashAnimation.fadeIn:SetChange(1)
 
 	frame.FlashAnimation = flashAnimation
 	flashAnimation.frame = frame
@@ -2810,10 +2613,10 @@ function detailsFramework:SetTemplate(frame, template)
 			end
 		end
 
-	elseif (frame.SetColorTexture) then
+	elseif (frame.SetTexture) then
 		if (template.backdropcolor) then
 			local r, g, b, a = detailsFramework:ParseColors(template.backdropcolor)
-			frame:SetColorTexture(r, g, b, a)
+			frame:SetTexture(r, g, b, a)
 		end
 	end
 
@@ -3323,17 +3126,22 @@ function DF:CreateAnimation(animationGroup, animationType, order, duration, arg1
 	animationType = string.upper(animationType)
 
 	if (animationType == "ALPHA") then
-		anim:SetFromAlpha(arg1)
-		anim:SetToAlpha(arg2)
+		local anim2 = animationGroup:CreateAnimation (animationType)
+		anim2:SetOrder (order or animationGroup.NextAnimation)
+		anim2:SetChange (-arg1)
+		anim2:SetDuration (0)
+
+		anim:SetOrder ((order or animationGroup.NextAnimation) + 1)
+		anim:SetChange(arg2)
 
 	elseif (animationType == "SCALE") then
-		if (DF.IsDragonflight() or DF.IsNonRetailWowWithRetailAPI() or DF.IsWarWow()) then
-			anim:SetScaleFrom(arg1, arg2)
-			anim:SetScaleTo(arg3, arg4)
-		else
-			anim:SetFromScale(arg1, arg2)
-			anim:SetToScale(arg3, arg4)
-		end
+		local anim2 = animationGroup:CreateAnimation (animationType)
+		anim2:SetOrder (order or animationGroup.NextAnimation)
+		anim2:SetScale (arg1, arg2)
+		anim2:SetDuration (0)
+
+		anim:SetScale((arg1 / 1) + arg3, (arg2 / 1) + arg4)
+		anim:SetOrder ((order or animationGroup.NextAnimation) + 1)
 		anim:SetOrigin(arg5 or "center", arg6 or 0, arg7 or 0) --point, x, y
 
 	elseif (animationType == "ROTATION") then
@@ -3342,30 +3150,6 @@ function DF:CreateAnimation(animationGroup, animationType, order, duration, arg1
 
 	elseif (animationType == "TRANSLATION") then
 		anim:SetOffset(arg1, arg2)
-
-	elseif (animationType == "PATH") then
-		local newControlPoint = anim:CreateControlPoint()
-		anim:SetCurveType(arg4 or "SMOOTH")
-		newControlPoint:SetOffset(arg2, arg3)
-		newControlPoint:SetOrder(#anim:GetControlPoints())
-
-	elseif (animationType == "VERTEXCOLOR" or animationType == "COLOR") then
-		local r1, g1, b1, a1 = arg1, arg2, arg3, arg4
-		local r2, g2, b2, a2 = arg5, arg6, arg7, arg8
-
-		if ((type(r1) == "table" or type(r1) == "string") and (type(g1) == "table" or type(g1) == "string")) then
-			r2, g2, b2, a2 = DF:ParseColors(g1)
-			r1, g1, b1, a1 = DF:ParseColors(r1)
-
-		elseif ((type(r1) == "table" or type(r1) == "string")) then
-			r1, g1, b1, a1 = DF:ParseColors(r1)
-
-		elseif ((type(r2) == "table" or type(r2) == "string")) then
-			r2, g2, b2, a2 = DF:ParseColors(r2)
-		end
-
-		anim:SetStartColor(CreateColor(r1, g1, b1, a1))
-		anim:SetEndColor(CreateColor(r2, g2, b2, a2))
 	end
 
 	animationGroup.NextAnimation = animationGroup.NextAnimation + 1
@@ -3782,7 +3566,7 @@ local glow_overlay_setcolor = function(self, antsColor, glowColor)
 		elseif (self.ProcLoopFlipbook) then
 			self.ProcLoopFlipbook:SetVertexColor(r, g, b) --no alpha because of animation
 			local anim1 = self.ProcLoop:GetAnimations()
-			anim1:SetToAlpha(a)
+			anim1:SetChange(a)
 		end
 	end
 
@@ -3794,8 +3578,7 @@ local glow_overlay_setcolor = function(self, antsColor, glowColor)
 		elseif (self.ProcStartFlipbook) then
 			self.ProcStartFlipbook:SetVertexColor(r, g, b) --no alpha because of animation
 			local anim1, anim2, anim3 = self.ProcStartAnim:GetAnimations()
-			anim1:SetToAlpha(a)
-			anim3:SetFromAlpha(a)
+			anim1:SetChange(0)
 		end
 	end
 end
@@ -3844,7 +3627,7 @@ function DF:CreateGlowOverlay(parent, antsColor, glowColor)
 	glowFrame:SetPoint("bottomright", parent, "bottomright", frameWidth * 0.32, -frameHeight * 0.36)
 
 	if (glowFrame.outerGlow) then
-		glowFrame.outerGlow:SetScale(1.2)
+		glowFrame.outerGlow:SetSize(frameWidth * 1.2, frameHeight * 1.2)
 	end
 
 	if (glowFrame.ProcStartFlipbook) then
@@ -3939,13 +3722,13 @@ end
 
 local SetBorderColor = function(self, r, g, b)
 	for _, texture in ipairs(self.Borders.Layer1) do
-		texture:SetColorTexture(r, g, b)
+		texture:SetTexture(r, g, b)
 	end
 	for _, texture in ipairs(self.Borders.Layer2) do
-		texture:SetColorTexture(r, g, b)
+		texture:SetTexture(r, g, b)
 	end
 	for _, texture in ipairs(self.Borders.Layer3) do
-		texture:SetColorTexture(r, g, b)
+		texture:SetTexture(r, g, b)
 	end
 end
 
@@ -3988,17 +3771,17 @@ function DF:CreateBorder(parent, alpha1, alpha2, alpha3)
 		local leftBorder1 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(leftBorder1, "topleft", parent, "topleft", -1, 1)
 		PixelUtil.SetPoint(leftBorder1, "bottomleft", parent, "bottomleft", -1, -1)
-		leftBorder1:SetColorTexture(0, 0, 0, alpha1 or default_border_color1)
+		leftBorder1:SetTexture(0, 0, 0, alpha1 or default_border_color1)
 
 		local leftBorder2 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(leftBorder2, "topleft", parent, "topleft", -2, 2)
 		PixelUtil.SetPoint(leftBorder2, "bottomleft", parent, "bottomleft", -2, -2)
-		leftBorder2:SetColorTexture(0, 0, 0, alpha2 or default_border_color2)
+		leftBorder2:SetTexture(0, 0, 0, alpha2 or default_border_color2)
 
 		local leftBorder3 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(leftBorder3, "topleft", parent, "topleft", -3, 3)
 		PixelUtil.SetPoint(leftBorder3, "bottomleft", parent, "bottomleft", -3, -3)
-		leftBorder3:SetColorTexture(0, 0, 0, alpha3 or default_border_color3)
+		leftBorder3:SetTexture(0, 0, 0, alpha3 or default_border_color3)
 
 		table.insert(parent.Borders.Layer1, leftBorder1)
 		table.insert(parent.Borders.Layer2, leftBorder2)
@@ -4009,17 +3792,17 @@ function DF:CreateBorder(parent, alpha1, alpha2, alpha3)
 		local topBorder1 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(topBorder1, "topleft", parent, "topleft", 0, 1)
 		PixelUtil.SetPoint(topBorder1, "topright", parent, "topright", 1, 1)
-		topBorder1:SetColorTexture(0, 0, 0, alpha1 or default_border_color1)
+		topBorder1:SetTexture(0, 0, 0, alpha1 or default_border_color1)
 
 		local topBorder2 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(topBorder2, "topleft", parent, "topleft", -1, 2)
 		PixelUtil.SetPoint(topBorder2, "topright", parent, "topright", 2, 2)
-		topBorder2:SetColorTexture(0, 0, 0, alpha2 or default_border_color2)
+		topBorder2:SetTexture(0, 0, 0, alpha2 or default_border_color2)
 
 		local topBorder3 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(topBorder3, "topleft", parent, "topleft", -2, 3)
 		PixelUtil.SetPoint(topBorder3, "topright", parent, "topright", 3, 3)
-		topBorder3:SetColorTexture(0, 0, 0, alpha3 or default_border_color3)
+		topBorder3:SetTexture(0, 0, 0, alpha3 or default_border_color3)
 
 		table.insert(parent.Borders.Layer1, topBorder1)
 		table.insert(parent.Borders.Layer2, topBorder2)
@@ -4030,17 +3813,17 @@ function DF:CreateBorder(parent, alpha1, alpha2, alpha3)
 		local rightBorder1 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(rightBorder1, "topright", parent, "topright", 1, 0)
 		PixelUtil.SetPoint(rightBorder1, "bottomright", parent, "bottomright", 1, -1)
-		rightBorder1:SetColorTexture(0, 0, 0, alpha1 or default_border_color1)
+		rightBorder1:SetTexture(0, 0, 0, alpha1 or default_border_color1)
 
 		local rightBorder2 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(rightBorder2, "topright", parent, "topright", 2, 1)
 		PixelUtil.SetPoint(rightBorder2, "bottomright", parent, "bottomright", 2, -2)
-		rightBorder2:SetColorTexture(0, 0, 0, alpha2 or default_border_color2)
+		rightBorder2:SetTexture(0, 0, 0, alpha2 or default_border_color2)
 
 		local rightBorder3 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(rightBorder3, "topright", parent, "topright", 3, 2)
 		PixelUtil.SetPoint(rightBorder3, "bottomright", parent, "bottomright", 3, -3)
-		rightBorder3:SetColorTexture(0, 0, 0, alpha3 or default_border_color3)
+		rightBorder3:SetTexture(0, 0, 0, alpha3 or default_border_color3)
 
 		table.insert(parent.Borders.Layer1, rightBorder1)
 		table.insert(parent.Borders.Layer2, rightBorder2)
@@ -4051,17 +3834,17 @@ function DF:CreateBorder(parent, alpha1, alpha2, alpha3)
 		local bottomBorder1 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(bottomBorder1, "bottomleft", parent, "bottomleft", 0, -1)
 		PixelUtil.SetPoint(bottomBorder1, "bottomright", parent, "bottomright", 0, -1)
-		bottomBorder1:SetColorTexture(0, 0, 0, alpha1 or default_border_color1)
+		bottomBorder1:SetTexture(0, 0, 0, alpha1 or default_border_color1)
 
 		local bottomBorder2 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(bottomBorder2, "bottomleft", parent, "bottomleft", -1, -2)
 		PixelUtil.SetPoint(bottomBorder2, "bottomright", parent, "bottomright", 1, -2)
-		bottomBorder2:SetColorTexture(0, 0, 0, alpha2 or default_border_color2)
+		bottomBorder2:SetTexture(0, 0, 0, alpha2 or default_border_color2)
 
 		local bottomBorder3 = parent:CreateTexture(nil, "background")
 		PixelUtil.SetPoint(bottomBorder3, "bottomleft", parent, "bottomleft", -2, -3)
 		PixelUtil.SetPoint(bottomBorder3, "bottomright", parent, "bottomright", 2, -3)
-		bottomBorder3:SetColorTexture(0, 0, 0, alpha3 or default_border_color3)
+		bottomBorder3:SetTexture(0, 0, 0, alpha3 or default_border_color3)
 
 		table.insert(parent.Borders.Layer1, bottomBorder1)
 		table.insert(parent.Borders.Layer2, bottomBorder2)
@@ -4120,14 +3903,13 @@ end
 function DF:CreateFullBorder (name, parent)
 	local border = CreateFrame("Frame", name, parent)
 	border:SetAllPoints()
-	border:SetIgnoreParentScale(true)
 	border:SetFrameLevel(border:GetParent():GetFrameLevel())
 	border.Textures = {}
 	Mixin(border, DFNamePlateBorderTemplateMixin)
 
 	local left = border:CreateTexture("$parentLeft", "BACKGROUND", nil, -8)
 	--left:SetDrawLayer("BACKGROUND", -8)
-	left:SetColorTexture(1, 1, 1, 1)
+	left:SetTexture(1, 1, 1, 1)
 	left:SetWidth(1.0)
 	left:SetPoint("TOPRIGHT", border, "TOPLEFT", 0, 1.0)
 	left:SetPoint("BOTTOMRIGHT", border, "BOTTOMLEFT", 0, -1.0)
@@ -4136,7 +3918,7 @@ function DF:CreateFullBorder (name, parent)
 
 	local right = border:CreateTexture("$parentRight", "BACKGROUND", nil, -8)
 	--right:SetDrawLayer("BACKGROUND", -8)
-	right:SetColorTexture(1, 1, 1, 1)
+	right:SetTexture(1, 1, 1, 1)
 	right:SetWidth(1.0)
 	right:SetPoint("TOPLEFT", border, "TOPRIGHT", 0, 1.0)
 	right:SetPoint("BOTTOMLEFT", border, "BOTTOMRIGHT", 0, -1.0)
@@ -4145,7 +3927,7 @@ function DF:CreateFullBorder (name, parent)
 
 	local bottom = border:CreateTexture("$parentBottom", "BACKGROUND", nil, -8)
 	--bottom:SetDrawLayer("BACKGROUND", -8)
-	bottom:SetColorTexture(1, 1, 1, 1)
+	bottom:SetTexture(1, 1, 1, 1)
 	bottom:SetHeight(1.0)
 	bottom:SetPoint("TOPLEFT", border, "BOTTOMLEFT", 0, 0)
 	bottom:SetPoint("TOPRIGHT", border, "BOTTOMRIGHT", 0, 0)
@@ -4154,7 +3936,7 @@ function DF:CreateFullBorder (name, parent)
 
 	local top = border:CreateTexture("$parentTop", "BACKGROUND", nil, -8)
 	--top:SetDrawLayer("BACKGROUND", -8)
-	top:SetColorTexture(1, 1, 1, 1)
+	top:SetTexture(1, 1, 1, 1)
 	top:SetHeight(1.0)
 	top:SetPoint("BOTTOMLEFT", border, "TOPLEFT", 0, 0)
 	top:SetPoint("BOTTOMRIGHT", border, "TOPRIGHT", 0, 0)
@@ -4188,7 +3970,7 @@ function DF:CreateBorderWithSpread(parent, alpha1, alpha2, alpha3, size, spread)
 
 	--left
 	local border1 = parent:CreateTexture(nil, "background")
-	border1:SetColorTexture(0, 0, 0, alpha1 or default_border_color1)
+	border1:SetTexture(0, 0, 0, alpha1 or default_border_color1)
 	PixelUtil.SetPoint(border1, "topleft", parent, "topleft", -1 + spread, 1 + (-spread), 0, 0)
 	PixelUtil.SetPoint(border1, "bottomleft", parent, "bottomleft", -1 + spread, -1 + spread, 0, 0)
 	PixelUtil.SetWidth (border1, size, minPixels)
@@ -4196,13 +3978,13 @@ function DF:CreateBorderWithSpread(parent, alpha1, alpha2, alpha3, size, spread)
 	local border2 = parent:CreateTexture(nil, "background")
 	PixelUtil.SetPoint(border2, "topleft", parent, "topleft", -2 + spread, 2 + (-spread))
 	PixelUtil.SetPoint(border2, "bottomleft", parent, "bottomleft", -2 + spread, -2 + spread)
-	border2:SetColorTexture(0, 0, 0, alpha2 or default_border_color2)
+	border2:SetTexture(0, 0, 0, alpha2 or default_border_color2)
 	PixelUtil.SetWidth (border2, size, minPixels)
 
 	local border3 = parent:CreateTexture(nil, "background")
 	PixelUtil.SetPoint(border3, "topleft", parent, "topleft", -3 + spread, 3 + (-spread))
 	PixelUtil.SetPoint(border3, "bottomleft", parent, "bottomleft", -3 + spread, -3 + spread)
-	border3:SetColorTexture(0, 0, 0, alpha3 or default_border_color3)
+	border3:SetTexture(0, 0, 0, alpha3 or default_border_color3)
 	PixelUtil.SetWidth (border3, size, minPixels)
 
 	table.insert(parent.Borders.Layer1, border1)
@@ -4213,19 +3995,19 @@ function DF:CreateBorderWithSpread(parent, alpha1, alpha2, alpha3, size, spread)
 	local border1 = parent:CreateTexture(nil, "background")
 	PixelUtil.SetPoint(border1, "topleft", parent, "topleft", 0 + spread, 1 + (-spread))
 	PixelUtil.SetPoint(border1, "topright", parent, "topright", 1 + (-spread), 1 + (-spread))
-	border1:SetColorTexture(0, 0, 0, alpha1 or default_border_color1)
+	border1:SetTexture(0, 0, 0, alpha1 or default_border_color1)
 	PixelUtil.SetHeight(border1, size, minPixels)
 
 	local border2 = parent:CreateTexture(nil, "background")
 	PixelUtil.SetPoint(border2, "topleft", parent, "topleft", -1 + spread, 2 + (-spread))
 	PixelUtil.SetPoint(border2, "topright", parent, "topright", 2 + (-spread), 2 + (-spread))
-	border2:SetColorTexture(0, 0, 0, alpha2 or default_border_color2)
+	border2:SetTexture(0, 0, 0, alpha2 or default_border_color2)
 	PixelUtil.SetHeight(border2, size, minPixels)
 
 	local border3 = parent:CreateTexture(nil, "background")
 	PixelUtil.SetPoint(border3, "topleft", parent, "topleft", -2 + spread, 3 + (-spread))
 	PixelUtil.SetPoint(border3, "topright", parent, "topright", 3 + (-spread), 3 + (-spread))
-	border3:SetColorTexture(0, 0, 0, alpha3 or default_border_color3)
+	border3:SetTexture(0, 0, 0, alpha3 or default_border_color3)
 	PixelUtil.SetHeight(border3, size, minPixels)
 
 	table.insert(parent.Borders.Layer1, border1)
@@ -4236,19 +4018,19 @@ function DF:CreateBorderWithSpread(parent, alpha1, alpha2, alpha3, size, spread)
 	local border1 = parent:CreateTexture(nil, "background")
 	PixelUtil.SetPoint(border1, "topright", parent, "topright", 1 + (-spread), 0 + (-spread))
 	PixelUtil.SetPoint(border1, "bottomright", parent, "bottomright", 1 + (-spread), -1 + spread)
-	border1:SetColorTexture(0, 0, 0, alpha1 or default_border_color1)
+	border1:SetTexture(0, 0, 0, alpha1 or default_border_color1)
 	PixelUtil.SetWidth (border1, size, minPixels)
 
 	local border2 = parent:CreateTexture(nil, "background")
 	PixelUtil.SetPoint(border2, "topright", parent, "topright", 2 + (-spread), 1 + (-spread))
 	PixelUtil.SetPoint(border2, "bottomright", parent, "bottomright", 2 + (-spread), -2 + spread)
-	border2:SetColorTexture(0, 0, 0, alpha2 or default_border_color2)
+	border2:SetTexture(0, 0, 0, alpha2 or default_border_color2)
 	PixelUtil.SetWidth (border2, size, minPixels)
 
 	local border3 = parent:CreateTexture(nil, "background")
 	PixelUtil.SetPoint(border3, "topright", parent, "topright", 3 + (-spread), 2 + (-spread))
 	PixelUtil.SetPoint(border3, "bottomright", parent, "bottomright", 3 + (-spread), -3 + spread)
-	border3:SetColorTexture(0, 0, 0, alpha3 or default_border_color3)
+	border3:SetTexture(0, 0, 0, alpha3 or default_border_color3)
 	PixelUtil.SetWidth (border3, size, minPixels)
 
 	table.insert(parent.Borders.Layer1, border1)
@@ -4258,19 +4040,19 @@ function DF:CreateBorderWithSpread(parent, alpha1, alpha2, alpha3, size, spread)
 	local border1 = parent:CreateTexture(nil, "background")
 	PixelUtil.SetPoint(border1, "bottomleft", parent, "bottomleft", 0 + spread, -1 + spread)
 	PixelUtil.SetPoint(border1, "bottomright", parent, "bottomright", 0 + (-spread), -1 + spread)
-	border1:SetColorTexture(0, 0, 0, alpha1 or default_border_color1)
+	border1:SetTexture(0, 0, 0, alpha1 or default_border_color1)
 	PixelUtil.SetHeight(border1, size, minPixels)
 
 	local border2 = parent:CreateTexture(nil, "background")
 	PixelUtil.SetPoint(border2, "bottomleft", parent, "bottomleft", -1 + spread, -2 + spread)
 	PixelUtil.SetPoint(border2, "bottomright", parent, "bottomright", 1 + (-spread), -2 + spread)
-	border2:SetColorTexture(0, 0, 0, alpha2 or default_border_color2)
+	border2:SetTexture(0, 0, 0, alpha2 or default_border_color2)
 	PixelUtil.SetHeight(border2, size, minPixels)
 
 	local border3 = parent:CreateTexture(nil, "background")
 	PixelUtil.SetPoint(border3, "bottomleft", parent, "bottomleft", -2 + spread, -3 + spread)
 	PixelUtil.SetPoint(border3, "bottomright", parent, "bottomright", 2 + (-spread), -3 + spread)
-	border3:SetColorTexture(0, 0, 0, alpha3 or default_border_color3)
+	border3:SetTexture(0, 0, 0, alpha3 or default_border_color3)
 	PixelUtil.SetHeight(border3, size, minPixels)
 
 	table.insert(parent.Borders.Layer1, border1)
@@ -4349,7 +4131,7 @@ function DF:ReskinSlider(slider, heightOffset)
 				local backgroundTexture = slider.ScrollBar.ScrollUpButton:CreateTexture(nil, "border")
 				slider.ScrollBar.ScrollUpButton.BackgroundTexture = backgroundTexture
 
-				backgroundTexture:SetColorTexture(backgroundColor_Red, backgroundColor_Green, backgroundColor_Blue)
+				backgroundTexture:SetTexture(backgroundColor_Red, backgroundColor_Green, backgroundColor_Blue)
 				backgroundTexture:SetAlpha(backgroundColor_Alpha)
 
 				backgroundTexture:SetPoint("topleft", slider.ScrollBar.ScrollUpButton, "topleft", 1, 0)
@@ -4391,7 +4173,7 @@ function DF:ReskinSlider(slider, heightOffset)
 				local backgroundTexture = slider.ScrollBar.ScrollDownButton:CreateTexture(nil, "border")
 				slider.ScrollBar.ScrollDownButton.BackgroundTexture = backgroundTexture
 
-				backgroundTexture:SetColorTexture(backgroundColor_Red, backgroundColor_Green, backgroundColor_Blue)
+				backgroundTexture:SetTexture(backgroundColor_Red, backgroundColor_Green, backgroundColor_Blue)
 				backgroundTexture:SetAlpha(backgroundColor_Alpha)
 
 				backgroundTexture:SetPoint("topleft", slider.ScrollBar.ScrollDownButton, "topleft", 1, 0)
@@ -4413,14 +4195,14 @@ function DF:ReskinSlider(slider, heightOffset)
 			slider.ScrollBar:SetPoint("BOTTOMLEFT", slider, "BOTTOMRIGHT", 6, 16 + (heightOffset and heightOffset*-1 or 0))
 		end
 
-		slider.ScrollBar.ThumbTexture:SetColorTexture(.5, .5, .5, .3)
+		slider.ScrollBar.ThumbTexture:SetTexture(.5, .5, .5, .3)
 		slider.ScrollBar.ThumbTexture:SetSize(14, 8)
 
 		if (not slider.ScrollBar.SliderTexture) then
 			local alpha = 1
 			local offset = 1
 			slider.ScrollBar.SliderTexture = slider.ScrollBar:CreateTexture(nil, "background")
-			slider.ScrollBar.SliderTexture:SetColorTexture(backgroundColor_Red, backgroundColor_Green, backgroundColor_Blue)
+			slider.ScrollBar.SliderTexture:SetTexture(backgroundColor_Red, backgroundColor_Green, backgroundColor_Blue)
 			slider.ScrollBar.SliderTexture:SetAlpha(backgroundColor_Alpha)
 			slider.ScrollBar.SliderTexture:SetPoint("TOPLEFT", slider.ScrollBar, "TOPLEFT", offset, -2)
 			slider.ScrollBar.SliderTexture:SetPoint("BOTTOMRIGHT", slider.ScrollBar, "BOTTOMRIGHT", -offset, 2)
@@ -4461,22 +4243,16 @@ function DF:GetCurrentSpecId()
 	return DF:GetCurrentSpec()
 end
 
-local specs_per_class = {
-	["DEMONHUNTER"] = {577, 581},
-	["DEATHKNIGHT"] = {250, 251, 252},
-	["WARRIOR"] = {71, 72, 73},
-	["MAGE"] = {62, 63, 64},
-	["ROGUE"] = {259, 260, 261},
-	["DRUID"] = {102, 103, 104, 105},
-	["HUNTER"] = {253, 254, 255},
-	["SHAMAN"] = {262, 263, 264},
-	["PRIEST"] = {256, 257, 258},
-	["WARLOCK"] = {265, 266, 267},
-	["PALADIN"] = {65, 66, 70},
-	["MONK"] = {268, 269, 270},
-	["EVOKER"] = {1467, 1468, 1473},
-}
+local specs_per_class = {}
 
+for _, class in ipairs(CLASS_SORT_ORDER) do
+    local specs = C_ClassInfo.GetAllSpecs(class)
+    specs_per_class[class] = {}
+    for index, spec in ipairs(specs) do
+        local specInfo = C_ClassInfo.GetSpecInfo(class, spec)
+		specs_per_class[index] = specInfo.ID
+    end
+end
 
 ---return an array table with the spec ids the class can have
 ---@param engClass string
@@ -4600,38 +4376,13 @@ function DF:CoreDispatch(context, func, ...)
 end
 
 
-DF.ClassIndexToFileName = {
-	[6] = "DEATHKNIGHT",
-	[1] = "WARRIOR",
-	[4] = "ROGUE",
-	[8] = "MAGE",
-	[5] = "PRIEST",
-	[3] = "HUNTER",
-	[9] = "WARLOCK",
-	[12] = "DEMONHUNTER",
-	[7] = "SHAMAN",
-	[11] = "DRUID",
-	[10] = "MONK",
-	[2] = "PALADIN",
-	[13] = "EVOKER",
-}
+DF.ClassIndexToFileName = table.Copy(Enum.ClassFile)
 
 
-DF.ClassFileNameToIndex = {
-	["WARRIOR"] = 1,
-	["PALADIN"] = 2,
-	["HUNTER"] = 3,
-	["ROGUE"] = 4,
-	["PRIEST"] = 5,
-	["DEATHKNIGHT"] = 6,
-	["SHAMAN"] = 7,
-	["MAGE"] = 8,
-	["WARLOCK"] = 9,
-	["MONK"] = 10,
-	["DRUID"] = 11,
-	["DEMONHUNTER"] = 12,
-	["EVOKER"] = 13,
-}
+
+DF.ClassFileNameToIndex = table.Copy(Enum.Class)
+DF.ClassFileNameToIndex.CustomStart = nil
+
 DF.ClassCache = {}
 
 function DF:GetClassList()
@@ -4640,17 +4391,14 @@ function DF:GetClassList()
 	end
 
 	for className, classIndex in pairs(DF.ClassFileNameToIndex) do
-		local classTable = C_CreatureInfo.GetClassInfo(classIndex)
-		if classTable then
-			local t = {
-				ID = classIndex,
-				Name = classTable.className,
-				Texture = [[Interface\GLUES\CHARACTERCREATE\UI-CharacterCreate-Classes]],
-				TexCoord = CLASS_ICON_TCOORDS[className],
-				FileString = className,
-			}
-			table.insert(DF.ClassCache, t)
-		end
+		local t = {
+			ID = classIndex,
+			Name = LOCALIZED_CLASS_NAMES_MALE[className],
+			Texture = [[Interface\GLUES\CHARACTERCREATE\UI-CharacterCreate-Classes]],
+			TexCoord = CLASS_ICON_TCOORDS[className],
+			FileString = className,
+		}
+		table.insert(DF.ClassCache, t)
 	end
 
 	return DF.ClassCache
@@ -4666,24 +4414,11 @@ DF.RaceList = {
 	[6] = "Tauren",
 	[7] = "Gnome",
 	[8] = "Troll",
-	[9] = "Goblin",
 	[10] = "BloodElf",
 	[11] = "Draenei",
-	[22] = "Worgen",
-	[24] = "Pandaren",
 }
 
-DF.AlliedRaceList = {
-	[27] = "Nightborne",
-	[29] = "HighmountainTauren",
-	[31] = "VoidElf",
-	[33] = "LightforgedDraenei",
-	[35] = "ZandalariTroll",
-	[36] = "KulTiran",
-	[38] = "DarkIronDwarf",
-	[40] = "Vulpera",
-	[41] = "MagharOrc",
-}
+DF.AlliedRaceList = {}
 
 local slotIdToIcon = {
 	[1] = "Interface\\ICONS\\" .. "INV_Helmet_29", --head
@@ -4720,13 +4455,6 @@ function DF:GetCharacterRaceList()
 		local raceInfo = C_CreatureInfo.GetRaceInfo(i)
 		if (raceInfo and DF.RaceList [raceInfo.raceID]) then
 			table.insert(DF.RaceCache, {Name = raceInfo.raceName, FileString = raceInfo.clientFileString, ID = raceInfo.raceID})
-		end
-
-		if IS_WOW_PROJECT_MAINLINE then
-			local alliedRaceInfo = C_AlliedRaces.GetRaceInfoByID(i)
-			if (alliedRaceInfo and DF.AlliedRaceList [alliedRaceInfo.raceID]) then
-				table.insert(DF.RaceCache, {Name = alliedRaceInfo.maleName, FileString = alliedRaceInfo.raceFileString, ID = alliedRaceInfo.raceID})
-			end
 		end
 	end
 
@@ -4937,141 +4665,18 @@ function DF:GetCLEncounterIDs()
 	return DF.CLEncounterID
 end
 
-DF.ClassSpecs = {
-	["DEMONHUNTER"] = {
-		[577] = true,
-		[581] = true,
-	},
-	["DEATHKNIGHT"] = {
-		[250] = true,
-		[251] = true,
-		[252] = true,
-	},
-	["WARRIOR"] = {
-		[71] = true,
-		[72] = true,
-		[73] = true,
-	},
-	["MAGE"] = {
-		[62] = true,
-		[63] = true,
-		[64] = true,
-	},
-	["ROGUE"] = {
-		[259] = true,
-		[260] = true,
-		[261] = true,
-	},
-	["DRUID"] = {
-		[102] = true,
-		[103] = true,
-		[104] = true,
-		[105] = true,
-	},
-	["HUNTER"] = {
-		[253] = true,
-		[254] = true,
-		[255] = true,
-	},
-	["SHAMAN"] = {
-		[262] = true,
-		[263] = true,
-		[264] = true,
-	},
-	["PRIEST"] = {
-		[256] = true,
-		[257] = true,
-		[258] = true,
-	},
-	["WARLOCK"] = {
-		[265] = true,
-		[266] = true,
-		[267] = true,
-	},
-	["PALADIN"] = {
-		[65] = true,
-		[66] = true,
-		[70] = true,
-	},
-	["MONK"] = {
-		[268] = true,
-		[269] = true,
-		[270] = true,
-	},
-	["EVOKER"] = {
-		[1467] = true,
-		[1468] = true,
-		[1473] = true,
-	},
-}
-
-DF.SpecListByClass = {
-	["DEMONHUNTER"] = {
-		577,
-		581,
-	},
-	["DEATHKNIGHT"] = {
-		250,
-		251,
-		252,
-	},
-	["WARRIOR"] = {
-		71,
-		72,
-		73,
-	},
-	["MAGE"] = {
-		62,
-		63,
-		64,
-	},
-	["ROGUE"] = {
-		259,
-		260,
-		261,
-	},
-	["DRUID"] = {
-		102,
-		103,
-		104,
-		105,
-	},
-	["HUNTER"] = {
-		253,
-		254,
-		255,
-	},
-	["SHAMAN"] = {
-		262,
-		263,
-		264,
-	},
-	["PRIEST"] = {
-		256,
-		257,
-		258,
-	},
-	["WARLOCK"] = {
-		265,
-		266,
-		267,
-	},
-	["PALADIN"] = {
-		65,
-		66,
-		70,
-	},
-	["MONK"] = {
-		268,
-		269,
-		270,
-	},
-	["EVOKER"] = {
-		1467,
-		1468,
-		1473,
-	},
-}
+DF.ClassSpecs = {}
+DF.SpecListByClass = {}
+for _, class in ipairs(CLASS_SORT_ORDER) do
+    local specs = C_ClassInfo.GetAllSpecs(class)
+    DF.ClassSpecs[class] = {}
+	DF.SpecListByClass[class] = {}
+    for index, spec in ipairs(specs) do
+        local specInfo = C_ClassInfo.GetSpecInfo(class, spec)
+        DF.ClassSpecs[class][specInfo.ID] = true
+		tinsert(DF.SpecListByClass[class], specInfo.ID)
+    end
+end
 
 ---return if the specId is a valid spec, it'll return false for specIds from the tutorial area
 ---@param self table
@@ -5459,51 +5064,34 @@ end
 
 	--these are functions which scripts cannot run due to security issues
 	local forbiddenFunction = {
-		--block mail, trades, action house, banks
-		["C_AuctionHouse"] 	= true,
-		["C_Bank"] = true,
-		["C_GuildBank"] = true,
-		["SetSendMailMoney"] = true,
-		["SendMail"]		= true,
-		["SetTradeMoney"]	= true,
-		["AddTradeMoney"]	= true,
-		["PickupTradeMoney"]	= true,
-		["PickupPlayerMoney"]	= true,
-		["AcceptTrade"]		= true,
-
-		--frames
-		["BankFrame"] 		= true,
-		["TradeFrame"]		= true,
-		["GuildBankFrame"] 	= true,
-		["MailFrame"]		= true,
-		["EnumerateFrames"] = true,
-
-		--block run code inside code
-		["RunScript"] = true,
-		["securecall"] = true,
-		["setfenv"] = true,
-		["getfenv"] = true,
-		["loadstring"] = true,
-		["pcall"] = true,
-		["xpcall"] = true,
-		["getglobal"] = true,
-		["setmetatable"] = true,
-		["DevTools_DumpCommand"] = true,
-		["ChatEdit_SendText"] = true,
-
-		--avoid creating macros
-		["SetBindingMacro"] = true,
-		["CreateMacro"] = true,
-		["EditMacro"] = true,
-		["hash_SlashCmdList"] = true,
-		["SlashCmdList"] = true,
-
-		--block guild commands
-		["GuildDisband"] = true,
-		["GuildUninvite"] = true,
-
-		--other things
-		["C_GMTicketInfo"] = true,
+		  -- Lua functions that may allow breaking out of the environment
+		  getfenv = true,
+		  setfenv = true,
+		  loadstring = true,
+		  pcall = true,
+		  xpcall = true,
+		  -- blocked WoW API
+		  SendMail = true,
+		  SetTradeMoney = true,
+		  AddTradeMoney = true,
+		  PickupTradeMoney = true,
+		  PickupPlayerMoney = true,
+		  TradeFrame = true,
+		  MailFrame = true,
+		  EnumerateFrames = true,
+		  RunScript = true,
+		  AcceptTrade = true,
+		  SetSendMailMoney = true,
+		  EditMacro = true,
+		  DevTools_DumpCommand = true,
+		  hash_SlashCmdList = true,
+		  CreateMacro = true,
+		  SetBindingMacro = true,
+		  GuildDisband = true,
+		  GuildUninvite = true,
+		  securecall = true,
+		  DeleteCursorItem = true,
+		  ChatEdit_SendText = true,
 
 		--deny messing addons with script support
 		["PlaterDB"] = true,
@@ -5512,9 +5100,6 @@ end
 	}
 
 	local C_RestrictedSubFunctions = {
-		["C_GuildInfo"] = {
-			["RemoveFromGuild"] = true,
-		},
 	}
 
 	--not in use, can't find a way to check within the environment handle
@@ -5635,7 +5220,7 @@ function DF:PreviewTexture(texture, left, right, top, bottom)
 	preview.fontString:SetText("")
 
 	--check if the texture passed is an atlas
-	if (type(texture) == "string" and C_Texture.GetAtlasInfo(texture)) then
+	if (type(texture) == "string" and AtlasUtil:AtlasExists(texture)) then
 		preview.texture:SetAtlas(texture)
 
 	elseif (type(texture) == "string" and texture:find("|T")) then

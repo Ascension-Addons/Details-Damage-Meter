@@ -3,10 +3,6 @@ if (not detailsFramework) then
 	return
 end
 
-local IS_WOW_PROJECT_MAINLINE = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-local IS_WOW_PROJECT_NOT_MAINLINE = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
-local IS_WOW_PROJECT_CLASSIC_ERA = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
-
 detailsFramework.CastInfo = detailsFramework.CastInfo or {}
 
 --NOTE: This NEEDs a chance to run, as Plater is depending on this working and LibCC is not bundled neccessarily in other addons.
@@ -94,21 +90,8 @@ function detailsFramework:LoadLCC(LibCC)
 	end
 end
 
-if IS_WOW_PROJECT_CLASSIC_ERA and false then --disable this for now, as it appears to be working now through API changes...
-	local LibCC = LibStub("LibClassicCasterino", true)
-	if (LibCC and not _G.DetailsFrameworkLCCLoaded) then
-		detailsFramework:LoadLCC(LibCC)
-		_G.DetailsFrameworkLCCLoaded = true
-
-	elseif not LibCC then
-		detailsFramework.CastInfo.UnitCastingInfo = CastingInfo
-		detailsFramework.CastInfo.UnitChannelInfo = ChannelInfo
-	end
-else -- end classic era
-
-	detailsFramework.CastInfo.UnitCastingInfo = UnitCastingInfo
-	detailsFramework.CastInfo.UnitChannelInfo = UnitChannelInfo
-end
+detailsFramework.CastInfo.UnitCastingInfo = UnitCastingInfo
+detailsFramework.CastInfo.UnitChannelInfo = UnitChannelInfo
 
 
 if (not DetailsFrameworkCanLoad) then

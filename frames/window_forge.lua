@@ -1069,7 +1069,7 @@ function Details:OpenForge()
 
                     local background = fillpanel:CreateTexture(nil, "background")
                     background:SetAllPoints()
-                    background:SetColorTexture(0, 0, 0, 0.2)
+                    background:SetTexture(0, 0, 0, 0.2)
 
                     module.fill_panel = fillpanel
                 end

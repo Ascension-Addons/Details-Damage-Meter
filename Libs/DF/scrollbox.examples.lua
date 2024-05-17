@@ -27,7 +27,7 @@ local createOptionFrameFunc = function(line, lineIndex, columnIndex)
 
     local highlightTexture = optionButton:CreateTexture(nil, "highlight")
     highlightTexture:SetAllPoints()
-    highlightTexture:SetColorTexture(1, 1, 1, 0.2)
+    highlightTexture:SetTexture(1, 1, 1, 0.2)
 
     DetailsFramework:ApplyStandardBackdrop(optionButton)
 

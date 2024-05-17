@@ -278,10 +278,10 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                     background:SetTexture(file)
                     background:SetTexCoord(L, R, T, B)
                 else
-                    background:SetColorTexture(0.2, 0.2, 0.2, 0.8)
+                    background:SetTexture(0.2, 0.2, 0.2, 0.8)
                 end
                 --]]
-                background:SetColorTexture(0.2, 0.2, 0.2, 0.8)
+                background:SetTexture(0.2, 0.2, 0.2, 0.8)
             end
         end
 

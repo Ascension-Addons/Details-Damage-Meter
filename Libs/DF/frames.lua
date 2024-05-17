@@ -26,15 +26,6 @@ local setCornerPoints = function(self, textures, width, height, xOffset, yOffset
         thisTexture:SetSize(width or 16, height or 16)
         thisTexture:SetTexture(self.options.corner_texture)
 
-        --set the mask
-        if (not thisTexture.MaskTexture and bIsBorder) then
-            thisTexture.MaskTexture = self:CreateMaskTexture(nil, "background")
-            thisTexture.MaskTexture:SetSize(74, 64)
-            thisTexture:AddMaskTexture(thisTexture.MaskTexture)
-            thisTexture.MaskTexture:SetTexture([[Interface\Azerite\AzeriteGoldRingRank2]]) --1940690
-            --thisTexture.MaskTexture:Hide()
-        end
-
         xOffset = xOffset or 0
         yOffset = yOffset or 0
 
@@ -44,30 +35,18 @@ local setCornerPoints = function(self, textures, width, height, xOffset, yOffset
         if (cornerName == "TopLeft") then
             thisTexture:SetTexCoord(0, 0.5, 0, 0.5)
             thisTexture:SetPoint(cornerName, self, cornerName, -xOffset, yOffset)
-            if (thisTexture.MaskTexture) then
-                thisTexture.MaskTexture:SetPoint(cornerName, self, cornerName, -18-xOffset, 16+yOffset)
-            end
 
         elseif (cornerName == "TopRight") then
             thisTexture:SetTexCoord(0.5, 1, 0, 0.5)
             thisTexture:SetPoint(cornerName, self, cornerName, xOffset, yOffset)
-            if (thisTexture.MaskTexture) then
-                thisTexture.MaskTexture:SetPoint(cornerName, self, cornerName, -18+xOffset, 16+yOffset)
-            end
 
         elseif (cornerName == "BottomLeft") then
             thisTexture:SetTexCoord(0, 0.5, 0.5, 1)
             thisTexture:SetPoint(cornerName, self, cornerName, -xOffset, -yOffset)
-            if (thisTexture.MaskTexture) then
-                thisTexture.MaskTexture:SetPoint(cornerName, self, cornerName, -18-xOffset, 16-yOffset)
-            end
 
         elseif (cornerName == "BottomRight") then
             thisTexture:SetTexCoord(0.5, 1, 0.5, 1)
             thisTexture:SetPoint(cornerName, self, cornerName, xOffset, -yOffset)
-            if (thisTexture.MaskTexture) then
-                thisTexture.MaskTexture:SetPoint(cornerName, self, cornerName, -18+xOffset, 16-yOffset)
-            end
         end
     end
 end
@@ -95,7 +74,7 @@ detailsFramework.RoundedCornerPanelMixin = {
         topHorizontalEdge:SetPoint("bottomleft", self.CornerTextures["TopLeft"], "bottomright", 0, 0)
         topHorizontalEdge:SetPoint("topright", self.CornerTextures["TopRight"], "topleft", 0, 0)
         topHorizontalEdge:SetPoint("bottomright", self.CornerTextures["TopRight"], "bottomleft", 0, 0)
-        topHorizontalEdge:SetColorTexture(unpack(defaultColorTable))
+        topHorizontalEdge:SetTexture(unpack(defaultColorTable))
 
         --create the bottom texture which connects the bottom corners with a horizontal line
         ---@type texture
@@ -104,7 +83,7 @@ detailsFramework.RoundedCornerPanelMixin = {
         bottomHorizontalEdge:SetPoint("bottomleft", self.CornerTextures["BottomLeft"], "bottomright", 0, 0)
         bottomHorizontalEdge:SetPoint("topright", self.CornerTextures["BottomRight"], "topleft", 0, 0)
         bottomHorizontalEdge:SetPoint("bottomright", self.CornerTextures["BottomRight"], "bottomleft", 0, 0)
-        bottomHorizontalEdge:SetColorTexture(unpack(defaultColorTable))
+        bottomHorizontalEdge:SetTexture(unpack(defaultColorTable))
 
         --create the center block which connects the bottom left of the topleft corner with the top right of the bottom right corner
         ---@type texture
@@ -113,7 +92,7 @@ detailsFramework.RoundedCornerPanelMixin = {
         centerBlock:SetPoint("bottomleft", self.CornerTextures["BottomLeft"], "topleft", 0, 0)
         centerBlock:SetPoint("topright", self.CornerTextures["BottomRight"], "topright", 0, 0)
         centerBlock:SetPoint("bottomright", self.CornerTextures["BottomRight"], "topright", 0, 0)
-        centerBlock:SetColorTexture(unpack(defaultColorTable))
+        centerBlock:SetTexture(unpack(defaultColorTable))
 
         self.CenterTextures[#self.CenterTextures+1] = topHorizontalEdge
         self.CenterTextures[#self.CenterTextures+1] = bottomHorizontalEdge
@@ -251,7 +230,6 @@ detailsFramework.RoundedCornerPanelMixin = {
             if (self.bHasBorder) then
                 for _, thisTexture in pairs(self.BorderCornerTextures) do
                     thisTexture:SetSize(cornerWidth-self.cornerRoundness, cornerHeight-self.cornerRoundness)
-                    thisTexture.MaskTexture:SetSize(74-(self.cornerRoundness*0.75), 64-self.cornerRoundness)
                 end
 
                 local horizontalEdgesNewSize = self:CalculateBorderEdgeSize("horizontal")
@@ -300,7 +278,7 @@ detailsFramework.RoundedCornerPanelMixin = {
             ---@type texture
             local newBorderTexture = self:CreateTexture(nil, "background", nil, 0)
             self.BorderCornerTextures[cornerNames[i]] = newBorderTexture
-            newBorderTexture:SetColorTexture(unpack(defaultColorTable))
+            newBorderTexture:SetTexture(unpack(defaultColorTable))
             newBorderTexture:SetVertexColor(r, g, b, a)
             self[cornerNames[i] .. "Border"] = newBorderTexture
         end
@@ -341,7 +319,7 @@ detailsFramework.RoundedCornerPanelMixin = {
 
         for edgeName, thisTexture in pairs(self.BorderEdgeTextures) do
             ---@cast thisTexture texture
-            thisTexture:SetColorTexture(unpack(defaultColorTable))
+            thisTexture:SetTexture(unpack(defaultColorTable))
             thisTexture:SetVertexColor(r, g, b, a)
         end
 
@@ -400,19 +378,6 @@ detailsFramework.RoundedCornerPanelMixin = {
 
         for _, thisTexture in pairs(self.CenterTextures) do
             thisTexture:SetVertexColor(red, green, blue, alpha)
-        end
-
-        if (self.bHasBorder) then
-            if (alpha < 0.98) then
-                --if using borders, the two border textures overlaps making the alpha be darker than it should
-                for _, thisTexture in pairs(self.BorderCornerTextures) do
-                    thisTexture.MaskTexture:Show()
-                end
-            else
-                for _, thisTexture in pairs(self.BorderCornerTextures) do
-                    thisTexture.MaskTexture:Hide()
-                end
-            end
         end
     end,
 }

@@ -608,187 +608,57 @@ local default_profile = {
 		[71] = {448/512, 512/512, 192/512, 256/512}, --warrior arms
 		[72] = {0, 64/512, 256/512, 320/512}, --warrior fury
 		[73] = {64/512, 128/512, 256/512, 320/512}, --warrior protect
-
-		[1467] = {256/512, 320/512, 256/512, 320/512}, -- Devastation
-		[1468] = {320/512, 384/512, 256/512, 320/512}, -- Preservation
-		[1473] = {384/512, 448/512, 256/512, 320/512}, -- Augmentation
 	},
 
 	--class icons and colors
 	class_icons_small = [[Interface\AddOns\Details\images\classes_small]],
 	class_coords = {
-		["DEMONHUNTER"] = {
-			0.73828126 / 2, -- [1]
-			1 / 2, -- [2]
-			0.5 / 2, -- [3]
-			0.75 / 2, -- [4]
-		},
-		["HUNTER"] = {
-			0, -- [1]
-			0.25 / 2, -- [2]
-			0.25 / 2, -- [3]
-			0.5 / 2, -- [4]
-		},
-		["WARRIOR"] = {
-			0, -- [1]
-			0.25 / 2, -- [2]
-			0, -- [3]
-			0.25 / 2, -- [4]
-		},
-		["ROGUE"] = {
-			0.49609375 / 2, -- [1]
-			0.7421875 / 2, -- [2]
-			0, -- [3]
-			0.25 / 2, -- [4]
-		},
-		["MAGE"] = {
-			0.25 / 2, -- [1]
-			0.49609375 / 2, -- [2]
-			0, -- [3]
-			0.25 / 2, -- [4]
-		},
-		["PET"] = {
-			0.25 / 2, -- [1]
-			0.49609375 / 2, -- [2]
-			0.75 / 2, -- [3]
-			1 / 2, -- [4]
-		},
-		["DRUID"] = {
-			0.7421875 / 2, -- [1]
-			0.98828125 / 2, -- [2]
-			0, -- [3]
-			0.25 / 2, -- [4]
-		},
-		["MONK"] = {
-			0.5 / 2, -- [1]
-			0.73828125 / 2, -- [2]
-			0.5 / 2, -- [3]
-			0.75 / 2, -- [4]
-		},
-		["DEATHKNIGHT"] = {
-			0.25 / 2, -- [1]
-			0.5 / 2, -- [2]
-			0.5 / 2, -- [3]
-			0.75 / 2, -- [4]
-		},
-		["UNKNOW"] = {
-			0.5 / 2, -- [1]
-			0.75 / 2, -- [2]
-			0.75 / 2, -- [3]
-			1 / 2, -- [4]
-		},
-		["PRIEST"] = {
-			0.49609375 / 2, -- [1]
-			0.7421875 / 2, -- [2]
-			0.25 / 2, -- [3]
-			0.5 / 2, -- [4]
-		},
-		["UNGROUPPLAYER"] = {
-			0.5 / 2, -- [1]
-			0.75 / 2, -- [2]
-			0.75 / 2, -- [3]
-			1 / 2, -- [4]
-		},
-		["Alliance"] = {
-			0.49609375 / 2, -- [1]
-			0.742187 / 25, -- [2]
-			0.75 / 2, -- [3]
-			1 / 2, -- [4]
-		},
-		["WARLOCK"] = {
-			0.7421875 / 2, -- [1]
-			0.98828125 / 2, -- [2]
-			0.25 / 2, -- [3]
-			0.5 / 2, -- [4]
-		},
-		["ENEMY"] = {
-			0, -- [1]
-			0.25 / 2, -- [2]
-			0.75 / 2, -- [3]
-			1 / 2, -- [4]
-		},
-		["Horde"] = {
-			0.7421875 / 2, -- [1]
-			0.98828125 / 2, -- [2]
-			0.75 / 2, -- [3]
-			1 / 2, -- [4]
-		},
-		["PALADIN"] = {
-			0, -- [1]
-			0.25 / 2, -- [2]
-			0.5 / 2, -- [3]
-			0.75 / 2, -- [4]
-		},
-		["MONSTER"] = {
-			0, -- [1]
-			0.25 / 2, -- [2]
-			0.75 / 2, -- [3]
-			1 / 2, -- [4]
-		},
-		["SHAMAN"] = {
-			0.25 / 2, -- [1]
-			0.49609375 / 2, -- [2]
-			0.25 / 2, -- [3]
-			0.5 / 2, -- [4]
-		},
-		["EVOKER"] = {
-			0.50390625, -- [1]
-			0.625, -- [2]
-			0, -- [3]
-			0.125, -- [4]
-		},
+		["Alliance"] = { 0.375, 0.5, 0.5, 0.625 },
+		["Horde"] = { 0.25, 0.375, 0.5, 0.625 },
+		["PET"] = { 0.125, 0.25, 0.5, 0.625 },
+		["MONSTER"] = { 0, 0.125, 0.5, 0.625 },
+		["ENEMY"] = { 0, 0.125, 0.5, 0.625 },
+		["UNKNOW"] = { 0, 0.125, 0.5, 0.625 },
+		["UNGROUPPLAYER"] = { 0.375, 0.5, 0.5, 0.625 },
+		["WITCHHUNTER"] = { 0.875, 1, 0.375, 0.5 },
+		["WITCHDOCTOR"] = { 0.75, 0.875, 0.375, 0.5 },
+		["WILDWALKER"] = { 0.625, 0.75, 0.375, 0.5 },
+		["WARRIOR"] = { 0.5, 0.625, 0.375, 0.5 },
+		["WARLOCK"] = { 0.375, 0.5, 0.375, 0.5 },
+		["TINKER"] = { 0.25, 0.375, 0.375, 0.5 },
+		["SUNCLERIC"] = { 0.125, 0.25, 0.375, 0.5 },
+		["STORMBRINGER"] = { 0, 0.125, 0.375, 0.5 },
+		["STARCALLER"] = { 0.875, 1, 0.25, 0.375 },
+		["SPIRITMAGE"] = { 0.75, 0.875, 0.25, 0.375 },
+		["SONOFARUGAL"] = { 0.625, 0.75, 0.25, 0.375 },
+		["SHAMAN"] = { 0.5, 0.625, 0.25, 0.375 },
+		["ROGUE"] = { 0.375, 0.5, 0.25, 0.375 },
+		["REAPER"] = { 0.25, 0.375, 0.25, 0.375 },
+		["RANGER"] = { 0.125, 0.25, 0.25, 0.375 },
+		["PYROMANCER"] = { 0, 0.125, 0.25, 0.375 },
+		["PROPHET"] = { 0.875, 1, 0.125, 0.25 },
+		["PRIEST"] = { 0.75, 0.875, 0.125, 0.25 },
+		["PALADIN"] = { 0.625, 0.75, 0.125, 0.25 },
+		["NECROMANCER"] = { 0.5, 0.625, 0.125, 0.25 },
+		["MONK"] = { 0.375, 0.5, 0.125, 0.25 },
+		["MAGE"] = { 0.25, 0.375, 0.125, 0.25 },
+		["HUNTER"] = { 0.125, 0.25, 0.125, 0.25 },
+		["HERO"] = { 0, 0.125, 0.125, 0.25 },
+		["GUARDIAN"] = { 0.875, 1, 0, 0.125 },
+		["FLESHWARDEN"] = { 0.75, 0.875, 0, 0.125 },
+		["DRUID"] = { 0.625, 0.75, 0, 0.125 },
+		["DEMONHUNTER"] = { 0.5, 0.625, 0, 0.125 },
+		["DEATHKNIGHT"] = { 0.375, 0.5, 0, 0.125 },
+		["CULTIST"] = { 0.25, 0.375, 0, 0.125 },
+		["CHRONOMANCER"] = { 0.125, 0.25, 0, 0.125 },
+		["BARBARIAN"] = { 0, 0.125, 0, 0.125 },
 	},
 
 	class_colors = {
-		["DEMONHUNTER"] = {
-			0.64,
-			0.19,
-			0.79,
-		},
-		["HUNTER"] = {
-			0.67, -- [1]
-			0.83, -- [2]
-			0.45, -- [3]
-		},
-		["WARRIOR"] = {
-			0.78, -- [1]
-			0.61, -- [2]
-			0.43, -- [3]
-		},
-		["PALADIN"] = {
-			0.96, -- [1]
-			0.55, -- [2]
-			0.73, -- [3]
-		},
-		["SHAMAN"] = {
-			0, -- [1]
-			0.44, -- [2]
-			0.87, -- [3]
-		},
-		["MAGE"] = {
-			0.41, -- [1]
-			0.8, -- [2]
-			0.94, -- [3]
-		},
-		["ROGUE"] = {
-			1, -- [1]
-			0.96, -- [2]
-			0.41, -- [3]
-		},
 		["UNKNOW"] = {
 			0.2, -- [1]
 			0.2, -- [2]
 			0.2, -- [3]
-		},
-		["PRIEST"] = {
-			1, -- [1]
-			1, -- [2]
-			1, -- [3]
-		},
-		["WARLOCK"] = {
-			0.58, -- [1]
-			0.51, -- [2]
-			0.79, -- [3]
 		},
 		["UNGROUPPLAYER"] = {
 			0.4, -- [1]
@@ -806,21 +676,6 @@ local default_profile = {
 			0.3, -- [1]
 			0.4, -- [2]
 			0.5, -- [3]
-		},
-		["DRUID"] = {
-			1, -- [1]
-			0.49, -- [2]
-			0.04, -- [3]
-		},
-		["MONK"] = {
-			0, -- [1]
-			1, -- [2]
-			0.59, -- [3]
-		},
-		["DEATHKNIGHT"] = {
-			0.77, -- [1]
-			0.12, -- [2]
-			0.23, -- [3]
 		},
 		["ARENA_GREEN"] = {
 			0.686, -- [1]
@@ -841,15 +696,6 @@ local default_profile = {
 			0.89019, -- [1]
 			0.32156, -- [2]
 			0.89019, -- [3]
-		},
-
-		["EVOKER"] = {
-			--0.2000,
-			--0.4980,
-			--0.5764,
-			0.2000,
-			0.5764,
-			0.4980,
 		},
 	},
 
@@ -1152,6 +998,11 @@ local default_profile = {
 	auto_swap_to_dynamic_overall = false,
 }
 
+for class, color in pairs(RAID_CLASS_COLORS) do
+	default_profile.class_colors[class] = { color.r, color.g, color.b }
+end
+
+
 Details.default_profile = default_profile
 
 -- aqui fica as propriedades do jogador que n�o ser�o armazenadas no profile
@@ -1171,8 +1022,6 @@ local default_player_data = {
 			track_hunter_frenzy = false,
 			merge_gemstones_1007 = false,
 			merge_critical_heals = false,
-			calc_evoker_damage = true,
-			evoker_show_realtimedps = false,
 		},
 
 		--this is used by the new data capture for charts
@@ -1389,8 +1238,6 @@ local default_global_data = {
 
 		user_is_patreon_supporter = false,
 
-		show_aug_predicted_spell_damage = false,
-
 		show_warning_id1 = true,
 		show_warning_id1_amount = 0,
 
@@ -1548,7 +1395,6 @@ local default_global_data = {
 		},
 
 		performance_profiles = { --deprecated
-			["RaidFinder"] = {enabled = false, update_speed = 1, use_row_animations = false, damage = true, heal = true, aura = true, energy = false, miscdata = true},
 			["Raid15"] = {enabled = false, update_speed = 1, use_row_animations = false, damage = true, heal = true, aura = true, energy = false, miscdata = true},
 			["Raid30"] = {enabled = false, update_speed = 1, use_row_animations = false, damage = true, heal = true, aura = true, energy = false, miscdata = true},
 			["Mythic"] = {enabled = false, update_speed = 1, use_row_animations = false, damage = true, heal = true, aura = true, energy = false, miscdata = true},
@@ -1681,7 +1527,6 @@ local default_global_data = {
 			delete_damage_TCOB = true, --delete damage on the concil of blood encounter
 		},
 }
-
 Details.default_global_data = default_global_data
 
 function Details:GetTutorialCVar(key, default)
@@ -1778,15 +1623,11 @@ function Details:UpdateState_CurrentMythicDungeonRun(stillOngoing, segmentID, la
 end
 
 function Details:RestoreState_CurrentMythicDungeonRun()
-	--no need to check for mythic+ if the user is playing on classic wow
-	if (DetailsFramework.IsTimewalkWoW()) then
-		return
-	end
-
 	local savedTable = Details.mythic_dungeon_currentsaved
-	local mythicLevel = C_ChallengeMode.GetActiveKeystoneInfo()
+	local activeKeystone = C_MythicPlus.IsKeystoneActive() and C_MythicPlus.GetActiveKeystoneInfo()
+	local mythicLevel = activeKeystone and activeKeystone.keystoneLevel
 	local zoneName, _, _, _, _, _, _, currentZoneID = GetInstanceInfo()
-	local mapID =  C_Map.GetBestMapForUnit("player")
+	local mapID = activeKeystone and activeKeystone.dungeonID
 
 	if (not mapID) then
 		--print("D! no mapID to restored mythic dungeon state.")
@@ -2035,9 +1876,8 @@ function Details:ImportProfile (profileString, newProfileName, bImportAutoRunCod
 		mythicPlusSettings.mythicrun_chart_frame_minimized = {}
 		mythicPlusSettings.finished_run_frame = {}
 
-		--max segments allowed
+		--make the max amount of segments be 25
 		Details.segments_amount = 25
-		--max segments to save between sections
 		Details.segments_amount_to_save = 15
 
 		--transfer instance data to the new created profile

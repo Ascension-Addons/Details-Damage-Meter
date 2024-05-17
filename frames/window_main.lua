@@ -567,15 +567,6 @@ local movement_onupdate = function(self, elapsed)
 		if (instance_ids_shown and instance_ids_shown > 0.95) then
 			show_instance_ids()
 			instance_ids_shown = nil
-
-			if (need_show_group_guide and not DetailsFramework.IsTimewalkWoW()) then
-				Details.MicroButtonAlert.Text:SetText(Loc["STRING_WINDOW1ATACH_DESC"])
-				Details.MicroButtonAlert:SetPoint("bottom", need_show_group_guide.baseframe, "top", 0, 30)
-				Details.MicroButtonAlert:SetHeight(320)
-				Details.MicroButtonAlert:Show()
-
-				need_show_group_guide = nil
-			end
 		elseif (instance_ids_shown) then
 			instance_ids_shown = instance_ids_shown + elapsed
 		end
@@ -955,10 +946,6 @@ local function move_janela(baseframe, iniciando, instancia, just_updating)
 		local group = instancia:GetInstanceGroup()
 		for _, this_instance in ipairs(group) do
 			this_instance.isMoving = false
-		end
-
-		if (not DetailsFramework.IsTimewalkWoW()) then
-			Details.MicroButtonAlert:Hide()
 		end
 
 		if (instancia_alvo and instancia_alvo.ativa and instancia_alvo.baseframe) then
@@ -1851,24 +1838,6 @@ local lineScript_Onenter = function(self)
 		self.textura:SetBlendMode("ADD")
 	end
 
-	local lefttext = self.lineText1
-	if (lefttext:IsTruncated()) then
-		if (not Details.left_anti_truncate) then
-
-		end
-
-		Details:SetFontSize(Details.left_anti_truncate.text, self._instance.row_info.font_size)
-		Details:SetFontFace(Details.left_anti_truncate.text, self._instance.row_info.font_face_file)
-		Details:SetFontColor(Details.left_anti_truncate.text, lefttext:GetTextColor())
-
-		Details.left_anti_truncate:SetPoint("left", lefttext, "left", -3, 0)
-		Details.left_anti_truncate.text:SetText(lefttext:GetText())
-
-		Details.left_anti_truncate:SetSize(Details.left_anti_truncate.text:GetStringWidth() + 3, self._instance.row_info.height)
-		Details.left_anti_truncate:Show()
-		lefttext.untruncated = true
-	end
-
 	self:SetScript("OnUpdate", shiftMonitor)
 
 	local classIcon = self:GetClassIcon()
@@ -2054,7 +2023,20 @@ end
 
 local setBarValue = function(self, value)
 	value = Clamp(value, 0, 100)
-	self.statusbar:SetValue(value)
+	if(self._instance.bars_inverted) then
+		self.statusbar:SetValue(0)
+
+		local width = self._instance.cached_bar_width
+		local inverse_bar_size = width / 100 * value
+		local coord_inverse = inverse_bar_size / width
+
+		inverse_bar_size = _math_max(inverse_bar_size, 0.00000001)
+
+		self.right_to_left_texture:SetWidth(inverse_bar_size)
+		self.right_to_left_texture:SetTexCoord(coord_inverse, 0, 0, 1)
+	else
+		self.statusbar:SetValue(value)
+	end
 	self.statusbar.value = value
 	if (self.using_upper_3dmodels) then
 		local width = self:GetWidth()
@@ -2093,9 +2075,6 @@ local iconFrame_OnEnter = function(self)
 			local instance = Details:GetInstance(self.row.instance_id)
 
 			instance:BuildInstanceBarTooltip(self)
-
-			local bIsClassic = (DetailsFramework.IsClassicWow() or DetailsFramework.IsTBCWow() or DetailsFramework.IsWotLKWow() or DetailsFramework.IsCataWow())
-
 			local classIcon, classL, classR, classT, classB = Details:GetClassIcon(class)
 
 			local specId, specName, specDescription, specIcon, specRole, specClass = DetailsFramework.GetSpecializationInfoByID(spec or 0) --thanks pas06
@@ -2120,28 +2099,15 @@ local iconFrame_OnEnter = function(self)
 			end
 			Details:AddTooltipHeaderStatusbar()
 
-			local talentString = ""
-
-			if (type(talents) == "table") then
-				if (talents and not bIsClassic) then
-					for i = 1, #talents do
-						local talentID, talentName, texture, selected, available = GetTalentInfoByID(talents[i])
-						if (texture) then
-							talentString = talentString ..  " |T" .. texture .. ":" .. 24 .. ":" .. 24 ..":0:0:64:64:4:60:4:60|t"
-						end
-					end
-				end
-			end
-
 			local gotInfo
-			local localizedItemLevelString = _G.STAT_AVERAGE_ITEM_LEVEL
+			local localizedItemLevelString = _G.AVERAGE_ITEM_LEVEL_S
 			if (ilvl) then
-				GameCooltip:AddLine(localizedItemLevelString .. ":" , ilvl and "|T:" .. 24 .. ":" .. 24 ..":0:0:64:64:4:60:4:60|t" .. floor(ilvl.ilvl) or "|T:" .. 24 .. ":" .. 24 ..":0:0:64:64:4:60:4:60|t ??") --Loc from GlobalStrings.lua
+				GameCooltip:AddLine(format(localizedItemLevelString, ilvl) and "|T:" .. 24 .. ":" .. 24 ..":0:0:64:64:4:60:4:60|t" .. floor(ilvl.ilvl) or "|T:" .. 24 .. ":" .. 24 ..":0:0:64:64:4:60:4:60|t ??") --Loc from GlobalStrings.lua
 				GameCooltip:AddIcon([[]], 1, 1, 1, 20)
 				Details:AddTooltipBackgroundStatusbar()
 				gotInfo = true
 			else
-				GameCooltip:AddLine(localizedItemLevelString .. ":" , 0)
+				GameCooltip:AddLine(format(localizedItemLevelString, 0))
 				GameCooltip:AddIcon([[]], 1, 1, 1, 20)
 				Details:AddTooltipBackgroundStatusbar()
 				gotInfo = true
@@ -2149,14 +2115,8 @@ local iconFrame_OnEnter = function(self)
 
 			local localizedTalentsString = _G.TALENTS
 
-			if (talentString ~= "") then
-				GameCooltip:AddLine(localizedTalentsString .. ":", talentString)
-				GameCooltip:AddIcon([[]], 1, 1, 1, 24)
-				Details:AddTooltipBackgroundStatusbar()
-				gotInfo = true
-
-			elseif (gotInfo) then
-				GameCooltip:AddLine(localizedTalentsString .. ":", Loc["STRING_QUERY_INSPECT_REFRESH"])
+			if (gotInfo) then
+				GameCooltip:AddLine(format(localizedItemLevelString, Loc["STRING_QUERY_INSPECT_REFRESH"]))
 				GameCooltip:AddIcon([[]], 1, 1, 1, 24)
 				Details:AddTooltipBackgroundStatusbar()
 			end
@@ -2196,75 +2156,7 @@ local iconFrame_OnEnter = function(self)
 				end
 			end
 
-			local actorName = actor:GetName()
-			local RaiderIO = _G.RaiderIO
-
 			local lineHeight = 21
-
-			if (RaiderIO and not bIsClassic) then
-				local addedInfo = false
-
-				local playerName, playerRealm = actorName:match("(%w+)%-(%w+)")
-				playerName = playerName or actorName
-				playerRealm = playerRealm or GetRealmName()
-				local faction = actor.enemy and Details.faction_against or UnitFactionGroup("player")
-				faction = faction == "Horde" and 2 or 1
-
-				local rioProfile = RaiderIO.GetProfile(playerName, playerRealm, faction)
-
-				if (rioProfile and rioProfile.mythicKeystoneProfile) then
-					rioProfile = rioProfile.mythicKeystoneProfile
-
-					local previousScore = rioProfile.previousScore or 0
-					local currentScore = rioProfile.currentScore or 0
-
-					if (false and previousScore > currentScore and time() > 1700562401) then --2023.11.21 midday
-						GameCooltip:AddLine("M+ Score:", previousScore .. " (|cFFFFDD11" .. currentScore .. "|r)", 1, "white")
-						addedInfo = true
-					else
-						GameCooltip:AddLine("M+ Score:", currentScore, 1, "white")
-						addedInfo = true
-					end
-				else
-					local dungeonPlayerInfo = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(actorName)
-					if (dungeonPlayerInfo) then
-						local currentScore = dungeonPlayerInfo.currentSeasonScore or 0
-						if (currentScore > 0) then
-							GameCooltip:AddLine("M+ Score:", currentScore, 1, "white")
-							addedInfo = true
-						end
-					end
-				end
-
-				if (addedInfo) then
-					GameCooltip:AddIcon([[]], 1, 1, 1, 20)
-					Details:AddTooltipBackgroundStatusbar()
-					--increase frame height
-					height = height + lineHeight
-				end
-			else
-				if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE and C_PlayerInfo) then --is retail?
-					local dungeonPlayerInfo = C_PlayerInfo.GetPlayerMythicPlusRatingSummary(actorName)
-					if (dungeonPlayerInfo) then
-						local currentScore = dungeonPlayerInfo.currentSeasonScore or 0
-						if (currentScore > 0) then
-							GameCooltip:AddLine("M+ Score:", currentScore, 1, "white")
-							GameCooltip:AddIcon([[]], 1, 1, 1, 20)
-							Details:AddTooltipBackgroundStatusbar()
-							--increase frame height
-							height = height + lineHeight
-						end
-					end
-				end
-			end
-
-			if (actor.spec == 1473 and actor.tipo == DETAILS_ATTRIBUTE_DAMAGE) then
-				local damageDone = math.floor(actor.total + actor.total_extra)
-				GameCooltip:AddLine("Evoker Predicted Damage:", Details:Format(damageDone) .. " (" .. Details:Format(damageDone / Details:GetCurrentCombat():GetCombatTime()) .. ")", 1, "white")
-				GameCooltip:AddIcon([[]], 1, 1, 1, 20)
-				Details:AddTooltipBackgroundStatusbar()
-				height = height + lineHeight
-			end
 
 			if (actor.classe == "UNKNOW") then
 				local npcId = tonumber(actor.aID)
@@ -3211,19 +3103,19 @@ local function CreateAlertFrame(baseframe, instancia)
 	flash_texture:SetAllPoints()
 	flash_texture:SetBlendMode("ADD")
 	local animation = flash_texture:CreateAnimationGroup()
+	local anim0 = animation:CreateAnimation("ALPHA")
 	local anim1 = animation:CreateAnimation("ALPHA")
 	local anim2 = animation:CreateAnimation("ALPHA")
-	anim1:SetOrder (1)
+	anim0:SetOrder(0)
+	anim0:SetDuration(0)
+	anim0:SetChange(-1)
 
-	anim1:SetFromAlpha (0)
-	anim1:SetToAlpha (1)
-
+	anim1:SetOrder (2)
+	anim1:SetChange(1)
 	anim1:SetDuration(0.1)
-	anim2:SetOrder (2)
 
-	anim1:SetFromAlpha (1)
-	anim1:SetToAlpha (0)
-
+	anim2:SetOrder (3)
+	anim1:SetChange(-1)
 	anim2:SetDuration(0.2)
 	animation:SetScript("OnFinished", function(self)
 		flash_texture:Hide()
@@ -4107,6 +3999,14 @@ function gump:CreateNewLine(instance, index)
 	newLine.statusbar:SetMinMaxValues(0, 100)
 	newLine.statusbar:SetValue(0)
 
+	--> right to left texture
+	newLine.statusbar.right_to_left_texture = newLine.statusbar:CreateTexture(nil, "overlay")
+	newLine.statusbar.right_to_left_texture:SetPoint("topright", newLine.statusbar, "topright")
+	newLine.statusbar.right_to_left_texture:SetPoint("bottomright", newLine.statusbar, "bottomright")
+	newLine.statusbar.right_to_left_texture:SetWidth(0.000000001)
+	newLine.statusbar.right_to_left_texture:Hide()
+	newLine.right_to_left_texture = newLine.statusbar.right_to_left_texture
+
 	--create textures and icons
 	newLine.textura = newLine.statusbar:CreateTexture(nil, "artwork")
 	newLine.textura:SetHorizTile(false)
@@ -4118,12 +4018,10 @@ function gump:CreateNewLine(instance, index)
 	newLine.extraStatusbar.texture = newLine.extraStatusbar:CreateTexture(nil, "overlay")
 	newLine.extraStatusbar:SetStatusBarTexture(newLine.extraStatusbar.texture)
 
-	--by default painting the extraStatusbar with the evoker color
-	local evokerColor = Details.class_colors["EVOKER"]
-	--newLine.extraStatusbar.texture:SetTexture([[Interface\AddOns\Details\images\bar_textures\bar_of_bars.png]]) --setColorTexture is very expensive, so set the color once and use vertex color to change it
-	newLine.extraStatusbar.texture:SetColorTexture(1, 1, 1, 1) --setColorTexture is very expensive, so set the color once and use vertex color to change it
+	--newLine.extraStatusbar.texture:SetTexture([[Interface\AddOns\Details\images\bar_textures\bar_of_bars]]) --SetTexture is very expensive, so set the color once and use vertex color to change it
+	newLine.extraStatusbar.texture:SetTexture(1, 1, 1, 1) --SetTexture is very expensive, so set the color once and use vertex color to change it
 
-	newLine.extraStatusbar.texture:SetVertexColor(unpack(evokerColor))
+	newLine.extraStatusbar.texture:SetVertexColor(0.20, 0.58, 0.50)
 	newLine.extraStatusbar:SetAlpha(0.7)
 	newLine.extraStatusbar.defaultAlpha = 0.7
 	newLine.extraStatusbar:Hide()
@@ -4910,9 +4808,8 @@ function Details:InstanceRefreshRows(instance)
 				row.lineText1:SetPoint("right", row.statusbar, "right", -self.row_info.textL_offset - 2, self.row_info.text_yoffset)
 				row.icone_classe:Hide()
 				row.iconHighlight:Hide()
-				--[[ Deprecation of right_to_left_texture in favor of StatusBar:SetReverseFill 5/2/2022 - Flamanis
 				row.right_to_left_texture:SetPoint("topright", row.statusbar, "topright")
-				row.right_to_left_texture:SetPoint("bottomright", row.statusbar, "bottomright")]]
+				row.right_to_left_texture:SetPoint("bottomright", row.statusbar, "bottomright")
 
 			else
 				row.icone_classe:ClearAllPoints()
@@ -4928,21 +4825,6 @@ function Details:InstanceRefreshRows(instance)
 				row.statusbar:SetPoint("topleft", row, "topleft")
 
 				row.lineText1:SetPoint("right", row.icone_classe, "left", -self.row_info.textL_offset - 2, self.row_info.text_yoffset)
-			end
-		end
-
-		if (bHasIconMask) then
-			if (not row.icone_classe.maskTexture) then
-				row.icone_classe.maskTexture = row:CreateMaskTexture("$parentClassIconMask", "overlay")
-				row.icone_classe.maskTexture:SetAllPoints(row.icone_classe)
-				row.icone_classe:AddMaskTexture(row.icone_classe.maskTexture)
-			end
-			row.icone_classe.maskTexture:SetTexture(iconMask)
-			row.icone_classe.maskTexture:Show()
-		else
-			if (row.icone_classe.maskTexture) then
-				row.icone_classe.maskTexture:Hide()
-				row.icone_classe.maskTexture:SetTexture("")
 			end
 		end
 
@@ -4998,9 +4880,9 @@ function Details:InstanceRefreshRows(instance)
 		row.overlayTexture:SetVertexColor(unpack(overlayColor))
 
 		if (isInvertedBars) then
-			row.statusbar:SetReverseFill(true)
+			row.right_to_left_texture:Show()
 			else
-			row.statusbar:SetReverseFill(false)
+				row.right_to_left_texture:Hide()
 		end
 
 		--texture class color: if true color changes on the fly through class refresh

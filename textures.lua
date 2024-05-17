@@ -304,7 +304,7 @@ Details.TextureAtlas = {
     },
 
     ["iconmask"] = {
-        file = [[Interface\AddOns\Details\images\common-iconmask.png]],
+        file = [[Interface\AddOns\Details\images\common-iconmask]],
         width = 64,
         height = 64,
         leftTexCoord = 0,

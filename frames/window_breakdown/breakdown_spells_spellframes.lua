@@ -502,7 +502,7 @@ local spellBlockMixin = {
 	---@param self breakdownspellblock
 	SetColor = function(self, ...)
 		local r, g, b, a = DF:ParseColors(...)
-		self.statusBarTexture:SetColorTexture(r, g, b, a)
+		self.statusBarTexture:SetTexture(r, g, b, a)
 	end,
 }
 
@@ -516,7 +516,7 @@ function spellsTab.CreateSpellBlock(spellBlockContainer, index) --~breakdownspel
 	detailsFramework:Mixin(spellBlock, spellBlockMixin)
 
 	local statusBarTexture = spellBlock:CreateTexture("$parentTexture", "artwork")
-	statusBarTexture:SetColorTexture(unpack(CONST_SPELLBLOCK_DEFAULT_COLOR))
+	statusBarTexture:SetTexture(unpack(CONST_SPELLBLOCK_DEFAULT_COLOR))
 	statusBarTexture:SetPoint("topleft", spellBlock, "topleft", 1, -1)
 	statusBarTexture:SetPoint("bottomleft", spellBlock, "bottomleft", 1, 1)
 	spellBlock.statusBarTexture = statusBarTexture
@@ -1508,7 +1508,7 @@ function spellsTab.CreateSpellBar(self, index) --~spellbar ~spellline ~spell ~cr
 
 	---@type texture shown when the mouse hoverover this spellbar
 	local hightlightTexture = statusBar:CreateTexture("$parentTextureHighlight", "highlight")
-	hightlightTexture:SetColorTexture(1, 1, 1, 0.2)
+	hightlightTexture:SetTexture(1, 1, 1, 0.2)
 	hightlightTexture:SetAllPoints()
 	statusBar.highlightTexture = hightlightTexture
 
@@ -1538,7 +1538,6 @@ function spellsTab.CreateSpellBar(self, index) --~spellbar ~spellline ~spell ~cr
 	local spellIcon = spellIconFrame:CreateTexture("$parentTexture", "overlay")
 	spellIcon:SetAllPoints()
 	spellIcon:SetTexCoord(.1, .9, .1, .9)
-	detailsFramework:SetMask(spellIcon, Details:GetTextureAtlas("iconmask"))
 	spellBar.spellIcon = spellIcon
 
 	--create a square frame which is placed at the right side of the line to show which targets for damaged by the spell

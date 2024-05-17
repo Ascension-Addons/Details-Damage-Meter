@@ -626,7 +626,7 @@ function detailsFramework:NewTextEntry(parent, container, name, member, width, h
 	--editbox
 	newTextEntryObject.editbox = CreateFrame("EditBox", name, parent,"BackdropTemplate")
 	newTextEntryObject.editbox:SetSize(232, 20)
-	newTextEntryObject.editbox:SetBackdrop({bgFile = [["Interface\DialogFrame\UI-DialogBox-Background"]], tileSize = 64, tile = true, edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]], edgeSize = 10, insets = {left = 1, right = 1, top = 0, bottom = 0}})
+	newTextEntryObject.editbox:SetBackdrop({bgFile = [[Interface\DialogFrame\UI-DialogBox-Background]], tileSize = 64, tile = true, edgeFile = [[Interface\DialogFrame\UI-DialogBox-Border]], edgeSize = 10, insets = {left = 1, right = 1, top = 0, bottom = 0}})
 	newTextEntryObject.editbox:SetTextInsets(3, 0, 0, -3)
 	newTextEntryObject.editbox:SetWidth(width)
 	newTextEntryObject.editbox:SetHeight(height)

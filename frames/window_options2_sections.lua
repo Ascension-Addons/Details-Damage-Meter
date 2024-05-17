@@ -205,7 +205,6 @@ do
                 --localize-me
                 {value = 1, label = "Activity Time", onclick = onSelectTimeType, icon = "Interface\\Icons\\Achievement_Quests_Completed_Daily_08", iconcolor = {1, .9, .9}, texcoord = {0.078125, 0.921875, 0.078125, 0.921875}},
                 {value = 2, label = "Effective Time", onclick = onSelectTimeType, icon = "Interface\\Icons\\Achievement_Quests_Completed_08"},
-                --{value = 3, label = "Real Time", onclick = onSelectTimeType, icon = "Interface\\Icons\\Ability_Evoker_TipTheScales"},
             }
             local buildTimeTypeMenu = function()
                 return timetypeOptions
@@ -4826,7 +4825,7 @@ do
             whiteBackground:SetDrawLayer("background")
             whiteBackground:SetSize(255, 128)
             whiteBackground:SetPoint("topleft", sectionFrame, "topleft", previewX, previewY)
-            whiteBackground:SetColorTexture(1, 1, 1, 1)
+            whiteBackground:SetTexture(1, 1, 1, 1)
 
             --background grid
             local icon1 = DF:NewImage(sectionFrame, nil, 128, 64, "artwork", nil, nil, "$parentIcon1")
@@ -6227,7 +6226,7 @@ do
         --create a gray texture below each plugin section
         local createBackgroupTexture = function()
             local texture = sectionFrame:CreateTexture(nil, "background")
-            texture:SetColorTexture(1, 1, 1, .1)
+            texture:SetTexture(1, 1, 1, .1)
             texture:SetSize(300, 150)
             return texture
         end
@@ -7129,33 +7128,6 @@ do
                 end,
                 name = DF:AddClassIconToText("Hunter Track Pet Frenzy", false, "HUNTER"),
                 desc = "Hunter Track Pet Frenzy",
-                boxfirst = true,
-            },
-
-            {--show evoker bar
-                type = "toggle",
-                get = function() return Details.combat_log.calc_evoker_damage end,
-                set = function(self, fixedparam, value)
-                    Details.combat_log.calc_evoker_damage = value
-                    afterUpdate()
-                    Details:ClearParserCache()
-                    currentInstance:InstanceReset()
-                end,
-                name = DF:AddClassIconToText("Show Augmentation Extra Bar", false, "EVOKER"),
-                desc = "Calculate how much the Augmentation Evoker are buffing other players",
-                boxfirst = true,
-            },
-
-            {--use realtime dps for evoker augmentataion
-                type = "toggle",
-                get = function() return Details.combat_log.evoker_show_realtimedps end,
-                set = function(self, fixedparam, value)
-                    Details.combat_log.evoker_show_realtimedps = value
-                    afterUpdate()
-                    Details:ClearParserCache()
-                end,
-                name = DF:AddClassIconToText("Use Real Time Dps for Aug. Evoker", false, "EVOKER"),
-                desc = "Use Real Time Dps for Augmentation Evoker",
                 boxfirst = true,
             },
 

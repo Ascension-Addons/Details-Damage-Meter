@@ -152,7 +152,7 @@ local eventListener = Details:CreateEventListener()
 
 eventListener:RegisterEvent("COMBAT_PLAYER_ENTER", function()
     --check if can start the real time dps tracker
-    local bCanStartRealTimeDpsTracker = Details.use_realtimedps or (Details.combat_log.evoker_show_realtimedps and Details.playerspecid == 1473)
+    local bCanStartRealTimeDpsTracker = Details.use_realtimedps
     if (not bCanStartRealTimeDpsTracker) then
         bCanStartRealTimeDpsTracker = Details.zone_type == "arena" and Details.realtimedps_always_arena
     end

@@ -1801,22 +1801,6 @@ function atributo_misc:ToolTipBuffUptime(instance, barFrame)
 			end
 		end
 
-		--check if this player has a augmentation buff container		
-		local augmentedBuffContainer = self.received_buffs_spells
-		if (augmentedBuffContainer) then
-			for sourceNameSpellId, spellTable in augmentedBuffContainer:ListSpells() do
-				local sourceName, spellId = strsplit("@", sourceNameSpellId)
-				spellId = tonumber(spellId)
-				local spellName, _, spellIcon = Details.GetSpellInfo(spellId)
-
-				if (spellName) then
-					sourceName = detailsFramework:RemoveRealmName(sourceName)
-					local uptime = spellTable.uptime or 0
-					buffUptimeTable[#buffUptimeTable+1] = {spellId, uptime, sourceName}
-				end
-			end
-		end
-
 		table.sort(buffUptimeTable, Details.Sort2)
 
 		Details:AddTooltipSpellHeaderText(Loc ["STRING_SPELLS"], headerColor, #buffUptimeTable, Details.tooltip_spell_icon.file, unpack(Details.tooltip_spell_icon.coords))

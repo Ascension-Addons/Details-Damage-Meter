@@ -572,7 +572,7 @@
 		bigDogRowTexture:SetPoint("bottomleft", optionsLeftSideBarMenu, "bottomleft", 1, 1)
 		bigDogRowTexture:SetPoint("bottomright", optionsLeftSideBarMenu, "bottomright", -1, 1)
 		bigDogRowTexture:SetHeight(20)
-		bigDogRowTexture:SetColorTexture(.5, .5, .5, .1)
+		bigDogRowTexture:SetTexture(.5, .5, .5, .1)
 		bigDogRowTexture:Hide()
 
 		--tools title bar

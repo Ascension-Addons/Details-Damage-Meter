@@ -1,4 +1,4 @@
-
+﻿
 Open Raid is a library to share the player information while playing in a group or raid.
 
 Install:

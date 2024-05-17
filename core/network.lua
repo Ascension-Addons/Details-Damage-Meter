@@ -45,7 +45,6 @@
 	local CONST_ROGUE_SR = "SR" --soul rip from akaari's soul (LEGION ONLY)
 
 	_G.DETAILS_PREFIX_COACH = "CO" --coach feature
-	_G.DETAILS_PREFIX_TBC_DATA = "BC" --tbc data
 
 	Details.network.ids = {
 		["HIGHFIVE_REQUEST"] = CONST_HIGHFIVE_REQUEST,
@@ -69,8 +68,6 @@
 		["CLOUD_SHAREDATA"] = CONST_CLOUD_SHAREDATA,
 
 		["COACH_FEATURE"] = DETAILS_PREFIX_COACH, --ask the raid leader is the coach is enbaled
-
-		["TBC_DATA"] = DETAILS_PREFIX_TBC_DATA, --get basic information about the player
 	}
 
 	local registredPlugins = {}
@@ -110,10 +107,6 @@
 			return
 		end
 
-		if (DetailsFramework.IsTimewalkWoW()) then
-			return
-		end
-
 		--check the player level to be at least 60
 		---@type number
 		local playerLevel = UnitLevel("player")
@@ -130,48 +123,9 @@
 		end
 
 		--get the equipped player item level
-		local overall, equipped = GetAverageItemLevel()
+		local equipped = GetAverageItemLevel()
 
-		local talentsAsString = ""
-
-		--get player talents
-		--depending on the game version, the talent API is different
-
-		--vertical tree
-		if (DetailsFramework.IsClassicWow()) then --vanilla
-			talentsAsString = ""
-
-		elseif (DetailsFramework.IsTBCWow()) then --burning crusade
-			talentsAsString = ""
-
-		elseif (DetailsFramework.IsWotLKWow()) then --wrath of the lich king
-			talentsAsString = ""
-
-		elseif (DetailsFramework.IsCataWow()) then --cataclysm
-			talentsAsString = ""
-		end
-
-		--horizontal pick one
-		if (DetailsFramework.IsPandaWow()) then
-			talentsAsString = getHorizontalTalentsAsString()
-
-		elseif (DetailsFramework.IsWarlordsWow()) then
-			talentsAsString = getHorizontalTalentsAsString()
-
-		elseif (DetailsFramework.IsLegionWow()) then
-			talentsAsString = getHorizontalTalentsAsString()
-
-		elseif (DetailsFramework.IsBFAWow()) then
-			talentsAsString = getHorizontalTalentsAsString()
-
-		elseif (DetailsFramework.IsShadowlandsWow()) then
-			talentsAsString = getHorizontalTalentsAsString()
-		end
-
-		--vertical, horizonal tree
-		if (DetailsFramework.IsDragonflight()) then
-			talentsAsString = detailsFramework:GetDragonlightTalentString()
-		end
+		local talentsAsString = C_CharacterAdvancement.ExportBuild(true)
 
 		--get the spec ID
 		local spec = DetailsFramework.GetSpecialization()
@@ -278,47 +232,6 @@
 
 	function Details.network.Cloud_SharedData(player, realm, coreVersion, data)
 		--deprecated
-	end
-
-	function Details.network.TBCData(player, realm, coreVersion, data)
-		if (not IsInRaid() and not IsInGroup()) then
-			return
-		end
-
-		local LibDeflate = _G.LibStub:GetLibrary("LibDeflate")
-		local dataCompressed = LibDeflate:DecodeForWoWAddonChannel(data)
-		local dataSerialized = LibDeflate:DecompressDeflate(dataCompressed)
-		local dataTable = {Details:Deserialize(dataSerialized)}
-		tremove(dataTable, 1)
-		local dataTable = dataTable[1]
-
-		local playerRole = dataTable[1]
-		local spec = dataTable[2]
-		local itemLevel = dataTable[3]
-		local talents = dataTable[4]
-		local guid = dataTable[5]
-
-		--[=[
-		print("Details! Received TBC Comm Data:")
-		print("From:", player)
-		print("spec:", spec)
-		print("role:", playerRole)
-		print("item level:", itemLevel)
-		print("guid:", guid)
-		--]=]
-
-		if (guid) then
-			Details.cached_talents[guid] = talents
-			if (spec and spec ~= 0)  then
-				Details.cached_specs[guid] = spec
-			end
-			Details.cached_roles[guid] = playerRole
-			Details.item_level_pool[guid] = {
-				name = player,
-				ilvl = itemLevel,
-				time = time()
-			}
-		end
 	end
 
 	--"CIEA" Coach Is Enabled Ask (client > server)
@@ -486,7 +399,6 @@
 		[CONST_PVP_ENEMY] = Details.network.ReceivedEnemyPlayer,
 
 		[DETAILS_PREFIX_COACH] = Details.network.Coach, --coach feature
-		[DETAILS_PREFIX_TBC_DATA] = Details.network.TBCData
 	}
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -610,24 +522,17 @@
 	end
 
 	function Details:SendHomeRaidData(type, ...)
-		if (IsInRaid(LE_PARTY_CATEGORY_HOME) and IsInInstance()) then
-			Details:SendCommMessage(DETAILS_PREFIX_NETWORK, Details:Serialize(type, UnitName("player"), GetRealmName(), Details.realversion, ...), "RAID")
-		end
+		Details:SendCommMessage(DETAILS_PREFIX_NETWORK, Details:Serialize(type, UnitName("player"), GetRealmName(), Details.realversion, ...), "RAID")
 	end
 
 	function Details:SendRaidData(type, ...)
-		local isInInstanceGroup = IsInRaid(LE_PARTY_CATEGORY_INSTANCE)
-		if (isInInstanceGroup) then
-			Details:SendCommMessage(DETAILS_PREFIX_NETWORK, Details:Serialize(type, UnitName("player"), GetRealmName(), Details.realversion, ...), "INSTANCE_CHAT")
-		else
-			Details:SendCommMessage(DETAILS_PREFIX_NETWORK, Details:Serialize(type, UnitName("player"), GetRealmName(), Details.realversion, ...), "RAID")
-		end
+		Details:SendCommMessage(DETAILS_PREFIX_NETWORK, Details:Serialize(type, UnitName("player"), GetRealmName(), Details.realversion, ...), "RAID")
 	end
 
 	function Details:SendPartyData(type, ...)
 		local prefix = DETAILS_PREFIX_NETWORK
 		local data = Details:Serialize(type, UnitName("player"), GetRealmName(), Details.realversion, ...)
-		local channel = IsInGroup(LE_PARTY_CATEGORY_INSTANCE) and "INSTANCE_CHAT" or "PARTY"
+		local channel = "PARTY"
 		Details:SendCommMessage(prefix, data, channel)
 	end
 

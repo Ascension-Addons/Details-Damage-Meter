@@ -256,8 +256,8 @@ function Details:StartMeUp()
 		Details.listener:RegisterEvent("PLAYER_REGEN_ENABLED")
 		Details.listener:RegisterEvent("UNIT_PET")
 
-		Details.listener:RegisterEvent("GROUP_ROSTER_UPDATE")
-		Details.listener:RegisterEvent("INSTANCE_ENCOUNTER_ENGAGE_UNIT")
+		Details.listener:RegisterEvent("RAID_ROSTER_UPDATE")
+		Details.listener:RegisterEvent("PARTY_MEMBERS_CHANGED")
 
 		Details.listener:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 		Details.listener:RegisterEvent("PLAYER_ENTERING_WORLD")
@@ -269,23 +269,15 @@ function Details:StartMeUp()
 		Details.listener:RegisterEvent("UNIT_NAME_UPDATE")
 
 		Details.listener:RegisterEvent("PLAYER_ROLES_ASSIGNED")
-		Details.listener:RegisterEvent("ROLE_CHANGED_INFORM")
 
 		Details.listener:RegisterEvent("UNIT_FACTION")
 
 		Details.listener:RegisterEvent("PLAYER_TARGET_CHANGED")
-
-		if (not DetailsFramework.IsTimewalkWoW()) then
-			Details.listener:RegisterEvent("PET_BATTLE_OPENING_START")
-			Details.listener:RegisterEvent("PET_BATTLE_CLOSE")
-			Details.listener:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
-			Details.listener:RegisterEvent("PLAYER_TALENT_UPDATE")
-			Details.listener:RegisterEvent("CHALLENGE_MODE_START")
-			--Details.listener:RegisterEvent("CHALLENGE_MODE_END") --doesn't exists ingame (only at cleu)
-			Details.listener:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-			Details.listener:RegisterEvent("WORLD_STATE_TIMER_START")
-
-		end
+		
+		Details.listener:RegisterEvent("MYTHIC_PLUS_STARTED")
+		Details.listener:RegisterEvent("MYTHIC_PLUS_COMPLETE")
+		
+		Details.listener:RegisterEvent("ASCENSION_KNOWN_ENTRIES_CHANGED")
 
 		Details.parser_frame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 
@@ -524,10 +516,7 @@ function Details:StartMeUp()
 		Details:Destroy(Details.cached_specs)
 		Details:Destroy(Details.cached_talents)
 	end
-
-	--get the player spec
-	C_Timer.After(2, Details.parser_functions.PLAYER_SPECIALIZATION_CHANGED)
-
+	
 	--embed windows on the chat window
 	Details.chat_embed:CheckChatEmbed(true)
 
@@ -565,13 +554,6 @@ function Details:StartMeUp()
 		Details:RefreshPlaterIntegration()
 	end)
 
-	--show warning message about classic beta
-	if (not DetailsFramework.IsClassicWow()) then
-		--i'm not in classc wow
-	else
-		--print("|CFFFFFF00[Details!]: you're using Details! for RETAIL on Classic WOW, please get the classic version (Details! Damage Meter Classic WoW), if you need help see our Discord (/details discord).")
-	end
-
 	Details:InstallHook("HOOK_DEATH", Details.Coach.Client.SendMyDeath)
 
 	if (not Details.slash_me_used) then
@@ -580,21 +562,7 @@ function Details:StartMeUp()
 		end
 	end
 
-	if (not DetailsFramework.IsTimewalkWoW()) then
-		Details.cached_specs[UnitGUID("player")] = GetSpecializationInfo(GetSpecialization() or 0)
-	end
-
-	if (GetExpansionLevel() == 9) then
-		if (not Details.data_wipes_exp["10"]) then
-			Details:Destroy(Details.encounter_spell_pool or {})
-			Details:Destroy(Details.boss_mods_timers or {})
-			Details:Destroy(Details.spell_school_cache or {})
-			Details:Destroy(Details.spell_pool or {})
-			Details:Destroy(Details.npcid_pool or {})
-			Details:Destroy(Details.current_exp_raid_encounters or {})
-			Details.data_wipes_exp["10"] = true
-		end
-	end
+	Details.cached_specs[UnitGUID("player")] = GetSpecializationInfo(GetSpecialization() or 0)
 
 	Details.boss_mods_timers.encounter_timers_dbm = Details.boss_mods_timers.encounter_timers_dbm or {}
 	Details.boss_mods_timers.encounter_timers_bw = Details.boss_mods_timers.encounter_timers_bw or {}
@@ -607,20 +575,6 @@ function Details:StartMeUp()
 	--if (Details.overall_clear_logout) then --this is suppose to be in the load data file
 	--	Details.tabela_overall = Details.combate:NovaTabela()
 	--end
-
-	if (not DetailsFramework.IsTimewalkWoW()) then
-		--wipe overall on torghast - REMOVE ON 10.0
-		local torghastTracker = CreateFrame("frame")
-		torghastTracker:RegisterEvent("JAILERS_TOWER_LEVEL_UPDATE") --shadowlands tower challenge
-		torghastTracker:SetScript("OnEvent", function(self, event, level, towerType)
-			if (level == 1) then
-				if (Details.overall_clear_newtorghast) then
-					Details.historico:ResetOverallData()
-					Details:Msg("overall data are now reset.") --localize-me
-				end
-			end
-		end)
-	end
 
 	--hide the panel shown by pressing the right mouse button on the title bar when a cooltip is opened
 	hooksecurefunc(GameCooltip, "SetMyPoint", function()
@@ -640,15 +594,13 @@ function Details:StartMeUp()
 
 	pcall(Details222.ClassCache.MakeCache)
 
-	Details:BuildSpecsNameCache()
-
 	Details222.Cache.DoMaintenance()
 
 	function Details:InstallOkey()
 		return true
 	end
 
-	if (DetailsFramework:IsNearlyEqual(Details.class_coords.ROGUE[4], 0.25)) then
+	if (DetailsFramework:IsNearlyEqual(Details.class_coords.ROGUE[4], 0.375)) then
 		DetailsFramework.table.copy(Details.class_coords, Details.default_profile.class_coords)
 	end
 

@@ -259,7 +259,7 @@ function DF:CreateCoolTip()
 		--this texture get the color from gameCooltip:SetColor()
 		if (not self.frameBackgroundTexture) then
 			self.frameBackgroundTexture = self:CreateTexture("$parent_FrameBackgroundTexture", "BACKGROUND", nil, 2)
-			self.frameBackgroundTexture:SetColorTexture(0, 0, 0, 0)
+			self.frameBackgroundTexture:SetTexture(0, 0, 0, 0)
 			self.frameBackgroundTexture:SetAllPoints()
 		end
 
@@ -272,7 +272,7 @@ function DF:CreateCoolTip()
 
 		if (not self.selectedTop) then
 			self.selectedTop = self:CreateTexture("$parent_SelectedTop", "ARTWORK")
-			self.selectedTop:SetColorTexture(.5, .5, .5, .75)
+			self.selectedTop:SetTexture(.5, .5, .5, .75)
 			self.selectedTop:SetHeight(3)
 		end
 
@@ -284,13 +284,13 @@ function DF:CreateCoolTip()
 
 		if (not self.selectedBottom) then
 			self.selectedBottom = self:CreateTexture("$parent_SelectedBottom", "ARTWORK")
-			self.selectedBottom:SetColorTexture(.5, .5, .5, .75)
+			self.selectedBottom:SetTexture(.5, .5, .5, .75)
 			self.selectedBottom:SetHeight(3)
 		end
 
 		if (not self.selectedMiddle) then
 			self.selectedMiddle = self:CreateTexture("$parent_Selected", "ARTWORK")
-			self.selectedMiddle:SetColorTexture(.5, .5, .5, .75)
+			self.selectedMiddle:SetTexture(.5, .5, .5, .75)
 			self.selectedMiddle:SetPoint("TOPLEFT", self.selectedTop, "BOTTOMLEFT")
 			self.selectedMiddle:SetPoint("BOTTOMRIGHT", self.selectedBottom, "TOPRIGHT")
 		end
@@ -623,17 +623,9 @@ function DF:CreateCoolTip()
 		statusbar.leftIcon:SetSize(16, 16)
 		statusbar.leftIcon:SetPoint("LEFT", statusbar, "LEFT", 0, 0)
 
-		statusbar.leftIconMask = statusbar:CreateMaskTexture("$parent_LeftIconMask", "artwork")
-		statusbar.leftIconMask:SetAllPoints(statusbar.leftIcon)
-		statusbar.leftIcon:AddMaskTexture(statusbar.leftIconMask)
-
 		statusbar.rightIcon = statusbar:CreateTexture("$parent_RightIcon", "OVERLAY")
 		statusbar.rightIcon:SetSize(16, 16)
 		statusbar.rightIcon:SetPoint("RIGHT", statusbar, "RIGHT", 0, 0)
-
-		statusbar.rightIconMask = statusbar:CreateMaskTexture("$parent_RightIconMask", "artwork")
-		statusbar.rightIconMask:SetAllPoints(statusbar.rightIcon)
-		statusbar.rightIcon:AddMaskTexture(statusbar.rightIconMask)
 
 		statusbar.spark2 = statusbar:CreateTexture("$parent_Spark2", "OVERLAY")
 		statusbar.spark2:SetSize(32, 32)
@@ -677,8 +669,6 @@ function DF:CreateCoolTip()
 		self:RegisterForClicks("LeftButtonDown")
 		self.leftIcon = self.statusbar.leftIcon
 		self.rightIcon = self.statusbar.rightIcon
-		self.leftIconMask = self.statusbar.leftIconMask
-		self.rightIconMask = self.statusbar.rightIconMask
 		self.texture = self.statusbar.texture
 		self.spark = self.statusbar.spark
 		self.spark2 = self.statusbar.spark2
@@ -1176,7 +1166,7 @@ function DF:CreateCoolTip()
 			--check if the texture passed is a texture object
 			if (type(leftIconSettings[1]) == "table" and leftIconSettings[1].GetObjectType and leftIconSettings[1]:GetObjectType() == "Texture") then
 				menuButton.leftIcon:SetSize(leftIconSettings[2], leftIconSettings[3])
-				menuButton.leftIcon:SetColorTexture(0.0156, 0.047, 0.1215, 1)
+				menuButton.leftIcon:SetTexture(0.0156, 0.047, 0.1215, 1)
 				textureObject = leftIconSettings[1]
 				textureObject:SetParent(menuButton.leftIcon:GetParent())
 				textureObject:ClearAllPoints()
@@ -1202,16 +1192,6 @@ function DF:CreateCoolTip()
 			textureObject:SetWidth(leftIconSettings[2])
 			textureObject:SetHeight(leftIconSettings[3])
 			textureObject:SetTexCoord(leftIconSettings[4], leftIconSettings[5], leftIconSettings[6], leftIconSettings[7])
-
-			if (leftIconSettings[10]) then
-				menuButton.leftIconMask:SetTexture(leftIconSettings[10])
-			else
-				if (DF.IsDragonflightAndBeyond()) then
-					menuButton.leftIconMask:SetTexture([[Interface\COMMON\common-iconmask]])
-				else
-					menuButton.leftIconMask:SetTexture([[Interface\CHATFRAME\chatframebackground]])
-				end
-			end
 
 			local colorRed, colorGreen, colorBlue, colorAlpha = DF:ParseColors(leftIconSettings[8])
 			textureObject:SetVertexColor(colorRed, colorGreen, colorBlue, colorAlpha)
@@ -1242,7 +1222,7 @@ function DF:CreateCoolTip()
 			--check if the texture passed is a texture object
 			if (type(rightIconSettings[1]) == "table" and rightIconSettings[1].GetObjectType and rightIconSettings[1]:GetObjectType() == "Texture") then
 				menuButton.rightIcon:SetSize(leftIconSettings[2], leftIconSettings[3])
-				menuButton.rightIcon:SetColorTexture(0.0156, 0.047, 0.1215, 1)
+				menuButton.rightIcon:SetTexture(0.0156, 0.047, 0.1215, 1)
 
 				textureObject = rightIconSettings[1]
 				textureObject:SetParent(menuButton)
@@ -1269,12 +1249,6 @@ function DF:CreateCoolTip()
 			menuButton.rightIcon:SetWidth(rightIconSettings[2])
 			menuButton.rightIcon:SetHeight(rightIconSettings[3])
 			menuButton.rightIcon:SetTexCoord(rightIconSettings[4], rightIconSettings[5], rightIconSettings[6], rightIconSettings[7])
-
-			if (rightIconSettings[10]) then
-				menuButton.rightIconMask:SetTexture(rightIconSettings[10])
-			else
-				menuButton.rightIconMask:SetTexture([[Interface\COMMON\common-iconmask]])
-			end
 
 			local colorRed, colorGreen, colorBlue, colorAlpha = DF:ParseColors(rightIconSettings[8])
 			menuButton.rightIcon:SetVertexColor(colorRed, colorGreen, colorBlue, colorAlpha)
@@ -1516,7 +1490,7 @@ function DF:CreateCoolTip()
 		if (DF:IsHtmlColor(texture) or type(texture) == "table") then
 			local color = texture
 			local r, g, b, a = DF:ParseColors(color)
-			wallpaper:SetColorTexture(r, g, b, a)
+			wallpaper:SetTexture(r, g, b, a)
 		else
 			wallpaper:SetTexture(texture)
 		end
@@ -1535,9 +1509,6 @@ function DF:CreateCoolTip()
 			wallpaper:SetDesaturated(true)
 		else
 			wallpaper:SetDesaturated(false)
-			if (wallpaperTable[8]) then
-				wallpaper:SetDesaturation(wallpaperTable[8])
-			end
 		end
 
 		wallpaper:Show()
@@ -1942,7 +1913,6 @@ function DF:CreateCoolTip()
 
 	function gameCooltip:SetSpellByID(spellId, bShowDescriptionOnly) --~spell
 		if (type(spellId) == "number") then
-			spellId = C_SpellBook.GetOverrideSpell(spellId)
 			local spellName, spellRank, spellIcon, castTime, minRange, maxRange = GetSpellInfo(spellId)
 			--castTime zero represents an instant cast or a channeled cast
 			if (spellName) then
@@ -2640,7 +2610,7 @@ function DF:CreateCoolTip()
 		menuType = gameCooltip:ParseMenuType(menuType)
 
 		if (menuType == CONST_MENU_TYPE_MAINMENU) then
-			frame1.frameBackgroundTexture:SetColorTexture(colorRed, colorGreen, colorBlue, colorAlpha)
+			frame1.frameBackgroundTexture:SetTexture(colorRed, colorGreen, colorBlue, colorAlpha)
 
 			--hide textures from older versions if exists
 			if (frame1.frameBackgroundLeft) then
@@ -2650,7 +2620,7 @@ function DF:CreateCoolTip()
 			end
 
 		elseif (menuType == CONST_MENU_TYPE_SUBMENU) then
-			frame2.frameBackgroundTexture:SetColorTexture(colorRed, colorGreen, colorBlue, colorAlpha)
+			frame2.frameBackgroundTexture:SetTexture(colorRed, colorGreen, colorBlue, colorAlpha)
 
 			--hide textures from older versions if exists
 			if (frame2.frameBackgroundLeft) then
@@ -2787,8 +2757,8 @@ function DF:CreateCoolTip()
 			frame1.frameBackgroundCenter:Hide()
 		end
 
-		frame1.frameBackgroundTexture:SetColorTexture(0, 0, 0, 0)
-		frame2.frameBackgroundTexture:SetColorTexture(0, 0, 0, 0)
+		frame1.frameBackgroundTexture:SetTexture(0, 0, 0, 0)
+		frame2.frameBackgroundTexture:SetTexture(0, 0, 0, 0)
 
 		if (not fromPreset) then
 			gameCooltip:Preset(3, true)

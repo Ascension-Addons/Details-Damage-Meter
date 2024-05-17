@@ -99,22 +99,7 @@ Details.SpellTableMixin = {
             if (spellTable) then
                 for key, value in pairs(spellTable) do
                     if (spellTable_FieldsToSum[key]) then
-                        --evoker empowerment levels
-                        if (key == "e_lvl" or key == "e_heal" or key == "e_dmg") then
-                            targetTable[key] = targetTable[key] or {}
-                            for level, amount in pairs(value) do
-                                targetTable[key][level] = (targetTable[key][level] or 0) + amount
-                            end
-
-                        elseif (key == "c_max" or key == "n_max") then
-                            targetTable[key] = math.max(targetTable[key] or value, value)
-
-                        elseif (key == "c_min" or key == "n_min") then
-                            targetTable[key] = math.min(targetTable[key] or value, value)
-
-                        else
-                            targetTable[key] = (targetTable[key] or 0) + value
-                        end
+                        targetTable[key] = (targetTable[key] or 0) + value
                     end
                 end
             end

@@ -336,15 +336,9 @@
 
         end,
 
-        SetTexture = function(titleBar, texturePath, textureCoord, vertexColor, maskTexture)
+        SetTexture = function(titleBar, texturePath, textureCoord, vertexColor)
             if (texturePath) then
                 titleBar.BackgroundTexture:SetTexture(texturePath)
-
-                if (maskTexture) then
-                    titleBar.BackgroundTexture:SetMask(maskTexture)
-                else
-                    titleBar.BackgroundTexture:SetMask("")
-                end
 
                 if (vertexColor) then
                     local r, g, b, a = detailsFramework:ParseColors(vertexColor)

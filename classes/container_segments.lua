@@ -141,7 +141,7 @@ function Details222.GuessSpecSchedules.ClearSchedules()
 	for i = 1, #Details222.GuessSpecSchedules.Schedules do
 		local schedule = Details222.GuessSpecSchedules.Schedules[i]
 		if (schedule) then
-			Details:CancelTimer(schedule)
+			Details:CancelTimer(schedule, true)
 		end
 	end
 	wipe(Details222.GuessSpecSchedules.Schedules)

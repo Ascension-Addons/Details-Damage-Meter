@@ -418,13 +418,13 @@ detailsFramework:Mixin(ButtonMetaFunctions, detailsFramework.ScriptHookMixin)
 		end
 
 		if (type(texture) == "string") then
-			local isAtlas = C_Texture.GetAtlasInfo(texture)
+			local isAtlas = AtlasUtil:AtlasExists(texture)
 			if (isAtlas) then
 				self.icon:SetAtlas(texture)
 
 			elseif (detailsFramework:IsHtmlColor(texture)) then
 				local r, g, b, a = detailsFramework:ParseColors(texture)
-				self.icon:SetColorTexture(r, g, b, a)
+				self.icon:SetTexture(r, g, b, a)
 			else
 				self.icon:SetTexture(texture, nil, nil, filterMode)
 			end
@@ -1134,7 +1134,7 @@ end
 
 		--texture which shows the texture color
 		local colorTexture = colorPickButton:CreateTexture("$parentTex", "overlay")
-		colorTexture:SetColorTexture(1, 1, 1)
+		colorTexture:SetTexture(1, 1, 1)
 		colorTexture:SetPoint("topleft", colorPickButton.widget, "topleft", 0, 0)
 		colorTexture:SetPoint("bottomright", colorPickButton.widget, "bottomright", 0, 0)
 		colorTexture:SetDrawLayer("background", 3)
@@ -1167,7 +1167,7 @@ end
 
         local atlas
         if (type(texture) == "string") then
-            atlas = C_Texture.GetAtlasInfo(texture)
+            atlas = AtlasUtil:AtlasExists(texture)
 			if (atlas) then
 				atlas = texture
 			end
@@ -1453,16 +1453,16 @@ function detailsFramework:CreateCloseButton(parent, frameName)
 	closeButton:SetSize(16, 16)
 
 	detailsFramework:Mixin(closeButton, detailsFramework.CloseButtonMixin)
+	
+
+	closeButton:SetNormalAtlas("RedButton-Exit")
+	closeButton:SetHighlightAtlas("RedButton-Highlight")
+	closeButton:SetPushedAtlas("RedButton-exit-pressed")
+	closeButton:SetDisabledAtlas("RedButton-Exit-Disabled")
 
 	local normalTexture = closeButton:GetNormalTexture()
 	local pushedTexture = closeButton:GetPushedTexture()
 	local highlightTexture = closeButton:GetHighlightTexture()
-	local disabledTexture = closeButton:GetDisabledTexture()
-
-	normalTexture:SetAtlas("RedButton-Exit")
-	highlightTexture:SetAtlas("RedButton-Highlight")
-	pushedTexture:SetAtlas("RedButton-exit-pressed")
-	disabledTexture:SetAtlas("RedButton-Exit-Disabled")
 
 	normalTexture:SetDesaturated(true)
 	highlightTexture:SetDesaturated(true)

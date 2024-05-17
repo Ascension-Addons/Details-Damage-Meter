@@ -41,10 +41,6 @@ end
 --auto run frame to dispatch scrtips for some events that details! doesn't handle
 local autoRunCodeEventFrame = CreateFrame("frame")
 
-if (not detailsFramework.IsTimewalkWoW()) then
-    autoRunCodeEventFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
-end
-
 autoRunCodeEventFrame.OnEventFunc = function(self, event)
     --ignore events triggered more than once in a small time window
     if (autoRunCodeEventFrame[event] and not autoRunCodeEventFrame[event]:IsCancelled()) then

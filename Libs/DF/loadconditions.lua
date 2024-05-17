@@ -17,15 +17,10 @@ local CreateFrame = CreateFrame ---@diagnostic disable-line
 local UnitIsUnit = UnitIsUnit ---@diagnostic disable-line
 local UnitClass = UnitClass ---@diagnostic disable-line
 local GetInstanceInfo = GetInstanceInfo ---@diagnostic disable-line
-local C_ChallengeMode = C_ChallengeMode ---@diagnostic disable-line
 local C_Map = C_Map ---@diagnostic disable-line
 local GetTalentInfoByID = GetTalentInfoByID ---@diagnostic disable-line
 
-local IS_WOW_PROJECT_MAINLINE = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE ---@diagnostic disable-line
-local IS_WOW_PROJECT_NOT_MAINLINE = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE ---@diagnostic disable-line
-local IS_WOW_PROJECT_CLASSIC_ERA = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC ---@diagnostic disable-line
-
-local PixelUtil = PixelUtil or DFPixelUtil  ---@diagnostic disable-line
+local PixelUtil = PixelUtil
 local UnitGroupRolesAssigned = detailsFramework.UnitGroupRolesAssigned
 local loadConditionsFrame
 
@@ -100,15 +95,9 @@ local default_load_conditions_frame_options = {
 
 function detailsFramework:CreateLoadFilterParser(callback)
 	local filterFrame = CreateFrame("frame")
-
-	if IS_WOW_PROJECT_MAINLINE then
-		filterFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED")
-		filterFrame:RegisterEvent("TRAIT_CONFIG_LIST_UPDATED")
-		filterFrame:RegisterEvent("CHALLENGE_MODE_START")
-	else
-		filterFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-		filterFrame:RegisterEvent("PLAYER_TALENT_UPDATE")
-	end
+	filterFrame:RegisterEvent("MYTHIC_PLUS_STARTED")
+	filterFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+	filterFrame:RegisterEvent("ASCENSION_KNOWN_ENTRIES_CHANGED")
 
 	filterFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED")
 	filterFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
@@ -117,46 +106,10 @@ function detailsFramework:CreateLoadFilterParser(callback)
 	filterFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 	filterFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
 
-	filterFrame:RegisterEvent("CHAT_MSG_LOOT")
-
 	filterFrame:SetScript("OnEvent", function(self, event, ...)
 		if (event == "ENCOUNTER_START") then --triggers before regen_disabled
 			local encounterID = ...
 			filterFrame.EncounterIDCached = encounterID
-
-		elseif (event == "CHAT_MSG_LOOT") then
-			local message = ...
-			local itemId = message:match("|Hitem:(%d+):")
-			itemId = tonumber(itemId)
-
-			if (itemId == 191140) then
-				xpcall(callback, geterrorhandler(), "RACE_START")
-				--monitor the player backpack each second to know when the item is removed from the bag
-
-				C_Timer.After(5, function()
-					filterFrame.FindBackpackItem = C_Timer.NewTicker(1, function()
-						local bFoundItem = false
-						for bagId = 0, 4 do
-							for slotId = 1, 32 do
-								local bagItemID = C_Container.GetContainerItemID(bagId, slotId)
-								if (bagItemID) then
-									if (bagItemID == itemId) then
-										--bronze timepiece is on the player backpack
-										return
-									end
-								end
-							end
-						end
-
-						if (not bFoundItem) then
-							filterFrame.FindBackpackItem:Cancel()
-							xpcall(callback, geterrorhandler(), "RACE_STOP")
-							return
-						end
-					end)
-				end)
-			end
-			return
 
 		elseif (event == "PLAYER_REGEN_DISABLED") then
 
@@ -167,7 +120,7 @@ function detailsFramework:CreateLoadFilterParser(callback)
 			--f.EncounterIDCached = nil
 			--when the player dies during an encounter, the game is triggering regen enabled
 
-		elseif (event == "PLAYER_SPECIALIZATION_CHANGED") then
+		elseif (event == "ASCENSION_KNOWN_ENTRIES_CHANGED") then
 			if (loadConditionsFrame and loadConditionsFrame:IsShown()) then
 				loadConditionsFrame:Refresh()
 			end
@@ -210,78 +163,11 @@ function detailsFramework:PassLoadFilters(loadTable, encounterID)
 		end
 	end
 
-	--spec
-	if (IS_WOW_PROJECT_MAINLINE and loadTable.spec.Enabled) then
-		local canCheckTalents = true
-
-		if (passLoadClass) then
-			--if is allowed to load on this class, check if the talents isn't from another class
-			local _, classFileName = UnitClass("player")
-			local specsForThisClass = detailsFramework:GetClassSpecIDs(classFileName)
-
-			canCheckTalents = false
-
-			for _, specID in ipairs(specsForThisClass) do
-				if (loadTable.spec[specID] or loadTable.spec[specID..""]) then
-					--theres a talent for this class
-					canCheckTalents = true
-					break
-				end
-			end
-		end
-
-		if (canCheckTalents) then
-			local specIndex = DetailsFramework.GetSpecialization()
-			if (specIndex) then
-				local specID = DetailsFramework.GetSpecializationInfo(specIndex)
-				if not specID or(not loadTable.spec[specID] and not loadTable.spec[specID .. ""]) then
-					return false, _G["SPECIALIZATION"]
-				end
-			else
-				return false, _G["SPECIALIZATION"]
-			end
-		end
-	end
-
 	--race
 	if (loadTable.race.Enabled) then
 		local raceName, raceFileName, raceID = UnitRace("player")
 		if (not loadTable.race [raceFileName]) then
 			return false, _G["RACE"]
-		end
-	end
-
-	--talents
-	if (IS_WOW_PROJECT_MAINLINE and loadTable.talent.Enabled) then
-		local bOnlySelected, bUseHashTable = true, true
-		local talentsInUse = detailsFramework:GetCharacterTalents(bOnlySelected, bUseHashTable)
-
-		local hasTalent
-
-		for talentId in pairs(talentsInUse) do
-			if talentId and(loadTable.talent[talentId] or loadTable.talent[talentId .. ""]) then
-				hasTalent =  true
-				break
-			end
-		end
-
-		if (not hasTalent) then
-			return false, _G["TALENTS"]
-		end
-	end
-
-	--pvptalent
-	if (IS_WOW_PROJECT_MAINLINE and loadTable.pvptalent.Enabled) then
-		local talentsInUse = detailsFramework:GetCharacterPvPTalents(false, true)
-		local hasTalent
-		for talentID, _ in pairs(talentsInUse) do
-			if talentID and(loadTable.pvptalent [talentID] or loadTable.pvptalent [talentID .. ""]) then
-				hasTalent =  true
-				break
-			end
-		end
-		if (not hasTalent) then
-			return false, (_G["PVP"] or "") .. " " .. (_G["TALENTS"] or "")
 		end
 	end
 
@@ -308,15 +194,15 @@ function detailsFramework:PassLoadFilters(loadTable, encounterID)
 	end
 
 	--affix
-	if (IS_WOW_PROJECT_MAINLINE and loadTable.affix.Enabled) then
-		local isInMythicDungeon = C_ChallengeMode.IsChallengeModeActive()
+	if (loadTable.affix.Enabled) then
+		local isInMythicDungeon = C_MythicPlus.IsKeystoneActive()
 		if (not isInMythicDungeon) then
 			return false, "M+ Affix"
 		end
 
-		local level, affixes, wasEnergized = C_ChallengeMode.GetActiveKeystoneInfo()
+		local activeKeystone = C_MythicPlus.GetActiveKeystoneInfo()
 		local hasAffix = false
-		for _, affixID in ipairs(affixes) do
+		for _, affixID in ipairs(activeKeystone.activeAffixes) do
 			if affixID and(loadTable.affix[affixID] or loadTable.affix[affixID .. ""]) then
 				hasAffix = true
 				break
@@ -460,26 +346,6 @@ function detailsFramework:OpenLoadConditionsPanel(optionsTable, callback, frameO
 			classGroup.DBKey = "class"
 			table.insert(loadConditionsFrame.AllRadioGroups, classGroup)
 
-		--create the radio group for character spec
-			if IS_WOW_PROJECT_MAINLINE then
-				local specs = {}
-				for _, specID in ipairs(detailsFramework:GetClassSpecIDs(select(2, UnitClass("player")))) do
-					local specID, specName, specDescription, specIcon, specBackground, specRole, specClass = DetailsFramework.GetSpecializationInfoByID(specID)
-					table.insert(specs, {
-						name = specName,
-						set = loadConditionsFrame.OnRadioCheckboxClick,
-						param = specID,
-						get = function() return loadConditionsFrame.OptionsTable.spec[specID] or loadConditionsFrame.OptionsTable.spec[specID..""] end,
-						texture = specIcon,
-					})
-				end
-
-				local specGroup = detailsFramework:CreateCheckboxGroup(loadConditionsFrame, specs, nil, {width = 200, height = 200, title = "Character Spec", backdrop_color = {0, 0, 0, 0}}, {offset_x = 120, amount_per_line = 4})
-				specGroup:SetPoint("topleft", loadConditionsFrame, "topleft", anchorPositions.spec[1], anchorPositions.spec[2])
-				specGroup.DBKey = "spec"
-				table.insert(loadConditionsFrame.AllRadioGroups, specGroup)
-			end
-
 		--create radio group for character races
 			local raceList = {}
 			for _, raceTable in ipairs(detailsFramework:GetCharacterRaceList()) do
@@ -495,221 +361,6 @@ function detailsFramework:OpenLoadConditionsPanel(optionsTable, callback, frameO
 			raceGroup:SetPoint("topleft", loadConditionsFrame, "topleft", anchorPositions.race [1], anchorPositions.race [2])
 			raceGroup.DBKey = "race"
 			table.insert(loadConditionsFrame.AllRadioGroups, raceGroup)
-
-		--create radio group for talents
-			if IS_WOW_PROJECT_MAINLINE then
-				--[=[ 7.0 to 9.0 talents schema
-				local talentList = {}
-				for _, talentTable in ipairs(detailsFramework:GetCharacterTalents()) do
-					if talentTable.ID then
-						table.insert(talentList, {
-							name = talentTable.Name:sub(1, 15),
-							set = loadConditionsFrame.OnRadioCheckboxClick,
-							param = talentTable.ID,
-							get = function() return loadConditionsFrame.OptionsTable.talent[talentTable.ID] or loadConditionsFrame.OptionsTable.talent[talentTable.ID .. ""] end,
-							texture = talentTable.Texture,
-						})
-					end
-				end
-				--]=]
-
-				--10.0 talents schema
-				local talentList = {}
-				local talentGroup = detailsFramework:CreateCheckboxGroup(loadConditionsFrame, talentList, nil, {width = 200, height = 200, title = "Character Talents", backdrop_color = {0, 0, 0, 0}}, {offset_x = 64, amount_per_line = 16})
-				talentGroup:SetPoint("topleft", loadConditionsFrame, "topleft", anchorPositions.talent[1], anchorPositions.talent[2])
-				talentGroup.DBKey = "talent"
-
-				table.insert(loadConditionsFrame.AllRadioGroups, talentGroup)
-				loadConditionsFrame.TalentGroup = talentGroup
-
-				do
-					if (false) then --disabled, isn't in use
-						--create a frame to show talents selected in other specs or characters
-						local otherTalents = CreateFrame("frame", nil, loadConditionsFrame, "BackdropTemplate")
-						otherTalents:SetSize(26, 26)
-						otherTalents:SetPoint("left", talentGroup.Title.widget, "right", 10, -2)
-						otherTalents.Texture = detailsFramework:CreateImage(otherTalents, [[Interface\BUTTONS\AdventureGuideMicrobuttonAlert]], 24, 24)
-						otherTalents.Texture:SetAllPoints()
-
-						local removeTalent = function(_, _, talentID)
-							loadConditionsFrame.OptionsTable.talent[talentID] = nil
-							GameCooltip2:Hide()
-							loadConditionsFrame.OnRadioStateChanged(talentGroup, loadConditionsFrame.OptionsTable[talentGroup.DBKey])
-							--loadConditionsFrame.CanShowTalentWarning()
-						end
-
-						local buildTalentMenu = function()
-							local playerTalents = detailsFramework:GetCharacterTalents()
-							local indexedTalents = {}
-							for _, talentTable in ipairs(playerTalents) do
-								table.insert(indexedTalents, talentTable.ID)
-							end
-
-							--talents selected to load
-							GameCooltip2:AddLine("select a talent to remove it (added from a different spec or character)", "", 1, "orange", "orange", 9)
-							GameCooltip2:AddLine("$div", nil, nil, -1, -1)
-
-							for talentID, _ in pairs(loadConditionsFrame.OptionsTable.talent) do
-								if (type(talentID) == "number" and not detailsFramework.table.find(indexedTalents, talentID)) then
-									local talentID, name, texture, selected, available = GetTalentInfoByID(talentID)
-									if (name) then
-										GameCooltip2:AddLine(name)
-										GameCooltip2:AddIcon(texture, 1, 1, 16, 16, .1, .9, .1, .9)
-										GameCooltip2:AddMenu(1, removeTalent, talentID)
-									end
-								end
-							end
-						end
-
-						otherTalents.CoolTip = {
-							Type = "menu",
-							BuildFunc = buildTalentMenu,
-							OnEnterFunc = function(self) end,
-							OnLeaveFunc = function(self) end,
-							FixedValue = "none",
-							ShowSpeed = 0.05,
-							Options = function()
-								GameCooltip2:SetOption("TextFont", "Friz Quadrata TT")
-								GameCooltip2:SetOption("TextColor", "orange")
-								GameCooltip2:SetOption("TextSize", 12)
-								GameCooltip2:SetOption("FixedWidth", 220)
-								GameCooltip2:SetOption("ButtonsYMod", -4)
-								GameCooltip2:SetOption("YSpacingMod", -4)
-								GameCooltip2:SetOption("IgnoreButtonAutoHeight", true)
-
-								GameCooltip2:SetColor(1, 0.5, 0.5, 0.5, 0)
-
-								local preset2_backdrop = {bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], edgeFile = [[Interface\Buttons\WHITE8X8]], tile = true, edgeSize = 1, tileSize = 16, insets = {left = 0, right = 0, top = 0, bottom = 0}}
-								local gray_table = {0.37, 0.37, 0.37, 0.95}
-								local black_table = {0.2, 0.2, 0.2, 1}
-								GameCooltip2:SetBackdrop(1, preset2_backdrop, gray_table, black_table)
-								GameCooltip2:SetBackdrop(2, preset2_backdrop, gray_table, black_table)
-							end,
-						}
-						GameCooltip2:CoolTipInject(otherTalents)
-
-						--[=[
-						function loadConditionsFrame.CanShowTalentWarning() --not in use
-							local playerTalents = detailsFramework:GetCharacterTalents()
-							local indexedTalents = {}
-							for _, talentTable in ipairs(playerTalents) do
-								table.insert(indexedTalents, talentTable.ID)
-							end
-							for talentID, _ in pairs(loadConditionsFrame.OptionsTable.talent) do
-								if (type(talentID) == "number" and not detailsFramework.table.find(indexedTalents, talentID)) then
-									otherTalents:Show()
-									return
-								end
-							end
-							otherTalents:Hide()
-						end
-						--]=]
-					end
-				end
-			end
-
-		--create radio group for pvp talents
-			if IS_WOW_PROJECT_MAINLINE then
-				local pvpTalentList = {}
-				for _, talentTable in ipairs(detailsFramework:GetCharacterPvPTalents()) do
-					table.insert(pvpTalentList, {
-						name = talentTable.Name:sub(1, 15),
-						set = loadConditionsFrame.OnRadioCheckboxClick,
-						param = talentTable.ID,
-						get = function() return loadConditionsFrame.OptionsTable.pvptalent [talentTable.ID] or loadConditionsFrame.OptionsTable.pvptalent [talentTable.ID .. ""] end,
-						texture = talentTable.Texture,
-					})
-				end
-				local pvpTalentGroup = detailsFramework:CreateCheckboxGroup(loadConditionsFrame, pvpTalentList, nil, {width = 200, height = 200, title = "Characer PvP Talents", backdrop_color = {0, 0, 0, 0}}, {offset_x = 160, amount_per_line = 3})
-				pvpTalentGroup:SetPoint("topleft", loadConditionsFrame, "topleft", anchorPositions.pvptalent [1], anchorPositions.pvptalent [2])
-				pvpTalentGroup.DBKey = "pvptalent"
-				table.insert(loadConditionsFrame.AllRadioGroups, pvpTalentGroup)
-				loadConditionsFrame.PvPTalentGroup = pvpTalentGroup
-
-				do
-					if (false) then
-						--create a frame to show talents selected in other specs or characters
-						local otherTalents = CreateFrame("frame", nil, loadConditionsFrame, "BackdropTemplate")
-						otherTalents:SetSize(26, 26)
-						otherTalents:SetPoint("left", pvpTalentGroup.Title.widget, "right", 10, -2)
-						otherTalents.Texture = detailsFramework:CreateImage(otherTalents, [[Interface\BUTTONS\AdventureGuideMicrobuttonAlert]], 24, 24)
-						otherTalents.Texture:SetAllPoints()
-
-						local removeTalent = function(_, _, talentID)
-							loadConditionsFrame.OptionsTable.pvptalent [talentID] = nil
-							GameCooltip2:Hide()
-							loadConditionsFrame.OnRadioStateChanged(pvpTalentGroup, loadConditionsFrame.OptionsTable [pvpTalentGroup.DBKey])
-							--loadConditionsFrame.CanShowPvPTalentWarning()
-						end
-
-						local buildTalentMenu = function()
-							local playerTalents = detailsFramework:GetCharacterPvPTalents()
-							local indexedTalents = {}
-							for _, talentTable in ipairs(playerTalents) do
-								table.insert(indexedTalents, talentTable.ID)
-							end
-
-							--talents selected to load
-							GameCooltip2:AddLine("select a talent to remove it(added from a different spec or character)", "", 1, "orange", "orange", 9)
-							GameCooltip2:AddLine("$div", nil, nil, -1, -1)
-
-							for talentID, _ in pairs(loadConditionsFrame.OptionsTable.pvptalent) do
-								if (type(talentID) == "number" and not detailsFramework.table.find(indexedTalents, talentID)) then
-									local _, name, texture = GetPvpTalentInfoByID(talentID)
-									if (name) then
-										GameCooltip2:AddLine(name)
-										GameCooltip2:AddIcon(texture, 1, 1, 16, 16, .1, .9, .1, .9)
-										GameCooltip2:AddMenu(1, removeTalent, talentID)
-									end
-								end
-							end
-						end
-
-						otherTalents.CoolTip = {
-							Type = "menu",
-							BuildFunc = buildTalentMenu,
-							OnEnterFunc = function(self) end,
-							OnLeaveFunc = function(self) end,
-							FixedValue = "none",
-							ShowSpeed = 0.05,
-							Options = function()
-								GameCooltip2:SetOption("TextFont", "Friz Quadrata TT")
-								GameCooltip2:SetOption("TextColor", "orange")
-								GameCooltip2:SetOption("TextSize", 12)
-								GameCooltip2:SetOption("FixedWidth", 220)
-								GameCooltip2:SetOption("ButtonsYMod", -4)
-								GameCooltip2:SetOption("YSpacingMod", -4)
-								GameCooltip2:SetOption("IgnoreButtonAutoHeight", true)
-
-								GameCooltip2:SetColor(1, 0.5, 0.5, 0.5, 0)
-
-								local preset2_backdrop = {edgeFile = [[Interface\Buttons\WHITE8X8]], tile = true, edgeSize = 1, tileSize = 16, insets = {left = 0, right = 0, top = 0, bottom = 0}}
-								local gray_table = {0.37, 0.37, 0.37, 0.95}
-								local black_table = {0.2, 0.2, 0.2, 1}
-								GameCooltip2:SetBackdrop(1, preset2_backdrop, gray_table, black_table)
-								GameCooltip2:SetBackdrop(2, preset2_backdrop, gray_table, black_table)
-							end,
-						}
-						GameCooltip2:CoolTipInject(otherTalents)
-
-						function loadConditionsFrame.CanShowPvPTalentWarning()
-							local playerTalents = detailsFramework:GetCharacterPvPTalents()
-							local indexedTalents = {}
-							for _, talentTable in ipairs(playerTalents) do
-								table.insert(indexedTalents, talentTable.ID)
-							end
-							for talentID, _ in pairs(loadConditionsFrame.OptionsTable.pvptalent) do
-								if (type(talentID) == "number" and not detailsFramework.table.find(indexedTalents, talentID)) then
-									otherTalents:Show()
-									return
-								end
-							end
-							otherTalents:Hide()
-						end
-						--]=]
-					end
-				end
-			end
 
 		--create radio for group types
 			local groupTypes = {}
@@ -743,26 +394,24 @@ function detailsFramework:OpenLoadConditionsPanel(optionsTable, callback, frameO
 			table.insert(loadConditionsFrame.AllRadioGroups, roleTypesGroup)
 
 		--create radio group for mythic+ affixes
-			if IS_WOW_PROJECT_MAINLINE then
-				local affixes = {}
-				for i = 2, 1000 do
-					local affixName, desc, texture = C_ChallengeMode.GetAffixInfo(i)
-					if (affixName and not deprecatedAffixes[i]) then
-						table.insert(affixes, {
-							name = affixName,
-							set = loadConditionsFrame.OnRadioCheckboxClick,
-							param = i,
-							get = function() return loadConditionsFrame.OptionsTable.affix[i] or loadConditionsFrame.OptionsTable.affix[i .. ""] end,
-							texture = texture,
-						})
-					end
+			local affixes = {}
+			for _, affixID in ipairs(C_MythicPlus.GetCurrentAffixes()) do
+				local affixName, desc, texture = GetSpellInfo(affixID)
+				if (affixName and not deprecatedAffixes[affixID]) then
+					table.insert(affixes, {
+						name = affixName,
+						set = loadConditionsFrame.OnRadioCheckboxClick,
+						param = affixID,
+						get = function() return loadConditionsFrame.OptionsTable.affix[affixID] or loadConditionsFrame.OptionsTable.affix[affixID .. ""] end,
+						texture = texture,
+					})
 				end
-
-				local affixTypesGroup = detailsFramework:CreateCheckboxGroup(loadConditionsFrame, affixes, nil, {width = 200, height = 200, title = "M+ Affixes", backdrop_color = {0, 0, 0, 0}}, {offset_x = 125})
-				affixTypesGroup:SetPoint("topleft", loadConditionsFrame, "topleft", anchorPositions.affix [1], anchorPositions.affix [2])
-				affixTypesGroup.DBKey = "affix"
-				table.insert(loadConditionsFrame.AllRadioGroups, affixTypesGroup)
 			end
+		
+			local affixTypesGroup = detailsFramework:CreateCheckboxGroup(loadConditionsFrame, affixes, nil, {width = 200, height = 200, title = "M+ Affixes", backdrop_color = {0, 0, 0, 0}}, {offset_x = 125})
+			affixTypesGroup:SetPoint("topleft", loadConditionsFrame, "topleft", anchorPositions.affix [1], anchorPositions.affix [2])
+			affixTypesGroup.DBKey = "affix"
+			table.insert(loadConditionsFrame.AllRadioGroups, affixTypesGroup)
 
 		--text entries functions
 			local textEntryRefresh = function(self)
@@ -818,56 +467,6 @@ function detailsFramework:OpenLoadConditionsPanel(optionsTable, callback, frameO
 			table.insert(loadConditionsFrame.AllTextEntries, mapIDEditbox)
 
 		function loadConditionsFrame.Refresh(self)
-			if IS_WOW_PROJECT_MAINLINE then
-				---@type {Name: string, ID: number, Texture: any, IsSelected: boolean}[]
-				local allTalents = detailsFramework:GetAllTalents()
-				local talentList = {}
-				for _, talentTable in ipairs(allTalents) do
-					if (talentTable.ID) then
-						table.insert(talentList, {
-							name = "", --talentTable.Name:sub(1, 15),
-							set = loadConditionsFrame.OnRadioCheckboxClick,
-							param = talentTable.ID,
-							get = function() return loadConditionsFrame.OptionsTable.talent[talentTable.ID] or loadConditionsFrame.OptionsTable.talent[talentTable.ID .. ""] end,
-							texture = talentTable.Texture,
-							tooltip = talentTable.Name,
-						})
-					end
-				end
-
-				--[=[]]
-				--update the talents(might have changed if the player changed its specializationid)
-				local talentList = {}
-				for _, talentTable in ipairs(detailsFramework:GetCharacterTalents()) do
-					if talentTable.ID then
-						table.insert(talentList, {
-							name = talentTable.Name,
-							set = loadConditionsFrame.OnRadioCheckboxClick,
-							param = talentTable.ID,
-							get = function() return loadConditionsFrame.OptionsTable.talent [talentTable.ID] or loadConditionsFrame.OptionsTable.talent [talentTable.ID .. ""] end,
-							texture = talentTable.Texture,
-						})
-					end
-				end
-				--]=]
-
-				loadConditionsFrame.TalentGroup:SetOptions(talentList)
-			end
-
-			if IS_WOW_PROJECT_MAINLINE then
-				local pvpTalentList = {}
-				for _, talentTable in ipairs(detailsFramework:GetCharacterPvPTalents()) do
-					table.insert(pvpTalentList, {
-						name = talentTable.Name:sub(1, 15),
-						set = loadConditionsFrame.OnRadioCheckboxClick,
-						param = talentTable.ID,
-						get = function() return loadConditionsFrame.OptionsTable.pvptalent [talentTable.ID] or loadConditionsFrame.OptionsTable.pvptalent [talentTable.ID .. ""] end,
-						texture = talentTable.Texture,
-					})
-				end
-				loadConditionsFrame.PvPTalentGroup:SetOptions(pvpTalentList)
-			end
-
 			--refresh the radio group
 			for _, radioGroup in ipairs(loadConditionsFrame.AllRadioGroups) do
 				radioGroup:Refresh()
@@ -877,11 +476,6 @@ function detailsFramework:OpenLoadConditionsPanel(optionsTable, callback, frameO
 			--refresh text entries
 			for _, textEntry in ipairs(loadConditionsFrame.AllTextEntries) do
 				textEntry:Refresh()
-			end
-
-			if IS_WOW_PROJECT_MAINLINE then
-				--loadConditionsFrame.CanShowTalentWarning()
-				--loadConditionsFrame.CanShowPvPTalentWarning()
 			end
 		end
 

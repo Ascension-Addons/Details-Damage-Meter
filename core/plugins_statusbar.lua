@@ -595,7 +595,7 @@ do
 	function PDps:PlayerLeaveCombat()
 		for index, child in ipairs(PDps.childs) do
 			if (child.tick) then
-				Details:CancelTimer(child.tick)
+				Details:CancelTimer(child.tick, true)
 				child.tick = nil
 			end
 		end
@@ -889,7 +889,7 @@ do
 
 	--leave combat
 	function Clock:PlayerLeaveCombat()
-		Details:CancelTimer(Clock.tick)
+		Details:CancelTimer(Clock.tick, true)
 	end
 
 	function Details:ClockPluginTickOnSegment()
@@ -1556,7 +1556,7 @@ function Details.StatusBar:OpenOptionsForChild(child)
 
 	_G.DetailsStatusBarOptionsTextStyleDropdown.MyObject:Select(child.options.textStyle, true)
 
-	_G.DetailsStatusBarOptionsTextColorTexture:SetColorTexture(child.options.textColor[1], child.options.textColor[2], child.options.textColor[3], child.options.textColor[4])
+	_G.DetailsStatusBarOptionsTextColorTexture:SetTexture(child.options.textColor[1], child.options.textColor[2], child.options.textColor[3], child.options.textColor[4])
 
 	_G.DetailsStatusBarOptionsSliderFontSize.MyObject:SetFixedParameter(child)
 	_G.DetailsStatusBarOptionsSliderFontSize.MyObject:SetValue(child.options.textSize)

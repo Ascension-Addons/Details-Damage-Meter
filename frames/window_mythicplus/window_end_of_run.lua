@@ -110,7 +110,7 @@ local createLootSquare = function(playerBanner, name, parent, lootIndex)
 end
 
 local createPlayerBanner = function(parent, name)
-    local template = "ChallengeModeBannerPartyMemberTemplate"
+    local template = "MythicPlusBannerPartyMemberTemplate"
 
 	---@type playerbanner
     local playerBanner = CreateFrame("frame", name, parent, template)
@@ -218,11 +218,6 @@ local createPlayerBanner = function(parent, name)
     dungeonBorderTexture:SetAlpha(1)
 	playerBanner.DungeonBorderTexture = dungeonBorderTexture
 
-	--load this addon, required to have access to the garrison templates
-	if (not C_AddOns.IsAddOnLoaded("Blizzard_GarrisonTemplates")) then
-		C_AddOns.LoadAddOn("Blizzard_GarrisonTemplates")
-	end
-
 	--animation for the key leveling up
 	local levelUpFrame = CreateFrame("frame", "$LevelUpFrame", playerBanner, "GarrisonFollowerLevelUpTemplate")
 	levelUpFrame:SetPoint("top", dungeonTexture, "bottom", 0, 44)
@@ -254,40 +249,33 @@ local createPlayerBanner = function(parent, name)
 
 	do
 		levelFontString.translation = animationGroup:CreateAnimation("TRANSLATION")
-		levelFontString.translation:SetTarget(levelFontString)
 		levelFontString.translation:SetOrder(1)
 		levelFontString.translation:SetDuration(0.096000000834465)
 		levelFontString.translation:SetOffset(0, -4)
 		levelFontString.translation = animationGroup:CreateAnimation("TRANSLATION")
-		levelFontString.translation:SetTarget(levelFontString)
 		levelFontString.translation:SetOrder(2)
 		levelFontString.translation:SetDuration(0.11599999666214)
 		levelFontString.translation:SetOffset(0, 16)
 		levelFontString.rotation = animationGroup:CreateAnimation("ROTATION")
-		levelFontString.rotation:SetTarget(levelFontString)
 		levelFontString.rotation:SetOrder(3)
 		levelFontString.rotation:SetDuration(0.096000000834465)
 		levelFontString.rotation:SetDegrees(20)
 		levelFontString.rotation:SetOrigin("center", 0, 0)
 		levelFontString.rotation = animationGroup:CreateAnimation("ROTATION")
-		levelFontString.rotation:SetTarget(levelFontString)
 		levelFontString.rotation:SetOrder(4)
 		levelFontString.rotation:SetDuration(0.096000000834465)
 		levelFontString.rotation:SetDegrees(-20)
 		levelFontString.rotation:SetOrigin("center", 0, 0)
 		levelFontString.rotation = animationGroup:CreateAnimation("ROTATION")
-		levelFontString.rotation:SetTarget(levelFontString)
 		levelFontString.rotation:SetOrder(5)
 		levelFontString.rotation:SetDuration(0.195999994874)
 		levelFontString.rotation:SetDegrees(360)
 		levelFontString.rotation:SetOrigin("center", 0, 0)
 		levelFontString.translation = animationGroup:CreateAnimation("TRANSLATION")
-		levelFontString.translation:SetTarget(levelFontString)
 		levelFontString.translation:SetOrder(6)
 		levelFontString.translation:SetDuration(0.21599999070168)
 		levelFontString.translation:SetOffset(0, 9)
 		levelFontString.translation = animationGroup:CreateAnimation("TRANSLATION")
-		levelFontString.translation:SetTarget(levelFontString)
 		levelFontString.translation:SetOrder(7)
 		levelFontString.translation:SetDuration(0.046000000089407)
 		levelFontString.translation:SetOffset(0, -24)
@@ -476,7 +464,7 @@ end
 
 if (CONST_DEBUG_MODE) then
 	C_Timer.After(3, function()
-		C_AddOns.LoadAddOn("Blizzard_ChallengesUI");
+		LoadAddOn("Ascension_MythicPlus");
 		_G.MythicDungeonFrames.ShowEndOfMythicPlusPanel()
 	end)
 end
@@ -540,30 +528,22 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		readyFrame.OpeningAnimation = openingAnimationHub
 
 		do --backdrop textures
-			local maskTexture = readyFrame:CreateMaskTexture("$parentDungeonBackdropTextureMaskTexture", "artwork")
-			maskTexture:SetTexture([[Interface\AddOns\Details\images\masks\white_rounded_512x512.png]])
-			maskTexture:SetPoint("topleft", readyFrame, "topleft", 0, 0)
-			maskTexture:SetPoint("bottomright", readyFrame, "bottomright", 0, 0)
-
 			--backdrop gradient from bottom to top
 			---@type df_gradienttable
 			local gradientTable = {gradient = "vertical", fromColor = {0, 0, 0, 0.8}, toColor = "transparent"}
 			local gradientBelowTheLine = detailsFramework:CreateTexture(readyFrame, gradientTable, 1, readyFrame:GetHeight()/3, "artwork", {0, 1, 0, 1}, "backgroundGradient")
 			gradientBelowTheLine:SetPoint("bottoms", 0, 0)
-			gradientBelowTheLine:AddMaskTexture(maskTexture)
 
 			local dungeonBackdropTexture = readyFrame:CreateTexture("$parentDungeonBackdropTexture", "artwork", nil, -2)
 			dungeonBackdropTexture:SetTexCoord(0.05, 0.70, 0.1, 0.82)
 			dungeonBackdropTexture:SetVertexColor(0.2, 0.2, 0.2, 0.8)
-			dungeonBackdropTexture:SetDesaturation(0.65)
+			dungeonBackdropTexture:SetDesaturated(true)
 			dungeonBackdropTexture:SetAlpha(0.834)
 			dungeonBackdropTexture:SetAllPoints()
-			dungeonBackdropTexture:AddMaskTexture(maskTexture)
 			readyFrame.DungeonBackdropTexture = dungeonBackdropTexture
 
 			local anotherBackdropTexture = readyFrame:CreateTexture("$parentAnotherBackdropTexture", "artwork", nil, -3)
 			anotherBackdropTexture:SetTexture([[Interface\GLUES\Models\UI_HighmountainTauren\7HM_RapidSimpleMask]])
-			anotherBackdropTexture:AddMaskTexture(maskTexture)
 			anotherBackdropTexture:SetAllPoints()
 			anotherBackdropTexture:SetVertexColor(0.467, 0.416, 0.639, 1)
 			readyFrame.AnotherBackdropTexture = anotherBackdropTexture
@@ -590,7 +570,6 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 			spikes:SetPoint("center", readyFrame, "top", 0, 30)
 			spikes:SetAtlas("ChallengeMode-SpikeyStar")
 			spikes:SetAlpha(1)
-			spikes:SetIgnoreParentAlpha(true)
 			readyFrame.YellowSpikeCircle = spikes
 
 			local yellowFlash = mythicDungeonFrames.ReadyFrameTop:CreateTexture("$parentYellowFlash", "artwork")
@@ -599,10 +578,9 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 			yellowFlash:SetAtlas("BossBanner-RedFlash")
 			yellowFlash:SetAlpha(0)
 			yellowFlash:SetBlendMode("ADD")
-			yellowFlash:SetIgnoreParentAlpha(true)
 			readyFrame.YellowFlash = yellowFlash
 
-			readyFrame.Level = mythicDungeonFrames.ReadyFrameTop:CreateFontString("$parentLevelText", "overlay", "GameFontNormalWTF2Outline")
+			readyFrame.Level = mythicDungeonFrames.ReadyFrameTop:CreateFontString("$parentLevelText", "overlay", "SystemFont_OutlineThick_WTF")
 			readyFrame.Level:SetPoint("center", readyFrame.YellowSpikeCircle, "center", 0, 0)
 			readyFrame.Level:SetText("")
 
@@ -611,12 +589,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 			local flashAnim1 = detailsFramework:CreateAnimation(flashAnimHub, "Alpha", 1, 0.5, 0, 1)
 			local flashAnim2 = detailsFramework:CreateAnimation(flashAnimHub, "Alpha", 2, 0.5, 1, 0)
 
-			--create the animation for the yellow spike circle
-			local spikeCircleAnimHub = detailsFramework:CreateAnimationHub(spikes, function() spikes:SetAlpha(0); spikes:SetScale(1) end, function() flashAnimHub:Play(); spikes:SetSize(100, 100); spikes:SetScale(1); spikes:SetAlpha(1) end)
-			local alphaAnim1 = detailsFramework:CreateAnimation(spikeCircleAnimHub, "Alpha", 1, 0.2960000038147, 0, 1)
-			local scaleAnim1 = detailsFramework:CreateAnimation(spikeCircleAnimHub, "Scale", 1, 0.21599999070168, 5, 5, 1, 1, "center", 0, 0)
-
-			readyFrame.YellowSpikeCircle.OnShowAnimation = spikeCircleAnimHub
+			readyFrame.YellowSpikeCircle.OnShowAnimation = flashAnimHub
 		end
 
 		readyFrame.leftFiligree = contentFrame:CreateTexture("$parentLeftFiligree", "artwork")
@@ -652,14 +625,6 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		local warningFooter = DetailsFramework:CreateLabel(contentFrame, "Under development.", 9, "yellow")
 		warningFooter:SetPoint("bottom", readyFrame, "bottom", 0, 20)
 
-		--waiting for loot label
-		local waitingForLootLabel = DetailsFramework:CreateLabel(contentFrame, "Waiting for loot", 12, "silver")
-		waitingForLootLabel:SetPoint("bottom", readyFrame, "bottom", 0, 54)
-		waitingForLootLabel:Hide()
-		local waitingForLootDotsAnimationLabel = DetailsFramework:CreateLabel(contentFrame, "...", 12, "silver")
-		waitingForLootDotsAnimationLabel:SetPoint("left", waitingForLootLabel, "right", 0, 0)
-		waitingForLootDotsAnimationLabel:Hide()
-
 		---@type texture
 		local topRedLineTexture = backgroundFrame:CreateTexture("$parentBannerTop", "border")
 		topRedLineTexture:SetAtlas("BossBanner-BgBanner-Top")
@@ -690,46 +655,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		--centerGradient:SetPoint("center", backgroundFrame, "center", 0, 0)
 		--centerGradient:SetSize(355, 390)
 
-
-		--make a text dot animation, which will show no dots at start and then "." then ".." then "..." and back to "" and so on
-		function readyFrame.StartTextDotAnimation()
-			--update the Waiting for Loot labels
-			waitingForLootLabel:Show()
-			waitingForLootDotsAnimationLabel:Show()
-
-			local dots = waitingForLootDotsAnimationLabel
-			local dotsCount = 0
-			local maxDots = 3
-			local maxLoops = 24
-
-			local dotsTimer = C_Timer.NewTicker(0.5, function()
-				dotsCount = dotsCount + 1
-
-				if (dotsCount > maxDots) then
-					dotsCount = 0
-				end
-
-				local dotsText = ""
-				for i = 1, dotsCount do
-					dotsText = dotsText .. "."
-				end
-
-				dots:SetText(dotsText)
-			end, maxLoops)
-
-			waitingForLootDotsAnimationLabel.dotsTimer = dotsTimer
-		end
-
-		function readyFrame.StopTextDotAnimation()
-			waitingForLootLabel:Hide()
-			waitingForLootDotsAnimationLabel:Hide()
-			if (waitingForLootDotsAnimationLabel.dotsTimer) then
-				waitingForLootDotsAnimationLabel.dotsTimer:Cancel()
-			end
-		end
-
 		readyFrame:SetScript("OnHide", function(self)
-			readyFrame.StopTextDotAnimation()
 			mythicDungeonFrames.ReadyFrameTop:Hide()
 		end)
 
@@ -750,7 +676,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		PixelUtil.SetPoint(readyFrame.ShowBreakdownButton, "topleft", readyFrame, "topleft", 31, -30)
 		PixelUtil.SetSize(readyFrame.ShowBreakdownButton, 145, 32)
 		readyFrame.ShowBreakdownButton:SetBackdrop(nil)
-		readyFrame.ShowBreakdownButton:SetIcon([[Interface\AddOns\Details\images\icons2.png]], 16, 16, "overlay", {84/512, 120/512, 153/512, 187/512}, {.7, .7, .7, 1}, nil, 0, 0)
+		readyFrame.ShowBreakdownButton:SetIcon([[Interface\AddOns\Details\images\icons2]], 16, 16, "overlay", {84/512, 120/512, 153/512, 187/512}, {.7, .7, .7, 1}, nil, 0, 0)
 		readyFrame.ShowBreakdownButton.textcolor = textColor
         detailsFramework:AddRoundedCornersToFrame(readyFrame.ShowBreakdownButton.widget, roundedCornerPreset)
 		leftAnchor = readyFrame.ShowBreakdownButton
@@ -766,7 +692,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		PixelUtil.SetPoint(readyFrame.ShowChartButton, "left", readyFrame.ShowBreakdownButton, "right", 6, 0)
 		PixelUtil.SetSize(readyFrame.ShowChartButton, 145, 32)
 		readyFrame.ShowChartButton:SetBackdrop(nil)
-		readyFrame.ShowChartButton:SetIcon([[Interface\AddOns\Details\images\icons2.png]], 16, 16, "overlay", {42/512, 75/512, 153/512, 187/512}, {.7, .7, .7, 1}, nil, 0, 0)
+		readyFrame.ShowChartButton:SetIcon([[Interface\AddOns\Details\images\icons2]], 16, 16, "overlay", {42/512, 75/512, 153/512, 187/512}, {.7, .7, .7, 1}, nil, 0, 0)
 		readyFrame.ShowChartButton.textcolor = textColor
         detailsFramework:AddRoundedCornersToFrame(readyFrame.ShowChartButton.widget, roundedCornerPreset)
 
@@ -810,7 +736,6 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		--frame to handle loot events
 		local lootFrame = CreateFrame("frame", "$parentLootFrame", readyFrame)
 		lootFrame:RegisterEvent("BOSS_KILL");
-		lootFrame:RegisterEvent("ENCOUNTER_LOOT_RECEIVED")
 
 		local bossKillEncounterId
 
@@ -819,49 +744,6 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 				local encounterID, name = ...;
 				bossKillEncounterId = encounterID
 				--print("BOSS_KILL", GetTime(), bossKillEncounterId)
-
-			elseif (event == "ENCOUNTER_LOOT_RECEIVED") then
-				local lootEncounterId, itemID, itemLink, quantity, playerName, className = ...
-				--print("ENCOUNTER_LOOT_RECEIVED", GetTime(), lootEncounterId, bossKillEncounterId)
-
-				--print("no ambig:", playerName, "with ambig:", Ambiguate(playerName, "none")) --debug
-				playerName = Ambiguate(playerName, "none")
-				local unitBanner = readyFrame.playerCacheByName[playerName]
-
-				if (not unitBanner) then
-					--print("no unitBanner for player", playerName, "aborting.")
-					return
-				end
-
-				local _, instanceType = GetInstanceInfo()
-				--print("Is encounter the same:", lootEncounterId == bossKillEncounterId)
-				if (instanceType == "party") then -- or instanceType == "raid" --lootEncounterId == bossKillEncounterId and
-					--print("all good showing loot for player", playerName)
-
-					local effectiveILvl, nop, baseItemLevel = GetDetailedItemLevelInfo(itemLink)
-
-					local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType,
-					itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType,
-					expacID, setID, isCraftingReagent = GetItemInfo(itemLink)
-
-					--print("equip loc:", itemEquipLoc)
-					--unitBanner:ClearLootSquares()
-					if (effectiveILvl > 300 and baseItemLevel > 5) then --avoid showing loot that isn't items
-						local lootSquare = unitBanner:GetLootSquare()
-						lootSquare.itemLink = itemLink --will error if this the thrid lootSquare (creates only 2 per banner)
-
-						local rarityColor = ITEM_QUALITY_COLORS[itemQuality]
-						lootSquare.LootIconBorder:SetVertexColor(rarityColor.r, rarityColor.g, rarityColor.b, 1)
-
-						lootSquare.LootIcon:SetTexture(GetItemIcon(itemID))
-						lootSquare.LootItemLevel:SetText(effectiveILvl or "0")
-
-						readyFrame.StopTextDotAnimation()
-
-						--print("loot info:", itemLink, effectiveILvl, itemQuality)
-						lootSquare:Show()
-					end
-				end
 			end
 		end)
 
@@ -909,7 +791,6 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 
 	readyFrame.TopRedLineTexture:Hide()
 	readyFrame.BottomRedLineTexture:Hide()
-	readyFrame.ContentFrame:SetAlpha(0)
 
 	readyFrame.Level:SetText(Details222.MythicPlus.Level or "")
 
@@ -936,8 +817,6 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 			readyFrame.ContentFrameFadeInAnimation:Play()
 		end)
 	end)
-
-	readyFrame.StartTextDotAnimation()
 
 	--/run PlaySound(SOUNDKIT.UI_70_CHALLENGE_MODE_KEYSTONE_UPGRADE);
 	--PlaySound(SOUNDKIT.UI_70_CHALLENGE_MODE_COMPLETE_NO_UPGRADE);
@@ -989,7 +868,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 	wipe(readyFrame.playerCacheByName)
 
 	if (Details222.MythicPlus.OnTime) then
-		readyFrame.YouBeatTheTimerLabel:SetFormattedText(CHALLENGE_MODE_COMPLETE_BEAT_TIMER .. " | " .. CHALLENGE_MODE_COMPLETE_KEYSTONE_UPGRADED, Details222.MythicPlus.KeystoneUpgradeLevels) --"You beat the timer!"
+		readyFrame.YouBeatTheTimerLabel:SetFormattedText(MYTHIC_PLUS_COMPLETE_BEAT_TIMER .. " | " .. MYTHIC_PLUS_COMPLETE_KEYSTONE_UPGRADED, Details222.MythicPlus.KeystoneUpgradeLevels) --"You beat the timer!"
 		readyFrame.YouBeatTheTimerLabel.textcolor = "limegreen"
 		--readyFrame.KeystoneUpgradeLabel:SetFormattedText(CHALLENGE_MODE_COMPLETE_KEYSTONE_UPGRADED, Details222.MythicPlus.KeystoneUpgradeLevels)
 		PlaySound(SOUNDKIT.UI_70_CHALLENGE_MODE_KEYSTONE_UPGRADE)
@@ -998,22 +877,12 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		end)
 	else
 		readyFrame.YouBeatTheTimerLabel.textcolor = "white"
-		readyFrame.YouBeatTheTimerLabel.text = CHALLENGE_MODE_COMPLETE_TIME_EXPIRED --"Time expired!"
-		--readyFrame.KeystoneUpgradeLabel.text = CHALLENGE_MODE_COMPLETE_TRY_AGAIN --"Try again! Beat the timer to upgrade your keystone!"
+		readyFrame.YouBeatTheTimerLabel.text = MYTHIC_PLUS_COMPLETE_TIME_EXPIRED --"Time expired!"
+		--readyFrame.KeystoneUpgradeLabel.text = MYTHIC_PLUS_COMPLETE_TRY_AGAIN --"Try again! Beat the timer to upgrade your keystone!"
 		PlaySound(SOUNDKIT.UI_70_CHALLENGE_MODE_COMPLETE_NO_UPGRADE)
 	end
 
-	if (Details222.MythicPlus.NewDungeonScore and Details222.MythicPlus.OldDungeonScore) then
-		local gainedScore = Details222.MythicPlus.NewDungeonScore - Details222.MythicPlus.OldDungeonScore
-		local color = C_ChallengeMode.GetDungeonScoreRarityColor(Details222.MythicPlus.NewDungeonScore)
-		if (not color) then
-			color = HIGHLIGHT_FONT_COLOR
-		end
-		readyFrame.RantingLabel.text = CHALLENGE_COMPLETE_DUNGEON_SCORE:format(color:WrapTextInColorCode(CHALLENGE_COMPLETE_DUNGEON_SCORE_FORMAT_TEXT:format(Details222.MythicPlus.NewDungeonScore, gainedScore)))
-		readyFrame.RantingLabel.textcolor = "limegreen"
-	else
-		readyFrame.RantingLabel.text = ""
-	end
+	readyFrame.RantingLabel.text = ""
 
 	C_Timer.After(0.6, function()
 		local playersFound = 0
@@ -1041,5 +910,5 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 end
 
 Details222.MythicPlus.IsMythicPlus = function()
-	return C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo() and true or false
+	return C_MythicPlus.IsKeystoneActive()
 end

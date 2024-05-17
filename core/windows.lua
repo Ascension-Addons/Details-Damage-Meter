@@ -957,14 +957,12 @@
 		--WaitTexture:SetDesaturated(true)
 		--WaitTexture:SetVertexColor(1, 1, 1, 0.3)
 		WaitForPluginFrame.wheel = WaitTexture
-		local RotateAnimGroup = WaitForPluginFrame:CreateAnimationGroup()
+		local RotateAnimGroup = WaitTexture:CreateAnimationGroup()
 		local rotate = RotateAnimGroup:CreateAnimation("Alpha")
 		--rotate:SetDegrees(360)
 		--rotate:SetDuration(5)
-		rotate:SetFromAlpha(0.8)
-		rotate:SetToAlpha(1)
+		rotate:SetChange(-0.2)
 		--RotateAnimGroup:SetLooping ("repeat")
-		rotate:SetTarget(WaitTexture)
 
 		local bgpanel = gump:NewPanel(WaitForPluginFrame, WaitForPluginFrame, "DetailsWaitFrameBG"..self.meu_id, nil, 120, 30, false, false, false)
 		bgpanel:SetPoint("center", WaitForPluginFrame, "center")

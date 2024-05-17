@@ -10,7 +10,7 @@ do
 	local UnitClass = UnitClass
 	local UnitGUID = UnitGUID
 
-	local CONST_UNKNOWN_CLASS_COORDS = {0.75, 1, 0.75, 1}
+	local CONST_UNKNOWN_CLASS_COORDS = { 0, 0.125, 0.5, 0.625 }
 	local CONST_DEFAULT_COLOR = {1, 1, 1, 1}
 
 	local roles = {
@@ -275,32 +275,6 @@ do
 		return Details.cached_specs[unitSerial]
 	end
 
-	local specNamesToId = {}
-	function Details:BuildSpecsNameCache()
-		if (DetailsFramework.IsDragonflightAndBeyond()) then
-			---@type table<class, table<specializationid, boolean>>
-			local classSpecList = DetailsFramework.ClassSpecs
-			---@number
-			local numClasses = GetNumClasses()
-
-			for i = 1, numClasses do
-				local classInfo = C_CreatureInfo.GetClassInfo(i)
-				local localizedClassName = classInfo.className
-				local classTag = classInfo.classFile
-
-				local specIdsList = classSpecList[classTag]
-				if (specIdsList) then
-					for specId in pairs(specIdsList) do
-						local specId2, specName = GetSpecializationInfoByID(specId)
-						if (specId2 and specName) then
-							specNamesToId[specName .. " " .. localizedClassName] = specId2
-						end
-					end
-				end
-			end
-		end
-	end
-
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -400,23 +374,6 @@ do
 		--attempt to get from the spec cache
 		if (not actorSpec) then
 			actorSpec = Details.cached_specs[actorObject.serial]
-		end
-
-		--attempt to get spec from tooltip
-		if (not actorSpec and DetailsFramework:IsDragonflightAndBeyond()) then
-			local tooltipData = C_TooltipInfo.GetHyperlink("unit:" .. actorObject.serial)
-			if (tooltipData and tooltipData.lines) then
-				for i = 1, #tooltipData.lines do
-					local thisLineData = tooltipData.lines[i]
-					local text = thisLineData.leftText
-					if (text and thisLineData.type == 0) then
-						local specId = specNamesToId[text]
-						if (specId and type(specId) == "number") then
-							actorSpec = specId
-						end
-					end
-				end
-			end
 		end
 
 		--attempt to get from the spells the actor used in the current combat

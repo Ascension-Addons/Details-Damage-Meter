@@ -267,7 +267,7 @@ detailsFramework.HeaderMixin = {
 					if (self.options.use_line_separators) then
 						columnHeader.Separator:Show()
 						columnHeader.Separator:SetWidth(self.options.line_separator_width)
-						columnHeader.Separator:SetColorTexture(unpack(self.options.line_separator_color))
+						columnHeader.Separator:SetTexture(unpack(self.options.line_separator_color))
 
 						columnHeader.Separator:ClearAllPoints()
 						if (self.options.line_separator_gap_align) then
@@ -285,7 +285,7 @@ detailsFramework.HeaderMixin = {
 					if (self.options.use_line_separators) then
 						columnHeader.Separator:Show()
 						columnHeader.Separator:SetWidth(self.options.line_separator_width)
-						columnHeader.Separator:SetColorTexture(unpack(self.options.line_separator_color))
+						columnHeader.Separator:SetTexture(unpack(self.options.line_separator_color))
 
 						columnHeader.Separator:ClearAllPoints()
 						if (self.options.line_separator_gap_align) then
@@ -555,7 +555,7 @@ detailsFramework.HeaderMixin = {
 
 			resizerButton.texture = resizerButton:CreateTexture(nil, "overlay")
 			resizerButton.texture:SetAllPoints()
-			resizerButton.texture:SetColorTexture(1, 1, 1, 1)
+			resizerButton.texture:SetTexture(1, 1, 1, 1)
 
 			local xOffset = self.options.reziser_shown and -5 or -1
 			columnHeader.Arrow:SetPoint("right", columnHeader, "right", xOffset, 0)

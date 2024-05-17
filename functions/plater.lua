@@ -96,8 +96,8 @@ function plater_integration_frame.AddDamageToGUID (sourceGUID, targetGUID, time,
 	end
 end
 
-plater_integration_frame:SetScript("OnEvent", function(self)
-	local time, token, hidding, sourceGUID, sourceName, sourceFlag, sourceFlag2, targetGUID, targetName, targetFlag, targetFlag2, spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical = CombatLogGetCurrentEventInfo()
+plater_integration_frame:SetScript("OnEvent", function(self, event, ...)
+	local time, token, hidding, sourceGUID, sourceName, sourceFlag, sourceFlag2, targetGUID, targetName, targetFlag, targetFlag2, spellID, spellName, spellType, amount, overKill, school, resisted, blocked, absorbed, isCritical = CombatLogGetCurrentEventInfo(...)
 	
 	--damage taken by the GUID unit
 	if (token == "SPELL_DAMAGE" or token == "SPELL_PERIODIC_DAMAGE" or token == "RANGE_DAMAGE" or token == "DAMAGE_SHIELD") then

@@ -262,12 +262,7 @@ function Details:CreateEventTrackerFrame(parentObject, name)
 		local screenFrame = CreateFrame("frame", name, parentObject or UIParent,"BackdropTemplate")
 		screenFrame:SetPoint("center", UIParent, "center")
 
-		if (not DetailsFramework.IsDragonflight() and not DetailsFramework.IsNonRetailWowWithRetailAPI()) then
-			screenFrame:SetMinResize (150, 40)
-			screenFrame:SetMaxResize (800, 1024)
-		else
-			screenFrame:SetResizeBounds(150, 40, 800, 1024)
-		end
+		screenFrame:SetResizeBounds(150, 40, 800, 1024)
 
 		screenFrame:SetSize(Details.event_tracker.frame.width, Details.event_tracker.frame.height)
 
@@ -796,9 +791,9 @@ function Details:CreateEventTrackerFrame(parentObject, name)
 			[4] = true,
 		}
 
-		combatLog:SetScript("OnEvent", function(self, event)
+		combatLog:SetScript("OnEvent", function(self, event, ...)
 
-			local time, token, hidding, caster_serial, caster_name, caster_flags, caster_flags2, target_serial, target_name, target_flags, target_flags2, spellid, spellname, spelltype, extraSpellID, extraSpellName, extraSchool = CombatLogGetCurrentEventInfo()
+			local time, token, hidding, caster_serial, caster_name, caster_flags, caster_flags2, target_serial, target_name, target_flags, target_flags2, spellid, spellname, spelltype, extraSpellID, extraSpellName, extraSchool = CombatLogGetCurrentEventInfo(...)
 			local added = false
 
 			--get the spell info from the Open Raid Lib

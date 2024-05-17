@@ -33,18 +33,12 @@ local UnitIsTapDenied = UnitIsTapDenied
 local max = math.max
 local min = math.min
 local abs = math.abs
-local GetSpellInfo = GetSpellInfo or function(spellID) if not spellID then return nil end local si = C_Spell.GetSpellInfo(spellID) if si then return si.name, nil, si.iconID, si.castTime, si.minRange, si.maxRange, si.spellID, si.originalIconID end end
+local GetSpellInfo = GetSpellInfo
 
-local IS_WOW_PROJECT_MAINLINE = WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-local IS_WOW_PROJECT_NOT_MAINLINE = WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE
-local IS_WOW_PROJECT_CLASSIC_ERA = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 
 local CastInfo = detailsFramework.CastInfo
 
-local PixelUtil = PixelUtil or DFPixelUtil
-
-local UnitGroupRolesAssigned = detailsFramework.UnitGroupRolesAssigned
-local cleanfunction = function() end
+local PixelUtil = PixelUtil
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --health bar frame
@@ -163,10 +157,9 @@ local cleanfunction = function() end
 		{"PLAYER_ENTERING_WORLD"},
 		{"UNIT_HEALTH", true},
 		{"UNIT_MAXHEALTH", true},
-		{(IS_WOW_PROJECT_NOT_MAINLINE) and "UNIT_HEALTH_FREQUENT", true}, -- this one is classic-only...
 		{"UNIT_HEAL_PREDICTION", true},
-		{(IS_WOW_PROJECT_MAINLINE) and "UNIT_ABSORB_AMOUNT_CHANGED", true},
-		{(IS_WOW_PROJECT_MAINLINE) and "UNIT_HEAL_ABSORB_AMOUNT_CHANGED", true},
+		{"UNIT_ABSORB_AMOUNT_CHANGED", true},
+		--{"UNIT_HEAL_ABSORB_AMOUNT_CHANGED", true},
 	}
 
 	--setup the castbar to be used by another unit
@@ -195,16 +188,12 @@ local cleanfunction = function() end
 				--check for settings and update some events
 				if (not self.Settings.ShowHealingPrediction) then
 					self:UnregisterEvent("UNIT_HEAL_PREDICTION")
-					if IS_WOW_PROJECT_MAINLINE then
-						self:UnregisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
-					end
+					self:UnregisterEvent("UNIT_HEAL_ABSORB_AMOUNT_CHANGED")
 					self.incomingHealIndicator:Hide()
 					self.healAbsorbIndicator:Hide()
 				end
 				if (not self.Settings.ShowShields) then
-					if IS_WOW_PROJECT_MAINLINE then
-						self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
-					end
+					self:UnregisterEvent("UNIT_ABSORB_AMOUNT_CHANGED")
 					self.shieldAbsorbIndicator:Hide()
 					self.shieldAbsorbGlow:Hide()
 				end
@@ -241,7 +230,7 @@ local cleanfunction = function() end
 		self:SetTexture(self.Settings.Texture)
 
 		self.background:SetAllPoints()
-		self.background:SetColorTexture(self.Settings.BackgroundColor:GetColor())
+		self.background:SetTexture(self.Settings.BackgroundColor:GetColor())
 
 		--setpoint of these widgets are set inside the function that updates the incoming heal
 		self.incomingHealIndicator:SetTexture(self:GetTexture())
@@ -321,9 +310,9 @@ local cleanfunction = function() end
 
 		if (self.Settings.ShowHealingPrediction) then
 			--incoming heal on the unit from all sources
-			local unitHealIncoming = self.displayedUnit and UnitGetIncomingHeals(self.displayedUnit) or 0
+			local unitHealIncoming = 0--self.displayedUnit and UnitGetIncomingHeals(self.displayedUnit) or 0
 			--heal absorbs
-			local unitHealAbsorb = IS_WOW_PROJECT_MAINLINE and self.displayedUnit and UnitGetTotalHealAbsorbs(self.displayedUnit) or 0
+			local unitHealAbsorb = 0--self.displayedUnit and UnitGetTotalHealAbsorbs(self.displayedUnit) or 0
 
 			if (unitHealIncoming > 0) then
 				--calculate what is the percent of health incoming based on the max health the player has
@@ -347,7 +336,7 @@ local cleanfunction = function() end
 			end
 		end
 
-		if (self.Settings.ShowShields and IS_WOW_PROJECT_MAINLINE) then
+		if (self.Settings.ShowShields) then
 			--damage absorbs
 			local unitDamageAbsorb = self.displayedUnit and UnitGetTotalAbsorbs (self.displayedUnit) or 0
 
@@ -616,7 +605,7 @@ detailsFramework.PowerFrameFunctions = {
 		self:SetTexture(self.Settings.Texture)
 
 		self.background:SetAllPoints()
-		self.background:SetColorTexture(self.Settings.BackgroundColor:GetColor())
+		self.background:SetTexture(self.Settings.BackgroundColor:GetColor())
 
 		if (self.Settings.ShowPercentText) then
 			self.percentText:Show()
@@ -672,18 +661,6 @@ detailsFramework.PowerFrameFunctions = {
 
 	--when a event different from unit_power_update is triggered, update which type of power the unit should show
 	UpdatePowerInfo = function(self)
-		if (IS_WOW_PROJECT_MAINLINE and self.Settings.ShowAlternatePower) then -- not available in classic
-			local barID = UnitPowerBarID(self.displayedUnit)
-			local barInfo = GetUnitPowerBarInfoByID(barID)
-			--local name, tooltip, cost = GetUnitPowerBarStringsByID(barID);
-			--barInfo.barType,barInfo.minPower, barInfo.startInset, barInfo.endInset, barInfo.smooth, barInfo.hideFromOthers, barInfo.showOnRaid, barInfo.opaqueSpark, barInfo.opaqueFlash, barInfo.anchorTop, name, tooltip, cost, barInfo.ID, barInfo.forcePercentage, barInfo.sparkUnderFrame;
-			if (barInfo and barInfo.showOnRaid and IsInGroup()) then
-				self.powerType = ALTERNATE_POWER_INDEX
-				self.minPower = barInfo.minPower
-				return
-			end
-		end
-
 		self.powerType = UnitPowerType (self.displayedUnit)
 		self.minPower = 0
 	end,
@@ -695,7 +672,7 @@ detailsFramework.PowerFrameFunctions = {
 			return
 		end
 
-		if (self.powerType == ALTERNATE_POWER_INDEX) then
+		if (self.powerType == Enum.PowerType.Focus) then
 			--don't change this, keep the same color as the game tints on CompactUnitFrame.lua
 			self:SetStatusBarColor(0.7, 0.7, 0.6)
 			return
@@ -907,15 +884,9 @@ detailsFramework.CastFrameFunctions = {
 
 	CastBarEvents = {
 		{"UNIT_SPELLCAST_INTERRUPTED"},
-		{"UNIT_SPELLCAST_DELAYED"},
 		{"UNIT_SPELLCAST_CHANNEL_START"},
 		{"UNIT_SPELLCAST_CHANNEL_UPDATE"},
 		{"UNIT_SPELLCAST_CHANNEL_STOP"},
-		{(IS_WOW_PROJECT_MAINLINE) and "UNIT_SPELLCAST_EMPOWER_START"},
-		{(IS_WOW_PROJECT_MAINLINE) and "UNIT_SPELLCAST_EMPOWER_UPDATE"},
-		{(IS_WOW_PROJECT_MAINLINE) and "UNIT_SPELLCAST_EMPOWER_STOP"},
-		{(IS_WOW_PROJECT_MAINLINE) and "UNIT_SPELLCAST_INTERRUPTIBLE"},
-		{(IS_WOW_PROJECT_MAINLINE) and "UNIT_SPELLCAST_NOT_INTERRUPTIBLE"},
 		{"PLAYER_ENTERING_WORLD"},
 		{"UNIT_SPELLCAST_START", true},
 		{"UNIT_SPELLCAST_STOP", true},
@@ -978,9 +949,9 @@ detailsFramework.CastFrameFunctions = {
 		PixelUtil.SetWidth (self, self.Settings.Width)
 		PixelUtil.SetHeight(self, self.Settings.Height)
 
-		self.background:SetColorTexture(self.Settings.BackgroundColor:GetColor())
+		self.background:SetTexture(self.Settings.BackgroundColor:GetColor())
 		self.background:SetAllPoints()
-		self.extraBackground:SetColorTexture(0, 0, 0, 1)
+		self.extraBackground:SetTexture(0, 0, 0, 1)
 		self.extraBackground:SetVertexColor(self.Settings.BackgroundColor:GetColor())
 		self.extraBackground:SetAllPoints()
 
@@ -1948,7 +1919,7 @@ function detailsFramework:CreateCastBar(parent, name, settingsOverride)
 
 			--animatios flash
 			local flashTexture = castBar:CreateTexture(nil, "overlay", nil, 7)
-			flashTexture:SetColorTexture(1, 1, 1, 1)
+			flashTexture:SetTexture(1, 1, 1, 1)
 			flashTexture:SetAllPoints()
 			flashTexture:SetAlpha(0)
 			flashTexture:Hide()
@@ -1964,12 +1935,6 @@ function detailsFramework:CreateCastBar(parent, name, settingsOverride)
 	--mixins
 	detailsFramework:Mixin(castBar, detailsFramework.CastFrameFunctions)
 	detailsFramework:Mixin(castBar, detailsFramework.StatusBarFunctions)
-
-
-	castBar:CreateTextureMask()
-	castBar:AddMaskTexture(castBar.flashTexture)
-	castBar:AddMaskTexture(castBar.background)
-	castBar:AddMaskTexture(castBar.extraBackground)
 
 	castBar:SetTexture([[Interface\WorldStateFrame\WORLDSTATEFINALSCORE-HIGHLIGHT]])
 

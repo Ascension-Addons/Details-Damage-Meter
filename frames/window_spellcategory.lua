@@ -307,7 +307,7 @@ function Details.Survey.OpenSpellCategoryScreen()
 
             local background = line:CreateTexture(nil, "background")
             background:SetAllPoints()
-            background:SetColorTexture(1, 1, 1, 0.08)
+            background:SetTexture(1, 1, 1, 0.08)
             line.hasDataBackground = background
             background:Hide()
 

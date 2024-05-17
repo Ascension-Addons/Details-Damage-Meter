@@ -142,7 +142,7 @@ detailsFramework.IconMixin = {
 		---@type texture
         iconFrame.Border = iconFrame:CreateTexture(nil, "background")
         iconFrame.Border:SetAllPoints()
-        iconFrame.Border:SetColorTexture(0, 0, 0)
+        iconFrame.Border:SetTexture(0, 0, 0)
 
 		---@type fontstring
         iconFrame.StackText = iconFrame:CreateFontString(nil, "overlay", "GameFontNormal")
@@ -274,7 +274,7 @@ detailsFramework.IconMixin = {
 				iconFrame:SetBackdropBorderColor(0, 0, 0 ,0)
 			end
 
-			--iconFrame.Border:SetColorTexture(0, 0, 0, 1)
+			--iconFrame.Border:SetTexture(0, 0, 0, 1)
 
 			if (startTime) then
 				CooldownFrame_Set(iconFrame.Cooldown, startTime, duration, true, true, modRate)

@@ -864,14 +864,14 @@ detailsFramework.KeybindMixin = {
 		line.backgroundTexture:SetAllPoints()
 
 		if (index % 2 == 0) then
-			line.backgroundTexture:SetColorTexture(0, 0, 0, 0.1)
+			line.backgroundTexture:SetTexture(0, 0, 0, 0.1)
 		else
-			line.backgroundTexture:SetColorTexture(0, 0, 0, 0)
+			line.backgroundTexture:SetTexture(0, 0, 0, 0)
 		end
 
 		line.highlightTexture = line:CreateTexture(nil, "border")
 		line.highlightTexture:SetAllPoints()
-		line.highlightTexture:SetColorTexture(1, 1, 1, .1)
+		line.highlightTexture:SetTexture(1, 1, 1, .1)
 		line.highlightTexture:Hide()
 
 		line:SetScript("OnEnter", keyBindFrame.OnEnterScrollLine)
@@ -1372,7 +1372,7 @@ detailsFramework.KeybindMixin = {
 		detailsFramework:ReskinSlider(editMacroEditBox.scroll)
 		editMacroEditBox:SetPoint("topleft", editMacroText, "bottomleft", 0, -5)
 
-		editMacroEditBox["Center"]:SetColorTexture(.1, .1, .1, .834)
+		editMacroEditBox["Center"]:SetTexture(.1, .1, .1, .834)
 
 		local saveButtonCallback = function()
 			local bIsEditing, actionIdentifier, keybindTable  = self:IsEditingKeybindSettings()

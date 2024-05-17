@@ -149,7 +149,7 @@ detailsFramework.IconGenericMixin = {
 		---@type texture
         newIcon.Border = newIcon:CreateTexture(nil, "background")
         newIcon.Border:SetAllPoints()
-        newIcon.Border:SetColorTexture(0, 0, 0)
+        newIcon.Border:SetTexture(0, 0, 0)
 
 		---@type fontstring
         newIcon.StackText = newIcon:CreateFontString(nil, "overlay", "GameFontNormal")
@@ -393,13 +393,9 @@ detailsFramework.IconGenericMixin = {
 				end
 			end
 
-			iconFrame:SetIgnoreParentAlpha(false)
-
 			if (iconSettings.color) then
 				local r, g, b, a = detailsFramework:ParseColors(iconSettings.color)
 				iconFrame.Texture:SetVertexColor(r, g, b, a)
-				--ignore the param alpha has the settings might have an alpha for it
-				iconFrame:SetIgnoreParentAlpha(true)
 			else
 				iconFrame.Texture:SetVertexColor(1, 1, 1, 1)
 			end

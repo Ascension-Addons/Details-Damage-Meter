@@ -298,7 +298,6 @@ detailsFramework.ScrollBoxFunctions = {
 			end
 			scrollBar:SetMinMaxValues(0, maxRange);
 			scrollBar:SetValueStep(buttonHeight);
-			scrollBar:SetStepsPerPage(numToDisplay-1);
 			scrollChildFrame:SetHeight(scrollChildHeight);
 
 			-- Arrow button handling

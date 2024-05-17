@@ -13,7 +13,7 @@ local GetInstanceInfo = GetInstanceInfo
 local time = time
 local floor = math.floor
 local C_Timer = C_Timer
-local C_ChallengeMode = C_ChallengeMode
+local C_MythicPlus = C_MythicPlus
 
 --constants
 local CONST_USE_PLAYER_EDPS = false
@@ -166,7 +166,8 @@ function mythicDungeonCharts:OnBossDefeated()
 	local currentCombat = Details:GetCurrentCombat()
 	local segmentType = currentCombat:GetCombatType()
 	local bossInfo = currentCombat:GetBossInfo()
-	local mythicLevel = C_ChallengeMode and C_ChallengeMode.GetActiveKeystoneInfo()
+	local activeKeystone = C_MythicPlus.IsKeystoneActive() and C_MythicPlus.GetActiveKeystoneInfo()
+	local mythicLevel = activeKeystone and activeKeystone.keystoneLevel
 
 	if (mythicLevel and mythicLevel > 0) then
 		if (mythicDungeonCharts.ChartTable and mythicDungeonCharts.ChartTable.Running and bossInfo) then

@@ -6,7 +6,6 @@
 	local _
 	local addonName, Details222 = ...
 
-	local bIsDragonflight = DetailsFramework.IsDragonflight()
 	local CONST_CLIENT_LANGUAGE = DF.ClientLanguage
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -183,114 +182,6 @@ end
 	function Details222.Pets.GetPetOwner(petGUID, petName)
 		pet_tooltip_frame:SetOwner(WorldFrame, "ANCHOR_NONE")
 		pet_tooltip_frame:SetHyperlink(("unit:" .. petGUID) or "")
-
-		--C_TooltipInfo.GetHyperlink
-
-		if (bIsDragonflight) then
-			local tooltipData = pet_tooltip_frame:GetTooltipData() --is pet tooltip reliable with the new tooltips changes?
-			if (tooltipData) then
-				if (not tooltipData.args and tooltipData.lines[1].leftText == '') then --Assume this unit acts like Akaari's soul, where it returns the tooltip for the player instead, with line 1 blank.
-					do
-						local ownerGUID = tooltipData.guid --tooltipData.guid points to the player attributed to this tooltip.
-						if (ownerGUID) then --If we have an owner GUID, then we should make sure it starts with a P for Player and then attempt to find the owner object from the caches.
-							if (ownerGUID:find("^P")) then
-								local playerGUID = ownerGUID
-								local actorObject = Details:GetActorFromCache(playerGUID) --quick cache only exists during conbat
-								if (actorObject) then
-									return actorObject.nome, playerGUID, actorObject.flag_original
-								end
-
-								local guidCache = Details:GetParserPlayerCache() --cache exists until the next combat starts
-								local ownerName = guidCache[playerGUID]
-								if (ownerName) then
-									return ownerName, playerGUID, 0x514
-								end
-
-								if(Details.zone_type == 'arena') then --Attempt to find enemy pet owner
-									for enemyName, enemyToken in pairs(Details.arena_enemies) do
-										if(UnitGUID(enemyToken) == ownerGUID) then
-											return enemyName, ownerGUID, 0x548
-										end
-									end
-								end
-							end
-						end
-					end
-					do
-						if (tooltipData.lines) then
-							for i = 1, #tooltipData.lines do
-								local lineData = tooltipData.lines[i]
-								if (lineData.unitToken) then --unit token seems to exists when the add belongs to the "player"
-									local ownerGUID = UnitGUID(lineData.unitToken)
-									if (ownerGUID and ownerGUID:find("^P")) then
-										local playerGUID = ownerGUID
-										local actorObject = Details:GetActorFromCache(playerGUID) --quick cache only exists during conbat
-										if (actorObject) then
-											return actorObject.nome, playerGUID, actorObject.flag_original
-										end
-
-										local guidCache = Details:GetParserPlayerCache() --cache exists until the next combat starts
-										local ownerName = guidCache[playerGUID]
-										if (ownerName) then
-											return ownerName, playerGUID, 0x514
-										end
-
-										if(Details.zone_type == 'arena') then --Attempt to find enemy pet owner
-											for enemyName, enemyToken in pairs(Details.arena_enemies) do
-												if(UnitGUID(enemyToken) == ownerGUID) then
-													return enemyName, ownerGUID, 0x548
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-				end
-
-				local tooltipLines = tooltipData.lines
-				for lineIndex = 1, #tooltipLines do
-					local thisLine = tooltipLines[lineIndex]
-					--get the type of information this line is showing
-					local lineType = thisLine.type --type 0 = 'friendly' type 2 = 'name' type 16 = controller guid
-
-					--parse the different types of information
-					if (lineType == 2) then --unit name
-						if (thisLine.leftText ~= petName) then
-							--tooltip isn't showing our pet
-							return
-						end
-
-					elseif (lineType == 16) then --controller guid
-						--assuming the unit name always comes before the controller guid
-						local GUID = thisLine.guid
-						--very fast way to get an actorObject, this cache only lives while in combat
-						local actorObject = Details:GetActorFromCache(GUID)
-						if (actorObject) then
-							--Details:Msg("(debug) pet found (1)", petName, "owner:", actorObject.nome)
-							return actorObject.nome, GUID, actorObject.flag_original
-						else
-							--return the actor name for a guid, this cache lives for current combat until next segment
-							local guidCache = Details:GetParserPlayerCache()
-							local ownerName = guidCache[GUID]
-							if (ownerName) then
-								--Details:Msg("(debug) pet found (2)", petName, "owner:", ownerName)
-								return ownerName, GUID, 0x514
-							end
-
-							if(Details.zone_type == 'arena') then --Attempt to find enemy pet owner
-								for enemyName, enemyToken in pairs(Details.arena_enemies) do
-									if(UnitGUID(enemyToken) == ownerGUID) then
-										return enemyName, ownerGUID, 0x548
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
 
 		local ownerName, ownerGUID, ownerFlags
 		if (not Details.tabela_vigente) then return end --Should exist at all times but load. Just in case.
