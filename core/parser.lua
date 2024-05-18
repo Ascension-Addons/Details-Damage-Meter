@@ -5461,7 +5461,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 		--send mythic dungeon end event
 		local zoneName, instanceType, difficultyID, difficultyName, maxPlayers, dynamicDifficulty, isDynamic, instanceMapID, instanceGroupSize = GetInstanceInfo()
-		if (difficultyID == 8) then
+		if (difficultyID == 3) then
 			Details:SendEvent("COMBAT_MYTHICDUNGEON_END")
 		end
 
