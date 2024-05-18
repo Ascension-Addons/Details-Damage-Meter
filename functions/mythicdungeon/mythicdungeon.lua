@@ -24,7 +24,7 @@ Details222.MythicPlus.Charts.Listener = mythicDungeonCharts
 
 -- ~mythic ~dungeon
 local DetailsMythicPlusFrame = _G.CreateFrame("frame", "DetailsMythicPlusFrame", UIParent)
-DetailsMythicPlusFrame.DevelopmentDebug = false
+DetailsMythicPlusFrame.DevelopmentDebug = true
 
 --disabling the mythic+ feature if the user is playing in wow classic
 DetailsMythicPlusFrame:RegisterEvent("MYTHIC_PLUS_STARTED")
@@ -405,7 +405,7 @@ end)
 
 ---@param combatObject combat
 function DetailsMythicPlusFrame.SaveMythicPlusStats(combatObject)
-    local mapChallengeModeID, mythicLevel, time, onTime = CMythicPlusUtil.GetCompletionInfo(true)
+    local mapChallengeModeID, mythicLevel, time, onTime = MythicPlusUtil.GetCompletionInfo(true)
     if (mapChallengeModeID) then
         local statName = "mythicdungeoncompletedDF2"
 

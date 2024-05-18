@@ -3396,7 +3396,7 @@ local frameshake_play = function(parent, shakeObject, scaleDirection, scaleAmpli
 		--update the amount of shake running on this frame
 		parent.__frameshakes.enabled = parent.__frameshakes.enabled + 1
 
-		if (parent:HasScript("OnUpdate") and not parent:GetScript("OnUpdate")) then
+		if (parent.HasScript and parent:HasScript("OnUpdate") and not parent:GetScript("OnUpdate")) then
 			parent:SetScript("OnUpdate", function()end)
 		end
 	end

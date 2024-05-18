@@ -463,7 +463,7 @@ end
 -- /run _G.DetailsMythicDungeonChartHandler.ShowEndOfMythicPlusPanel()
 
 if (CONST_DEBUG_MODE) then
-	C_Timer.After(3, function()
+	C_Timer.After(10, function()
 		LoadAddOn("Ascension_MythicPlus");
 		_G.MythicDungeonFrames.ShowEndOfMythicPlusPanel()
 	end)
@@ -818,9 +818,6 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		end)
 	end)
 
-	--/run PlaySound(SOUNDKIT.UI_70_CHALLENGE_MODE_KEYSTONE_UPGRADE);
-	--PlaySound(SOUNDKIT.UI_70_CHALLENGE_MODE_COMPLETE_NO_UPGRADE);
-
 	--fin the overall mythic dungeon combat, starting with the current combat
 	---@type combat
 	local overallMythicDungeonCombat = Details:GetCurrentCombat()
@@ -871,7 +868,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		readyFrame.YouBeatTheTimerLabel:SetFormattedText(MYTHIC_PLUS_COMPLETE_BEAT_TIMER .. " | " .. MYTHIC_PLUS_COMPLETE_KEYSTONE_UPGRADED, Details222.MythicPlus.KeystoneUpgradeLevels) --"You beat the timer!"
 		readyFrame.YouBeatTheTimerLabel.textcolor = "limegreen"
 		--readyFrame.KeystoneUpgradeLabel:SetFormattedText(CHALLENGE_MODE_COMPLETE_KEYSTONE_UPGRADED, Details222.MythicPlus.KeystoneUpgradeLevels)
-		PlaySound(SOUNDKIT.UI_70_CHALLENGE_MODE_KEYSTONE_UPGRADE)
+		PlaySound(SOUNDKIT.UI_CHALLENGEMODE_NEWRECORD)
 		C_Timer.After(0.020, function()
 			--PlaySoundFile([[Interface\AddOns\Details\sounds\bassdrop2.mp3]])
 		end)
@@ -879,7 +876,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		readyFrame.YouBeatTheTimerLabel.textcolor = "white"
 		readyFrame.YouBeatTheTimerLabel.text = MYTHIC_PLUS_COMPLETE_TIME_EXPIRED --"Time expired!"
 		--readyFrame.KeystoneUpgradeLabel.text = MYTHIC_PLUS_COMPLETE_TRY_AGAIN --"Try again! Beat the timer to upgrade your keystone!"
-		PlaySound(SOUNDKIT.UI_70_CHALLENGE_MODE_COMPLETE_NO_UPGRADE)
+		PlaySound(SOUNDKIT.UI_CHALLENGEMODE_WARNING)
 	end
 
 	readyFrame.RantingLabel.text = ""
