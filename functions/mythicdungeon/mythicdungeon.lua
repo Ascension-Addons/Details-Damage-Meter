@@ -131,7 +131,8 @@ function DetailsMythicPlusFrame.MythicDungeonStarted()
 
     local activeKeystone = C_MythicPlus.IsKeystoneActive() and C_MythicPlus.GetActiveKeystoneInfo()
 	local mythicLevel = activeKeystone and activeKeystone.keystoneLevel
-    local zoneName, _, _, _, _, _, _, currentZoneID = GetInstanceInfo()
+    local currentZoneID = activeKeystone and activeKeystone.dungeonID
+    local zoneName, _, _, _, _, _, _ = GetInstanceInfo()
 
     local mapID = activeKeystone.dungeonID
 
@@ -174,9 +175,11 @@ end
 
 function DetailsMythicPlusFrame.OnChallengeModeStart()
     --is this a mythic dungeon?
-    local _, _, difficultyID, _, _, _, _, currentZoneID = GetInstanceInfo()
+    local activeKeystone = C_MythicPlus.IsKeystoneActive() and C_MythicPlus.GetActiveKeystoneInfo()
+    local currentZoneID = activeKeystone and activeKeystone.dungeonID
+    local _, _, difficultyID, _, _, _, _ = GetInstanceInfo()
 
-    if (difficultyID == 8) then
+    if (difficultyID == 3) then
         --start the dungeon on Details!
         DetailsMythicPlusFrame.MythicDungeonStarted()
         Details222.MythicPlus.LogStep("OnChallengeModeStart()")
@@ -184,7 +187,6 @@ function DetailsMythicPlusFrame.OnChallengeModeStart()
         --print("D! mythic dungeon was already started!")
         --from zone changed
         local mythicLevel = MythicPlusUtil.GetActiveKeystoneLevel()
-        local zoneName, _, _, _, _, _, _, currentZoneID = GetInstanceInfo()
 
         if (not Details.MythicPlus.Started and Details.MythicPlus.DungeonID == currentZoneID and Details.MythicPlus.Level == mythicLevel) then
             Details.MythicPlus.Started = true
@@ -316,8 +318,10 @@ function DetailsMythicPlusFrame.EventListener.OnDetailsEvent(contextObject, even
 			end
 		end
 
-        local mythicLevel = MythicPlusUtil.GetActiveKeystoneLevel()
-        local zoneName, _, _, _, _, _, _, currentZoneID = GetInstanceInfo()
+        local activeKeystone = C_MythicPlus.IsKeystoneActive() and C_MythicPlus.GetActiveKeystoneInfo()
+        local mythicLevel = activeKeystone and activeKeystone.keystoneLevel
+        local zoneName, _, _, _, _, _, _ = GetInstanceInfo()
+        local currentZoneID = activeKeystone and activeKeystone.dungeonID
 		Details222.MythicPlus.LogStep("COMBAT_MYTHICDUNGEON_START | settings: " .. result .. " | level: " .. mythicLevel .. " | zone: " .. zoneName .. " | zoneId: " .. currentZoneID)
 
     elseif (event == "COMBAT_MYTHICDUNGEON_END") then
@@ -338,8 +342,9 @@ end
 
 local playerLeftDungeonZoneTimer_Callback = function()
     if (DetailsMythicPlusFrame.IsDoingMythicDungeon) then
-        local _, _, difficulty, _, _, _, _, currentZoneID = GetInstanceInfo()
-        if (currentZoneID ~= Details.MythicPlus.DungeonID) then
+        local activeKeystone = C_MythicPlus.IsKeystoneActive() and C_MythicPlus.GetActiveKeystoneInfo()
+        local currentZoneID = activeKeystone and activeKeystone.dungeonID
+        if (not currentZoneID or currentZoneID ~= Details.MythicPlus.DungeonID) then
             Details222.MythicPlus.LogStep("ZONE_CHANGED_NEW_AREA | player has left the dungeon and Details! finished the dungeon because of that.")
 
             --send mythic dungeon end event
@@ -373,8 +378,9 @@ DetailsMythicPlusFrame:SetScript("OnEvent", function(_, event, ...)
                 return
             end
 
-            local _, _, difficulty, _, _, _, _, currentZoneID = GetInstanceInfo()
-            if (currentZoneID ~= Details.MythicPlus.DungeonID) then
+            local activeKeystone = C_MythicPlus.IsKeystoneActive() and C_MythicPlus.GetActiveKeystoneInfo()
+            local currentZoneID = activeKeystone and activeKeystone.dungeonID
+            if (not currentZoneID or currentZoneID ~= Details.MythicPlus.DungeonID) then
                 if (DetailsMythicPlusFrame.DevelopmentDebug) then
                     print("Zone changed and the zone is different than the dungeon")
                 end

@@ -276,6 +276,7 @@ function Details:StartMeUp()
 		
 		Details.listener:RegisterEvent("MYTHIC_PLUS_STARTED")
 		Details.listener:RegisterEvent("MYTHIC_PLUS_COMPLETE")
+		Details.listener:RegisterEvent("MYTHIC_PLUS_COUNTDOWN_STARTED")
 		
 		Details.listener:RegisterEvent("ASCENSION_KNOWN_ENTRIES_CHANGED")
 

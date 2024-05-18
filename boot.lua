@@ -480,8 +480,8 @@ do
 		_detalhes.enabled = true
 		_detalhes.__index = _detalhes
 		_detalhes._tempo = time()
-		_detalhes.debug = false
-		_detalhes.debug_chr = false
+		_detalhes.debug = true and UnitName("player") == "Andrew"
+		_detalhes.debug_chr = true and UnitName("player") == "Andrew"
 		_detalhes.opened_windows = 0
 		_detalhes.last_combat_time = 0
 
