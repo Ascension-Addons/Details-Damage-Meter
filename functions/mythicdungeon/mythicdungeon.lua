@@ -36,7 +36,9 @@ DetailsMythicPlusFrame:RegisterEvent("START_TIMER")
 function Details222.MythicPlus.LogStep(log)
     local today = date("%d/%m/%y %H:%M:%S")
     table.insert(Details.mythic_plus_log, 1, today .. "|" .. log)
-    tremove(Details.mythic_plus_log, 50)
+    if #Details.mythic_plus_log >= 50 then
+        tremove(Details.mythic_plus_log, 50)
+    end
 end
 
 function DetailsMythicPlusFrame.BossDefeated(this_is_end_end, encounterID, encounterName, difficultyID, raidSize, endStatus) --hold your breath and count to ten
