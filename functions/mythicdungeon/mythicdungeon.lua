@@ -24,7 +24,7 @@ Details222.MythicPlus.Charts.Listener = mythicDungeonCharts
 
 -- ~mythic ~dungeon
 local DetailsMythicPlusFrame = _G.CreateFrame("frame", "DetailsMythicPlusFrame", UIParent)
-DetailsMythicPlusFrame.DevelopmentDebug = true
+DetailsMythicPlusFrame.DevelopmentDebug = false
 
 --disabling the mythic+ feature if the user is playing in wow classic
 DetailsMythicPlusFrame:RegisterEvent("MYTHIC_PLUS_STARTED")
