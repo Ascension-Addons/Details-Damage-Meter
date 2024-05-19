@@ -178,7 +178,6 @@
 		local buffs_on_target = {
 			[10060] = true, --power infusion
 			[194384] = true, --atonement uptime
-			[378134] = true, --rallied to victory
 		}
 
 		Details.CreditBuffToTarget = buffs_on_target
