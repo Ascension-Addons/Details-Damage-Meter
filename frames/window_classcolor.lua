@@ -5,9 +5,9 @@ local DF = _G.DetailsFramework
 local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
 
 --config class colors
-function Details:OpenClassColorsConfig()
+function Details:OpenClassColorsConfig() 
     if (not _G.DetailsClassColorManager) then
-        DF:CreateSimplePanel(UIParent, 300, 455, Loc ["STRING_OPTIONS_CLASSCOLOR_MODIFY"], "DetailsClassColorManager")
+        DF:CreateSimplePanel(UIParent, 440, 400, Loc ["STRING_OPTIONS_CLASSCOLOR_MODIFY"], "DetailsClassColorManager")
         local panel = _G.DetailsClassColorManager
 
         DF:ApplyStandardBackdrop(panel)
@@ -17,7 +17,7 @@ function Details:OpenClassColorsConfig()
         upper_panel:SetAllPoints(panel)
         upper_panel:SetFrameLevel(panel:GetFrameLevel()+3)
 
-        local y = -50
+        local y = -30
 
         local callback = function(button, r, g, b, a, self)
             self.MyObject.my_texture:SetVertexColor(r, g, b)
@@ -53,7 +53,7 @@ function Details:OpenClassColorsConfig()
         end
 
         local reset = DF:NewLabel(panel, panel, nil, nil, "|TInterface\\TUTORIALFRAME\\UI-TUTORIAL-FRAME:" .. 20 .. ":" .. 20 .. ":0:1:512:512:8:70:328:409|t " .. Loc ["STRING_OPTIONS_CLASSCOLOR_RESET"])
-        reset:SetPoint("bottomright", panel, "bottomright", -23, 08)
+        reset:SetPoint("bottomright", panel, "bottomright", -20, 08)
 
         local reset_texture = DF:CreateImage(panel, [[Interface\MONEYFRAME\UI-MONEYFRAME-BORDER]], 138, 45, "border")
         reset_texture:SetPoint("center", reset, "center", 0, -7)
@@ -61,21 +61,26 @@ function Details:OpenClassColorsConfig()
 
         panel.buttons = {}
 
+        local next_x = 10
         for index, className in ipairs(CLASS_SORT_ORDER) do
-            local icon = DF:CreateImage(upper_panel, [[Interface\Glues\CHARACTERCREATE\UI-CHARACTERCREATE-CLASSES]], 32, 32, nil, CLASS_ICON_TCOORDS [className], "icon_" .. className)
+            local icon = DF:CreateImage(upper_panel, [[Interface\Glues\CHARACTERCREATE\UI-CHARACTERCREATE-CLASSES]], 30, 30, nil, CLASS_ICON_TCOORDS [className], "icon_" .. className)
 
-            if (index%2 ~= 0) then
-                icon:SetPoint(10, y)
-            else
-                icon:SetPoint(150, y)
-                y = y - 33
+            if index == 12 then
+                next_x = 150
+                y = -30
+            elseif index == 23 then
+                next_x = 290
+                y = -30
             end
+            
+            icon:SetPoint("topleft", panel, "topleft", next_x, y)
+            y = y - 33
 
             local backgroundTexture = DF:CreateImage(panel, [[Interface\AddOns\Details\images\bar_skyline]], 135, 30, "artwork")
-            backgroundTexture:SetPoint("left", icon, "right", -32, 0)
-
-            local button = DF:CreateButton(panel, set_color, 135, 30, className, className, index)
-            button:SetPoint("left", icon, "right", -32, 0)
+            backgroundTexture:SetPoint("left", icon, "right", -30, 0)
+            local localizedClassName = LOCALIZED_CLASS_NAMES_MALE[className]
+            local button = DF:CreateButton(panel, set_color, 135, 30, localizedClassName, className, index)
+            button:SetPoint("left", icon, "right", -30, 0)
             button:InstallCustomTexture(nil, nil, nil, nil, true)
             button:SetFrameLevel(panel:GetFrameLevel()+1)
 
@@ -135,75 +140,6 @@ function Details:OpenClassColorsConfig()
 
             return result
         end
-
-        local deathLogOptions = {
-            {--damage
-                type = "select",
-                get = function() return Details.death_log_colors.damage end,
-                values = function()
-                    return buildColorList("damage")
-                end,
-                name = "Damage",
-                desc = "Damage",
-            },
-            {--heal
-                type = "select",
-                get = function() return Details.death_log_colors.heal end,
-                values = function()
-                    return buildColorList("heal")
-                end,
-                name = "Heal",
-                desc = "Heal",
-            },
-            {--friendlyfire
-                type = "select",
-                get = function() return Details.death_log_colors.friendlyfire end,
-                values = function()
-                    return buildColorList("friendlyfire")
-                end,
-                name = "Friendly Fire",
-                desc = "Friendly Fire",
-            },
-            {--cooldown
-                type = "select",
-                get = function() return Details.death_log_colors.cooldown end,
-                values = function()
-                    return buildColorList("cooldown")
-                end,
-                name = "Cooldown",
-                desc = "Cooldown",
-            },
-            {--debuff
-                type = "select",
-                get = function() return Details.death_log_colors.debuff end,
-                values = function()
-                    return buildColorList("debuff")
-                end,
-                name = "Debuff",
-                desc = "Debuff",
-            },
-            {--buff
-                type = "select",
-                get = function() return Details.death_log_colors.buff end,
-                values = function()
-                    return buildColorList("buff")
-                end,
-                name = "Buff",
-                desc = "Buff",
-            },
-        }
-
-        --templates
-        local options_text_template = DF:GetTemplate("font", "OPTIONS_FONT_TEMPLATE")
-        local options_dropdown_template = DF:GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
-        local options_switch_template = DF:GetTemplate("switch", "OPTIONS_CHECKBOX_TEMPLATE")
-        local options_slider_template = DF:GetTemplate("slider", "OPTIONS_SLIDER_TEMPLATE")
-        local options_button_template = DF:GetTemplate("button", "OPTIONS_BUTTON_TEMPLATE")
-
-        DetailsFramework:BuildMenu(panel, deathLogOptions, 5, -315, 700, true, options_text_template, options_dropdown_template, options_switch_template, true, options_slider_template, options_button_template)
-
-        local deathLogColorsLabel = DF:CreateLabel(panel, "Colors on Death Log:", 12, "yellow")
-        deathLogColorsLabel:SetPoint("topleft", panel, "topleft", 5, -295)
     end
 
     for class, button in pairs(_G.DetailsClassColorManager.buttons) do
