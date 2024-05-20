@@ -1390,26 +1390,24 @@ do
 					set = function()end,
 					param = "player",
 					get = function() return compareTwo.db.compare_type == CONST_COMPARETYPE_SPEC end,
-					texture = [[Interface\AddOns\Details\images\icons2.png]],
+					texture = [[Interface\Icons\icon_petfamily_humanoid]],
 					width = 32,
 					height = 32,
 					text_size = 20,
-					texcoord = {0, 64/512, 211/512, 275/512},
+					texcoord = {0, 1, 0, 1},
 					callback = selectCompareMode,
-					mask = [[Interface\COMMON\common-iconmask]],
 				},
 				{
 					name = "Compare Segments", --localize-me
 					set = function()end,
 					param = "segment",
 					get = function() return compareTwo.db.compare_type == CONST_COMPARETYPE_SEGMENT end,
-					texture = [[Interface\AddOns\Details\images\icons2.png]],
-					texcoord = {65/512, 128/512, 211/512, 275/512},
+					texture = [[Interface\Icons\icon_petfamily_mechanical]],
+					texcoord = {0, 1, 0, 1},
 					width = 32,
 					height = 32,
 					text_size = 20,
 					callback = selectCompareMode,
-					mask = [[Interface\COMMON\common-iconmask]],
 				}
 			}
 
@@ -1485,8 +1483,6 @@ do
 			local amountOfComparisonsSlider = detailsFramework:CreateSlider(comparePlugin, 160, 20, minValue, maxValue, scrollStep, currentValue, bIsDecimals)
 			amountOfComparisonsSlider:SetPoint("bottomright", comparePlugin, "bottomright", -30, 14)
 			amountOfComparisonsSlider:SetTemplate("MODERN_SLIDER_TEMPLATE")
-			local bObeyStep = true
-			amountOfComparisonsSlider:SetObeyStepOnDrag(bObeyStep)
 			amountOfComparisonsSlider:SetHook("OnValueChanged", function(self, fixedValue, value)
 				if (value == compareTwo.db.max_compares) then
 					return
@@ -1519,7 +1515,6 @@ do
 
 				local spellIcon = line:CreateTexture("$parentIcon", "overlay")
 				spellIcon:SetSize(lineHeight -2 , lineHeight - 2)
-				detailsFramework:SetMask(spellIcon, [[Interface\COMMON\common-iconmask]])
 				spellIcon:SetAlpha(comparisonFrameSettings.spellIconAlpha)
 
 				local spellName = line:CreateFontString("$parentName", "overlay", "GameFontNormal")
