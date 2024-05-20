@@ -1481,7 +1481,7 @@ do
 			local scrollStep = 1
 			local bIsDecimals = false
 			local amountOfComparisonsSlider = detailsFramework:CreateSlider(comparePlugin, 160, 20, minValue, maxValue, scrollStep, currentValue, bIsDecimals)
-			amountOfComparisonsSlider:SetPoint("bottomright", comparePlugin, "bottomright", -30, 14)
+			amountOfComparisonsSlider:SetPoint("bottomright", comparePlugin, "bottomright", -42, 14)
 			amountOfComparisonsSlider:SetTemplate("MODERN_SLIDER_TEMPLATE")
 			amountOfComparisonsSlider:SetHook("OnValueChanged", function(self, fixedValue, value)
 				if (value == compareTwo.db.max_compares) then
