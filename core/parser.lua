@@ -557,7 +557,8 @@
 
 		--melee
 		if (token == "SWING_DAMAGE") then
-			spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical, glacing, crushing, isoffhand = 1, meleeString, 00000001, spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical
+			-- school or 00000001 because pets can have different melee damage types.
+			spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical, glacing, crushing, isoffhand = 1, meleeString, school or 00000001, spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical
 		end
 
 		if (not targetName) then
@@ -1138,6 +1139,10 @@
 			if (isreflected) then
 				spellTable.isReflection = true
 			end
+		end
+
+		if spellTable.spellschool ~= (spellType or school) then
+			spellTable.spellschool = spellType or school -- damage change REs can get cached as the wrong school type
 		end
 
 		--empowerment data
