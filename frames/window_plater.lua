@@ -11,7 +11,7 @@ function Details:InitializePlaterIntegrationWindow()
     DetailsPlaterIntegrationPanel.__icon = [[Interface\AddOns\Details\images\plater_icon]]
     DetailsPlaterIntegrationPanel.__iconcoords = {0, 1, 0, 1}
     DetailsPlaterIntegrationPanel.__iconcolor = "white"
-    DetailsPluginContainerWindow.EmbedPlugin (DetailsPlaterIntegrationPanel, DetailsPlaterIntegrationPanel, true)
+    --DetailsPluginContainerWindow.EmbedPlugin (DetailsPlaterIntegrationPanel, DetailsPlaterIntegrationPanel, true)
 
     function DetailsPlaterIntegrationPanel.RefreshWindow()
         Details.OpenPlaterIntegrationWindow()
