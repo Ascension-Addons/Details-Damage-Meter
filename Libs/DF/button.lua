@@ -443,18 +443,18 @@ detailsFramework:Mixin(ButtonMetaFunctions, detailsFramework.ScriptHookMixin)
 		local buttonWidth = self.button:GetWidth()
 		local iconWidth = self.icon:GetWidth()
 		local textWidth = self.button.text:GetStringWidth()
-		if (textWidth > buttonWidth - 15 - iconWidth) then
+		if (textWidth > buttonWidth - 25 - iconWidth) then
 			if (shortMethod == false) then
 
 			elseif (not shortMethod) then
-				local new_width = textWidth + 15 + iconWidth
+				local new_width = textWidth + 25 + iconWidth
 				self.button:SetWidth(new_width)
 
 			elseif (shortMethod == 1) then
 				local loop = true
 				local textSize = 11
 				while (loop) do
-					if (textWidth + 15 + iconWidth < buttonWidth or textSize < 8) then
+					if (textWidth + 25 + iconWidth < buttonWidth or textSize < 8) then
 						loop = false
 						break
 					else
@@ -987,18 +987,18 @@ end
 		buttonObject.button.text:SetPoint("center", buttonObject.button, "center")
 
 		local textWidth = buttonObject.button.text:GetStringWidth()
-		if (textWidth > width - 15 and buttonObject.button.text:GetText() ~= "") then
+		if (textWidth > width - 25 and buttonObject.button.text:GetText() ~= "") then
 			if (shortMethod == false) then --if is false, do not use auto resize
 				--do nothing
 			elseif (not shortMethod) then --if the value is omitted, use the default resize
-				local newWidth = textWidth + 15
+				local newWidth = textWidth + 25
 				PixelUtil.SetWidth(buttonObject.button, newWidth)
 
 			elseif (shortMethod == 1) then
 				local loop = true
 				local textsize = 11
 				while (loop) do
-					if (textWidth + 15 < width or textsize < 8) then
+					if (textWidth + 25 < width or textsize < 8) then
 						loop = false
 						break
 					else
