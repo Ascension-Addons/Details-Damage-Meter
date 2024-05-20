@@ -49,8 +49,7 @@ local ignored_debuffs = {
 	[80354] = true, --temporal displacement
 	[57724] = true, --sated
 	[6788] = true, --weakened soul
-	[124275] = true, --light stagger
-	[124274] = true, --moderate stagger
+	[20232] = true, -- stagger
 }
 
 ---------------------------------------------------------------------------------------------

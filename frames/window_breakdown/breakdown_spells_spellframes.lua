@@ -1531,6 +1531,7 @@ function spellsTab.CreateSpellBar(self, index) --~spellbar ~spellline ~spell ~cr
 	spellIconFrame:SetSize(CONST_BAR_HEIGHT - 2, CONST_BAR_HEIGHT - 2)
 	spellIconFrame:SetScript("OnEnter", onEnterSpellIconFrame)
 	spellIconFrame:SetScript("OnLeave", onLeaveSpellIconFrame)
+	spellIconFrame:EnableMouse(true)
 	spellBar.spellIconFrame = spellIconFrame
 
 	--create the icon to show the spell texture

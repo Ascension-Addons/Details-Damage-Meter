@@ -407,13 +407,8 @@ end
 function Details:GameTooltipSetSpellByID(spellId) --[[exported]]
 	if (spellId == 1) then
 		GameTooltip:SetSpellByID(6603)
-
 	elseif (spellId == 2) then
 		GameTooltip:SetSpellByID(75)
-
-	elseif (spellId > 10) then
-		GameTooltip:SetSpellByID(spellId)
-
 	else
 		GameTooltip:SetSpellByID(spellId)
 	end
@@ -4081,15 +4076,15 @@ function damageClass:ToolTip_DamageTaken(instance, numero, barra, keydown)
 				end
 
 				--special cases - monk stagger
-				if (enemyName == actorName and self:Class() == "MONK") then
+				if (enemyName == actorName) then
 					local friendlyFire = enemyActorObject.friendlyfire[enemyName]
 					if (friendlyFire and friendlyFire.total > 0) then
-						local staggerDamage = friendlyFire.spells[124255] or 0
+						local staggerDamage = friendlyFire.spells[20232] or 0
 						if (staggerDamage > 0) then
 							if (damageTakenTable) then
 								damageTakenTable[2] = damageTakenTable[2] + staggerDamage
 							else
-								damageTakenDataSorted[#damageTakenDataSorted+1] = {enemyName, staggerDamage, "MONK", enemyActorObject}
+								damageTakenDataSorted[#damageTakenDataSorted+1] = {enemyName, staggerDamage, enemyActorObject:Class(), enemyActorObject}
 							end
 						end
 					end

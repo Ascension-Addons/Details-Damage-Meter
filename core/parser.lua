@@ -141,27 +141,24 @@
 			--we can track which spell caused the reflection
 			--this is used to credit this aura as the one doing the damage
 			[23920] = true, --warrior spell reflection
-			[216890] = true, --warrior spell reflection (pvp talent)
-			[213915] = true, --warrior mass spell reflection
-			[212295] = true, --warlock nether ward
-			--check pally legendary
 		}
 		local reflection_dispelid = {
 			--some dispels also reflect, and we can track them
-			[122783] = true, --monk diffuse magic
-
-			--[205604] = true, --demon hunter reverse magic
-			--this last one is an odd one, like most dh spells is kindy buggy combatlog wise
-			--for now it doesn't fire SPELL_DISPEL events even when dispelling stuff (thanks blizzard)
-			--maybe someone can figure out something to track it... but for now it doesnt work
 		}
 		local reflection_ignore = {
 			--common self-harm spells that we know weren't reflected
 			--this list can be expanded
 			[111400] = true, --warlock burning rush
-			[124255] = true, --monk stagger
-			[196917] = true, --paladin light of the martyr
-			[217979] = true, --warlock health funnel
+			[20232] = true, --monk stagger
+			[755] = true, --warlock health funnel (rank 1)
+			[3698] = true, --warlock health funnel (rank 2)
+			[3699] = true, --warlock health funnel (rank 3)
+			[3700] = true, --warlock health funnel (rank 4)
+			[11693] = true, --warlock health funnel (rank 5)
+			[11694] = true, --warlock health funnel (rank 6)
+			[11695] = true, --warlock health funnel (rank 7)
+			[27259] = true, --warlock health funnel (rank 8)
+			[47856] = true, --warlock health funnel (rank 9)
 		}
 
 		--army od the dead cache
@@ -177,7 +174,6 @@
 		--list of buffs given by another player but should also be credited to the which received it
 		local buffs_on_target = {
 			[10060] = true, --power infusion
-			[194384] = true, --atonement uptime
 		}
 
 		Details.CreditBuffToTarget = buffs_on_target
@@ -214,100 +210,18 @@
 
 	--spellIds override
 	local override_spellId = {
-		--Scourge Strike
-		[55090] = 55271,
-		[55265] = 55271,
-		[55270] = 55271,
-		[70890] = 55271, --shadow
-
-		--Frost Strike
-		[49143] = 55268,
-		[51416] = 55268,
-		[51417] = 55268,
-		[51418] = 55268,
-		[51419] = 55268,
-		[66962] = 55268, --offhand
-
-		--Obliterate
-		[49020] = 51425,
-		[51423] = 51425,
-		[51424] = 51425,
-		[66974] = 51425, --offhand
-
-		--Death Strike
-		[49998] = 49924,
-		[49999] = 49924,
-		[45463] = 49924,
-		[49923] = 49924,
-		[66953] = 49924, --offhand
-
-		--Blood Strike
-		[45902] = 49930,
-		[49926] = 49930,
-		[49927] = 49930,
-		[49928] = 49930,
-		[49929] = 49930,
-		[66979] = 49930, --offhand
-
-		--Rune Strike
-		[6621] = 56815, --offhand
-
-		--Plague Strike
-		[45462] = 49921,
-		[49917] = 49921,
-		[49918] = 49921,
-		[49919] = 49921,
-		[49920] = 49921,
-		[66992] = 49921, --offhand
-
-		--Seal of Command
-		[20424] = 69403, --53739 and 53733
-
-		--odyn's fury warrior
-		[385062] = 385060,
-		[385061] = 385060,
-
-		--crushing blow
-		[335098] = 335097,
-		[335100] = 335097,
-
-		--charge warrior
-		[105771] = 126664,
-
-		--elemental stances
-		[377458] = 377459,
-		[377461] = 377459,
-		[382133] = 377459,
 	}
 
 	
 	local override_aura_spellid = {
-		[426672] = { --Pip's Emerald Friendship Badge Urctos
-			CanOverride = function(auraName, texture, count, auraType, duration, expirationTime, sourceUnit, isStealable, shouldConsolidate, spellId, ...)
-				if (duration and duration >= 1 and duration <= 60) then
-					return true
-				end
-			end,
-			NewSpellId = 426674,
-		},
-
-		[426676] = { --Pip's Emerald Friendship Badge Aerwynn
-			CanOverride = function(auraName, texture, count, auraType, duration, expirationTime, sourceUnit, isStealable, shouldConsolidate, spellId, ...)
-				if (duration and duration >= 1 and duration <= 60) then
-					return true
-				end
-			end,
-			NewSpellId = 426677,
-		},
-
-		[426647] = { --Pip's Emerald Friendship Badge Pip
-			CanOverride = function(auraName, texture, count, auraType, duration, expirationTime, sourceUnit, isStealable, shouldConsolidate, spellId, ...)
-				if (duration and duration >= 1 and duration <= 60) then
-					return true
-				end
-			end,
-			NewSpellId = 426648
-		},
+		-- [426672] = { --Pip's Emerald Friendship Badge Urctos
+		-- 	CanOverride = function(auraName, texture, count, auraType, duration, expirationTime, sourceUnit, isStealable, shouldConsolidate, spellId, ...)
+		-- 		if (duration and duration >= 1 and duration <= 60) then
+		-- 			return true
+		-- 		end
+		-- 	end,
+		-- 	NewSpellId = 426674,
+		-- },
 	}
 
 	local bitfield_debuffs = {}
@@ -335,29 +249,12 @@
 
 	--list of ignored npcs by the user
 	Details.default_ignored_npcs = {
-		--DH Havoc Talent Fodder to the Flame
-		[169421] = true,
-		[169425] = true,
-		[168932] = true,
-		[169426] = true,
-		[169429] = true,
-		[169428] = true,
-		[169430] = true,
-
-		--Volatile Spark on razga'reth
-		[194999] = true,
-
-		--Ozumat - Throne of Tides
-		[44566] = true,
-
-		--Smoldering Seedling trinket
-		[212590] = true,
 	}
 
 	local ignored_npcids = {}
 
 	--ignore soul link (damage from the warlock on his pet - current to demonology only)
-	local SPELLID_WARLOCK_SOULLINK = 108446
+	local SPELLID_WARLOCK_SOULLINK = 25228
 	--brewmaster monk guard talent
 	local SPELLID_MONK_GUARD = 115295
 
@@ -377,7 +274,6 @@
 
 	--spells with special treatment
 	local special_damage_spells = {
-		[20232] = true, --spirit link toten
 	}
 
 	--damage spells to ignore
@@ -853,23 +749,12 @@
 
 			--record avoidance only for tank actors
 			if (tanks_members_cache[targetSerial]) then
-				--monk's stagger
-				if (targetActor.classe == "MONK") then
+				--advanced damage taken
+				if (Details.damage_taken_everything) then
 					if (absorbed) then
-						--the absorbed amount was staggered and should not be count as damage taken now
-						--this absorbed will hit the player with the stagger debuff
 						amount = (amount or 0) - absorbed
 					end
-				else
-					--advanced damage taken
-					--if advanced  damage taken is enabled, the damage taken to tanks acts like the monk stuff above
-					if (Details.damage_taken_everything) then
-						if (absorbed) then
-							amount = (amount or 0) - absorbed
-						end
-					end
 				end
-
 				--avoidance
 				local avoidance = targetActor.avoidance
 				if (not avoidance) then
@@ -2088,27 +1973,25 @@
 			effectiveHeal = effectiveHeal + amount - overHealing
 		end
 
-		if (isWOTLK or isCATA) then
-			--earth shield
-			if (spellId == SPELLID_SHAMAN_EARTHSHIELD_HEAL) then
-				--get the information of who placed the buff into this actor
-				local sourceData = TBC_EarthShieldCache[sourceName]
-				if (sourceData) then
-					sourceSerial, sourceName, sourceFlags = unpack(sourceData)
-				end
-
-			--prayer of mending
-			elseif (spellId == SPELLID_PRIEST_POM_HEAL) then
-				local sourceData = TBC_PrayerOfMendingCache[sourceName]
-				if (sourceData) then
-					sourceSerial, sourceName, sourceFlags = unpack(sourceData)
-					TBC_PrayerOfMendingCache[sourceName] = nil
-				end
-
-			elseif (spellId == 27163) then --Judgement of Light (paladin), reattribute healing to the person getting healed. Stops 'sniping' the JoL to parse
-				--Removed old version 10/27/23 Flamanis
-				sourceSerial, sourceName, sourceFlags = targetSerial, targetName, targetFlags
+		--earth shield
+		if (spellId == SPELLID_SHAMAN_EARTHSHIELD_HEAL) then
+			--get the information of who placed the buff into this actor
+			local sourceData = TBC_EarthShieldCache[sourceName]
+			if (sourceData) then
+				sourceSerial, sourceName, sourceFlags = unpack(sourceData)
 			end
+
+		--prayer of mending
+		elseif (spellId == SPELLID_PRIEST_POM_HEAL) then
+			local sourceData = TBC_PrayerOfMendingCache[sourceName]
+			if (sourceData) then
+				sourceSerial, sourceName, sourceFlags = unpack(sourceData)
+				TBC_PrayerOfMendingCache[sourceName] = nil
+			end
+
+		elseif (spellId == 20267) then --Judgement of Light (paladin), reattribute healing to the person getting healed. Stops 'sniping' the JoL to parse
+			--Removed old version 10/27/23 Flamanis
+			sourceSerial, sourceName, sourceFlags = targetSerial, targetName, targetFlags
 		end
 
 		_current_heal_container.need_refresh = true
