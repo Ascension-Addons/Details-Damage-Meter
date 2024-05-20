@@ -684,7 +684,7 @@ end
 		local forceClass
 
 		--get the aID (actor id)
-		if (actorSerial:match("^C")) then
+		if (GUIDIsNPC(actorSerial)) then
 			newActor.aID = tostring(Details:GetNpcIdFromGuid(actorSerial))
 
 			--immersion stuff
@@ -697,8 +697,8 @@ end
 				end
 			end
 
-		elseif (actorSerial:match("^P")) then
-			newActor.aID = actorSerial:gsub("Player%-", "")
+		elseif (GUIDIsPlayer(actorSerial)) then
+			newActor.aID = GetPlayerUIDFromGUID(actorSerial)
 
 		else
 			newActor.aID = ""

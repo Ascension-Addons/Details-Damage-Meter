@@ -1501,12 +1501,7 @@ end
 ---@param GUID string
 ---@return number
 function DF:GetNpcIdFromGuid(GUID)
-	local npcId = select(6, strsplit("-", GUID ))
-	if (npcId) then
-		npcId = tonumber(npcId)
-		return npcId or 0
-	end
-	return 0
+	return GetCreatureIDFromGUID(GUID) or 0
 end
 
 function DF.SortOrder1(t1, t2)

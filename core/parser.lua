@@ -640,7 +640,7 @@
 			local npcId = npcid_cache[targetSerial] --target npc
 			if (not npcId) then
 				--this string manipulation is running on every event
-				npcId = tonumber(select(6, strsplit("-", targetSerial)) or 0)
+				npcId = GetCreatureIDFromGUID(targetSerial) or 0
 				npcid_cache[targetSerial] = npcId
 			end
 
@@ -650,7 +650,7 @@
 
 			npcId = npcid_cache[sourceSerial] --source npc
 			if (not npcId) then
-				npcId = tonumber(select(6, strsplit("-", sourceSerial)) or 0)
+				npcId = GetCreatureIDFromGUID(sourceSerial) or 0
 				npcid_cache[sourceSerial] = npcId
 			end
 
@@ -2054,7 +2054,7 @@
 		local npcId = npcid_cache[targetSerial] --target npc
 		if (not npcId) then
 			--this string manipulation is running on every event
-			npcId = tonumber(select(6, strsplit("-", targetSerial)) or 0)
+			npcId = GetCreatureIDFromGUID(targetSerial) or 0
 			npcid_cache[targetSerial] = npcId
 		end
 
@@ -5733,12 +5733,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		Details.combat_id = 0
 		Details.opened_windows = 0
 
-		local _, _, _, toc = GetBuildInfo()
-		if (toc >= 100200) then
-			Details.playername = UnitName("player") .. "-" .. (GetRealmName():gsub("%s", ''))
-		else
-			Details.playername = UnitName("player")
-		end
+		Details.playername = UnitName("player")
 
 		Details.playername = Details:Ambiguate(Details.playername)
 
@@ -6659,19 +6654,9 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 		local currentCombat = Details:GetCurrentCombat()
 
+		local name, killingBlows, honorableKills, deaths, honorGained, faction, race, rank, class, classToken, damageDone, healingDone
 		for i = 1, players do
-			local name, killingBlows, honorableKills, deaths, honorGained, faction, race, rank, class, classToken, damageDone, healingDone, bgRating, ratingChange, preMatchMMR, mmrChange, talentSpec
-			if (isWOTLK or isERA) then
-				name, killingBlows, honorableKills, deaths, honorGained, faction, rank, race, class, classToken, damageDone, healingDone, bgRating, ratingChange, preMatchMMR, mmrChange, talentSpec = GetBattlefieldScore(i)
-			else
-				name, killingBlows, honorableKills, deaths, honorGained, faction, race, class, classToken, damageDone, healingDone, bgRating, ratingChange, preMatchMMR, mmrChange, talentSpec = GetBattlefieldScore(i)
-			end
-
-			if (not isWOTLK and not isERA) then --Must be dragonflight
-				if (not name:match("%-")) then
-					name = name .. "-" .. realmName
-				end
-			end
+			name, killingBlows, honorableKills, deaths, honorGained, faction, rank, race, class, classToken, damageDone, healingDone = GetBattlefieldScore(i)
 
 			name = Details:Ambiguate(name)
 

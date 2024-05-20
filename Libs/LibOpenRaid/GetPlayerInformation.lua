@@ -229,18 +229,7 @@ function openRaidLib.GearManager.BuildPlayerEquipmentList()
 end
 
 local playerHasPetOfNpcId = function(npcId)
-    if (UnitExists("pet") and UnitHealth("pet") >= 1) then
-        local guid = UnitGUID("pet")
-        if (guid) then
-            local split = {strsplit("-", guid)}
-            local playerPetNpcId = tonumber(split[6])
-            if (playerPetNpcId) then
-                if (npcId == playerPetNpcId) then
-                    return true
-                end
-            end
-        end
-    end
+   return false -- 3.3.5 cant get if a pet GUID is a specific npc or not.
 end
 
 local addCooldownToTable = function(cooldowns, cooldownsHash, cooldownSpellId, timeNow)

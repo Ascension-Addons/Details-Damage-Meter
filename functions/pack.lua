@@ -185,6 +185,32 @@ function Details.packFunctions.PackCombatData(combatObject, flags)
         return dataEncoded
 end
 
+local function CreateGUID(realmID, guidType, unk1, unk2, uid)
+    if guidType == 0 then
+        return string.format("0x%02X%01X%03X%03X%07X", realmID, guidType, unk1, unk2, uid)
+    elseif guidType == 4 then
+        return string.format("0x%02X%01X%07X%06X", realmID, guidType, unk1, uid)
+    else
+        return string.format("0x%02X%01X%03X%04X%06X", realmID, guidType, unk1, unk2, uid)
+    end
+end
+
+function Details.packFunctions.CreateNPCGUID(realmID, unk1, npcID, spawnID)
+    return CreateGUID(realmID, 3, unk1, npcID, spawnID)
+end
+
+function Details.packFunctions.CreatePlayerGUID(realmID, unk1, unk2, uid)
+    return CreateGUID(realmID, 0, unk1, unk2, uid)
+end
+
+function Details.packFunctions.CreatePetGUID(realmID, petID, uid)
+    return CreateGUID(realmID, 4, petID, uid)
+end
+
+function Details.packFunctions.CreateVehicleGUID(realmID, unk1, npcID, spawnID)
+    return CreateGUID(realmID, 5, unk1, npcID, spawnID)
+end
+
 function Details.packFunctions.GenerateSerialNumber()
     local serialNumber = entitySerialCounter
     entitySerialCounter = entitySerialCounter + 1
@@ -337,25 +363,27 @@ end
 
 local packActorSerial = function(actor)
     local serial = actor.serial
-    if (serial:match("^C") == "C") then
-        local npcId = tonumber(select(6, strsplit("-", serial)) or 0)
+    if serial == "" then
+        return "C12345"
+    end
+
+    if (GUIDIsNPC(serial) == 3) then
+        local npcId = GetCreatureIDFromGUID(serial) or 0
         return "C" .. npcId
 
-    elseif (serial:match("^P") == "P") then
+    elseif (GUIDIsPlayer(serial) == 0) then
         return "P"
-    
-    elseif (serial == "") then
-        return "C12345"
     end
 end
 
 local unpackActorSerial = function(serialNumber)
     --player serial
     if (serialNumber:match("^P")) then
-        return "Player-1-" .. Details.packFunctions.GenerateSerialNumber()
+        
+        return Details.packfunctions.CreatePlayerGUID(0, 0, 0, Details.packFunctions.GenerateSerialNumber())
 
     elseif (serialNumber:match("^C")) then
-        return "Creature-0-0-0-0-" .. serialNumber:gsub("C", "") .."-" .. Details.packFunctions.GenerateSerialNumber()
+        return Details.packfunctions.CreateNPCGUID(0, 0, serialNumber:gsub("C", ""), Details.packFunctions.GenerateSerialNumber())
     end
 end
 
@@ -466,14 +494,10 @@ function Details.packFunctions.PackDamage(combatObject)
         --check if is an enemy or neutral
         if (actor:IsNeutralOrEnemy()) then
             --get the spawnId
-            local spawnId = select(7, strsplit("-", actor.serial))
+            local spawnId = GetCreatureSpawnIDFromGUID(actor.serial)
             if (spawnId) then
-                --convert hex to number
-                spawnId = tonumber(spawnId:sub(1, 10), 16)
-                if (spawnId) then
-                    --first index is the actorObject, the second index is the spawnId to sort enemies
-                    tinsert(allEnemies, {actor, spawnId})
-                end
+                --first index is the actorObject, the second index is the spawnId to sort enemies
+                tinsert(allEnemies, {actor, spawnId})
             end
         end
     end
@@ -716,14 +740,10 @@ function Details.packFunctions.PackHeal(combatObject)
         --check if is an enemy or neutral
         if (actor:IsNeutralOrEnemy()) then
             --get the spawnId
-            local spawnId = select(7, strsplit("-", actor.serial))
+            local spawnId = GetCreatureSpawnIDFromGUID(actor.serial)
             if (spawnId) then
-                --convert hex to number
-                spawnId = tonumber(spawnId:sub(1, 10), 16)
-                if (spawnId) then
-                    --first index is the actorObject, the second index is the spawnId to sort enemies
-                    tinsert(allEnemies, {actor, spawnId})
-                end
+                --first index is the actorObject, the second index is the spawnId to sort enemies
+                tinsert(allEnemies, {actor, spawnId})
             end
         end
     end
@@ -970,14 +990,10 @@ function Details.packFunctions.PackUtility(combatObject)
         --check if is an enemy or neutral
         if (actor:IsNeutralOrEnemy()) then
             --get the spawnId
-            local spawnId = select(7, strsplit("-", actor.serial))
+            local spawnId = GetCreatureSpawnIDFromGUID(actor.serial)
             if (spawnId) then
-                --convert hex to number
-                spawnId = tonumber(spawnId:sub(1, 10), 16)
-                if (spawnId) then
-                    --first index is the actorObject, the second index is the spawnId to sort enemies
-                    tinsert(allEnemies, {actor, spawnId})
-                end
+                --first index is the actorObject, the second index is the spawnId to sort enemies
+                tinsert(allEnemies, {actor, spawnId})
             end
         end
     end
