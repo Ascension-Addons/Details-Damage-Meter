@@ -1,0 +1,10 @@
+{
+    "diagnostics": {
+        "disable": ["undefined-global"],
+        "globals": [],
+        "globalRegex": [
+        ],
+        "severity": {
+        }
+    }
+}
