@@ -240,34 +240,9 @@ local createPlayerScrollBox = function(breakdownWindowFrame, breakdownSideMenu, 
 		local actorTotal = self.playerObject.total
 		local combatObject = self.combatObject
 
-		--warcraftlogs percentile
-		if (self.playerObject.tipo == DETAILS_ATTRIBUTE_DAMAGE) then
-			local actorDPS = self.playerObject.total / combatObject:GetCombatTime()
-
-			local parsePercent = Details222.WarcraftLogs.GetDamageParsePercent(encounterId, difficultyId, actorSpecId, actorDPS)
-			if (parsePercent) then
-				parsePercent =  math.floor(parsePercent)
-				local colorName = Details222.WarcraftLogs.GetParseColor(parsePercent)
-				self.percentileText:SetTextColor(detailsFramework:ParseColors(colorName))
-				self.percentileText:SetText(math.floor(parsePercent))
-				self.percentileText.alpha = 1
-			else
-				parsePercent = Details222.ParsePercent.GetPercent(DETAILS_ATTRIBUTE_DAMAGE, difficultyId, encounterId, actorSpecId, actorDPS)
-				if (parsePercent) then
-					parsePercent =  math.floor(parsePercent)
-					local colorName = Details222.WarcraftLogs.GetParseColor(parsePercent)
-					self.percentileText:SetTextColor(detailsFramework:ParseColors(colorName))
-					self.percentileText:SetText(math.floor(parsePercent))
-					self.percentileText.alpha = 1
-				else
-					self.percentileText:SetText("#.def")
-					self.percentileText:SetAlpha(0.25)
-				end
-			end
-		else
-			self.percentileText:SetText("#.def")
-			self.percentileText:SetAlpha(0.25)
-		end
+		-- we dont have warcraft logs or any percentile stuff.
+		self.percentileText:SetText("N/A")
+		self.percentileText:SetAlpha(0.25)
 
 		Details222.BreakdownWindow.ApplyFontSettings(self.playerName)
 		Details222.BreakdownWindow.ApplyFontSettings(self.itemLevelText)
