@@ -1573,34 +1573,10 @@ end
 function DF:GetAllTalents()
 	local allTalents = {}
 
-	local configId = C_ClassTalents.GetActiveConfigID()
-	if (configId) then
-		local configInfo = C_Traits.GetConfigInfo(configId)
-		--get the spells from the SPEC from talents
-		for treeIndex, treeId in ipairs(configInfo.treeIDs) do
-			local treeNodes = C_Traits.GetTreeNodes(treeId)
-			for nodeIdIndex, treeNodeID in ipairs(treeNodes) do
-				local traitNodeInfo = C_Traits.GetNodeInfo(configId, treeNodeID)
-				if (traitNodeInfo) then
-					local activeEntry = traitNodeInfo.activeEntry
-					local entryIds = traitNodeInfo.entryIDs
-					for i = 1, #entryIds do
-						local entryId = entryIds[i] --number
-						local traitEntryInfo = C_Traits.GetEntryInfo(configId, entryId)
-						local borderTypes = Enum.TraitNodeEntryType
-						if (traitEntryInfo.type) then -- == borderTypes.SpendCircle
-							local definitionId = traitEntryInfo.definitionID
-							local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
-							local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
-							local spellName, _, spellTexture = GetSpellInfo(spellId)
-							if (spellName) then
-								local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false}
-								allTalents[#allTalents+1] = talentInfo
-							end
-						end
-					end
-				end
-			end
+	for _, entry in ipairs(C_CharacterAdvancement.GetAllEntries()) do 
+		if entry.Type == "Talent" then
+			local talentInfo = {Name = entry.name, ID = entry.ID, Texture = entry.icon, IsSelected = entry.selected}
+			allTalents[#allTalents + 1] = talentInfo
 		end
 	end
 
@@ -1612,85 +1588,28 @@ end
 function DF:GetAvailableSpells()
     local completeListOfSpells = {}
 
-    --this line might not be compatible with classic
-    --local specId, specName, _, specIconTexture = GetSpecializationInfo(GetSpecialization())
-    --local classNameLoc, className, classId = UnitClass("player") --not in use
-    local locPlayerRace, playerRace, playerRaceId = UnitRace("player")
-
-    --get racials from the general tab
-	local generalTabIndex = 1
-    local tabName, tabTexture, offset, numSpells, isGuild, offspecId = GetSpellTabInfo(generalTabIndex)
-    offset = offset + 1
-    local tabEnd = offset + numSpells
-    for entryOffset = offset, tabEnd - 1 do
-        local spellType, spellId = GetSpellBookItemInfo(entryOffset, SPELLBOOK_BANK_PLAYER)
-        local spellData = LIB_OPEN_RAID_COOLDOWNS_INFO[spellId]
-        if (spellData) then
-            local raceId = spellData.raceid
-            if (raceId) then
-                if (type(raceId) == "table") then
-                    if (raceId[playerRaceId]) then
-                        local spellName = GetSpellInfo(spellId)
-                        local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
-                        if (spellName and not bIsPassive) then
-                            completeListOfSpells[spellId] = true
-                        end
-                    end
-
-                elseif (type(raceId) == "number") then
-                    if (raceId == playerRaceId) then
-                        local spellName = GetSpellInfo(spellId)
-                        local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
-                        if (spellName and not bIsPassive) then
-                            completeListOfSpells[spellId] = true
-                        end
-                    end
-                end
-            end
-        end
-    end
-
 	--get spells from the Spec spellbook
 	local amountOfTabs = GetNumSpellTabs()
-    for i = 2, amountOfTabs-1 do --starting at index 2 to ignore the general tab
+    for i = 2, amountOfTabs do --starting at index 2 to ignore the general tab
         local tabName, tabTexture, offset, numSpells, isGuild, offSpecId, shouldHide, specID = GetSpellTabInfo(i)
-		local bIsOffSpec = offSpecId ~= 0
-		offset = offset + 1
-		local tabEnd = offset + numSpells
-		for entryOffset = offset, tabEnd - 1 do
-			local spellType, spellId = GetSpellBookItemInfo(entryOffset, SPELLBOOK_BANK_PLAYER)
-			if (spellId) then
-				if (spellType == "SPELL") then
-					local spellName = GetSpellInfo(spellId)
-					local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
-					if (spellName and not bIsPassive) then
-						completeListOfSpells[spellId] = bIsOffSpec == false
+		if tabName and tabName ~= "Internal" and tabName ~= "Ascension Vanity Items" then
+			local bIsOffSpec = offSpecId ~= 0
+			offset = offset + 1
+			local tabEnd = offset + numSpells
+			for entryOffset = offset, tabEnd - 1 do
+				local spellType, spellId = GetSpellBookItemInfo(entryOffset, SPELLBOOK_BANK_PLAYER)
+				if (spellId) then
+					if (spellType == "SPELL") then
+						local spellName = GetSpellInfo(spellId)
+						local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
+						if (spellName and not bIsPassive) then
+							completeListOfSpells[spellId] = bIsOffSpec == false
+						end
 					end
 				end
 			end
 		end
     end
-
-    --get class shared spells from the spell book
-	--[=[
-    local tabName, tabTexture, offset, numSpells, isGuild, offSpecId = GetSpellTabInfo(2)
-	local bIsOffSpec = offSpecId ~= 0
-    offset = offset + 1
-    local tabEnd = offset + numSpells
-    for entryOffset = offset, tabEnd - 1 do
-        local spellType, spellId = GetSpellBookItemInfo(entryOffset, "player")
-        if (spellId) then
-            if (spellType == "SPELL") then
-                local spellName = GetSpellInfo(spellId)
-                local bIsPassive = IsPassiveSpell(spellId, "player")
-
-				if (spellName and not bIsPassive) then
-                    completeListOfSpells[spellId] = bIsOffSpec == false
-                end
-            end
-        end
-    end
-	--]=]
 
     local getNumPetSpells = function()
         --'HasPetSpells' contradicts the name and return the amount of pet spells available instead of a boolean
@@ -4259,59 +4178,8 @@ function DF:GetClassSpecIds(engClass) --naming conventions
 	return DF:GetClassSpecIDs(engClass)
 end
 
---kinda deprecated
-local getDragonflightTalents = function()
-	if (not ClassTalentFrame) then
-		ClassTalentFrame_LoadUI()
-	end
-
-	if (not DF.TalentExporter) then
-    	local talentExporter = CreateFromMixins(ClassTalentImportExportMixin)
-		DF.TalentExporter = talentExporter
-	end
-
-	local exportStream = ExportUtil.MakeExportDataStream()
-
-	local configId = C_ClassTalents.GetActiveConfigID()
-	if (not configId) then
-		return ""
-	end
-
-	local configInfo = C_Traits.GetConfigInfo(configId)
-	if (not configInfo) then
-		return ""
-	end
-
-	local currentSpecID = PlayerUtil.GetCurrentSpecID()
-
-	local treeInfo = C_Traits.GetTreeInfo(configId, configInfo.treeIDs[1])
-	local treeHash = C_Traits.GetTreeHash(treeInfo.ID)
-	local serializationVersion = C_Traits.GetLoadoutSerializationVersion()
-
-	DF.TalentExporter:WriteLoadoutHeader(exportStream, serializationVersion, currentSpecID, treeHash)
-	DF.TalentExporter:WriteLoadoutContent(exportStream, configId, treeInfo.ID)
-
-	return exportStream:GetExportString()
-end
-
-local getDragonflightTalentsEasy = function()
-	local activeConfigID = C_ClassTalents.GetActiveConfigID()
-	if (activeConfigID and activeConfigID > 0) then
-		return C_Traits.GenerateImportString(activeConfigID)
-	end
-	return ""
-end
-
---/dump DetailsFramework:GetDragonlightTalentString()
-function DF:GetDragonlightTalentString()
-	local runOkay, errorText = pcall(getDragonflightTalentsEasy)
-	if (not runOkay) then
-		DF:Msg("error 0x4517", errorText)
-		return ""
-	else
-		local talentString = errorText
-		return talentString
-	end
+function DF:GetAscensionTalentString()
+	return C_CharacterAdvancement.ExportBuild(true)
 end
 
 local dispatch_error = function(context, errortext)
@@ -4440,19 +4308,19 @@ end
 
 
 --store and return a list of character races, always return the non-localized value
-DF.RaceCache = {}
+DF.RaceCache = {
+	{ Name = "Human", FileString = "Human", ID = Enum.Race.Human },
+	{ Name = "Orc", FileString = "Orc", ID = Enum.Race.Orc },
+	{ Name = "Dwarf", FileString = "Dwarf", ID = Enum.Race.Dwarf },
+	{ Name = "Night Elf", FileString = "NightElf", ID = Enum.Race.NightElf },
+	{ Name = "Undead", FileString = "Scourge", ID = Enum.Race.Scourge },
+	{ Name = "Tauren", FileString = "Tauren", ID = Enum.Race.Tauren },
+	{ Name = "Gnome", FileString = "Gnome", ID = Enum.Race.Gnome },
+	{ Name = "Troll", FileString = "Troll", ID = Enum.Race.Troll },
+	{ Name = "Blood Elf", FileString = "BloodElf", ID = Enum.Race.BloodElf },
+	{ Name = "Draenei", FileString = "Draenei", ID = Enum.Race.Draenei },
+}
 function DF:GetCharacterRaceList()
-	if (next (DF.RaceCache)) then
-		return DF.RaceCache
-	end
-
-	for i = 1, 100 do
-		local raceInfo = C_CreatureInfo.GetRaceInfo(i)
-		if (raceInfo and DF.RaceList [raceInfo.raceID]) then
-			table.insert(DF.RaceCache, {Name = raceInfo.raceName, FileString = raceInfo.clientFileString, ID = raceInfo.raceID})
-		end
-	end
-
 	return DF.RaceCache
 end
 
@@ -4461,71 +4329,13 @@ end
 --if onlySelectedHash return a hash table with [spelID] = true
 function DF:GetCharacterTalents(bOnlySelected, bOnlySelectedHash)
 	local talentList = {}
-	local version, build, date, tocversion = GetBuildInfo()
 
-	if (tocversion >= 70000 and tocversion <= 99999) then
-		for i = 1, 7 do
-			for o = 1, 3 do
-				local talentID, name, texture, selected, available = GetTalentInfo(i, o, 1)
-				if (bOnlySelectedHash) then
-					if (selected) then
-						talentList[talentID] = true
-						break
-					end
-				elseif (bOnlySelected) then
-					if (selected) then
-						table.insert(talentList, {Name = name, ID = talentID, Texture = texture, IsSelected = selected})
-						break
-					end
-				else
-					table.insert(talentList, {Name = name, ID = talentID, Texture = texture, IsSelected = selected})
-				end
-			end
-		end
-
-	elseif (tocversion >= 100000) then
-		if (not bOnlySelected) then
-			return DF:GetAllTalents()
-		end
-
-		local configId = C_ClassTalents.GetActiveConfigID()
-		if (configId) then
-			local configInfo = C_Traits.GetConfigInfo(configId)
-			--get the spells from the SPEC from talents
-			for treeIndex, treeId in ipairs(configInfo.treeIDs) do
-				local treeNodes = C_Traits.GetTreeNodes(treeId)
-
-				for nodeIdIndex, treeNodeID in ipairs(treeNodes) do
-					local traitNodeInfo = C_Traits.GetNodeInfo(configId, treeNodeID)
-
-					if (traitNodeInfo) then
-						local activeEntry = traitNodeInfo.activeEntry
-						local entryIds = traitNodeInfo.entryIDs
-
-						for i = 1, #entryIds do
-							local entryId = entryIds[i] --number
-							local traitEntryInfo = C_Traits.GetEntryInfo(configId, entryId)
-							local borderTypes = Enum.TraitNodeEntryType
-
-							if (traitEntryInfo.type) then -- == borderTypes.SpendCircle
-								local definitionId = traitEntryInfo.definitionID
-								local traitDefinitionInfo = C_Traits.GetDefinitionInfo(definitionId)
-								local spellId = traitDefinitionInfo.overriddenSpellID or traitDefinitionInfo.spellID
-								local spellName, _, spellTexture = GetSpellInfo(spellId)
-								local bIsSelected = (activeEntry and activeEntry.rank and activeEntry.rank > 0) or false
-								if (spellName and bIsSelected) then
-									local talentInfo = {Name = spellName, ID = spellId, Texture = spellTexture, IsSelected = true}
-									if (bOnlySelectedHash) then
-										talentList[spellId] = talentInfo
-									else
-										table.insert(talentList, talentInfo)
-									end
-								end
-							end
-						end
-					end
-				end
-			end
+	for _, entry in ipairs(C_CharacterAdvancement.GetKnownTalentEntries()) do 
+		local talentInfo = {Name = entry.name, ID = entry.ID, Texture = entry.icon, IsSelected = true}
+		if bOnlySelectedHash then
+			talentList[entry.ID] = talentInfo
+		else
+			table.insert(talentList, talentInfo)
 		end
 	end
 
@@ -4570,7 +4380,6 @@ DF.GroupTypes = {
 	{Name = "Battleground", ID = "pvp"},
 	{Name = "Raid", ID = "raid"},
 	{Name = "Dungeon", ID = "party"},
-	{Name = "Scenario", ID = "scenario"},
 	{Name = "Open World", ID = "none"},
 }
 function DF:GetGroupTypes()

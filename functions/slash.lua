@@ -1329,7 +1329,7 @@ function SlashCmdList.DETAILS (msg, editbox)
 		Details:InstanceCallDetailsFunc(Details.ResetaGump)
 		Details:RefreshMainWindow(-1, true)
 
-	elseif (msg == "ej") then
+	elseif (msg == "ej" and false) then
 
 		local result = {}
 		local spellIDs = {}
@@ -1982,7 +1982,7 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 						C_Timer.After(30, function()
 							f:UnregisterEvent("GUILD_ROSTER_UPDATE")
 						end)
-						C_GuildInfo.GuildRoster()
+						GuildRoster()
 
 						openRaidLib.RequestKeystoneDataFromGuild()
 					end
@@ -2380,9 +2380,7 @@ if (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE) then
 			local guildName = GetGuildInfo("player")
 			if (guildName) then
 				--call an update on the guild roster
-				if (C_GuildInfo and C_GuildInfo.GuildRoster) then
-					C_GuildInfo.GuildRoster()
-				end
+				GuildRoster()
 				DetailsKeystoneInfoFrame.RequestFromGuildButton:Enable()
 			else
 				DetailsKeystoneInfoFrame.RequestFromGuildButton:Disable()

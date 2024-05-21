@@ -275,7 +275,7 @@ end
         if (spellIcon) then
             cooldownLine:SetIcon(spellIcon, .1, .9, .1, .9)
 
-            local classColor = C_ClassColor.GetClassColor(cooldownLine.class or "PRIEST")
+            local classColor = Details.class_colors[cooldownLine.class or "PRIEST"]
             if (classColor) then
                 cooldownLine:SetStatusBarColor(classColor.r, classColor.g, classColor.b)
             else
@@ -360,7 +360,7 @@ end
 
         if (Details.ocd_tracker.show_conditions.only_inside_instance) then
             local isInInstanceType = select(2, GetInstanceInfo())
-            if (isInInstanceType ~= "party" and isInInstanceType ~= "raid" and isInInstanceType ~= "scenario" and isInInstanceType ~= "arena") then
+            if (isInInstanceType ~= "party" and isInInstanceType ~= "raid" and isInInstanceType ~= "arena") then
                 cooldownFrame:Hide()
                 return
             end

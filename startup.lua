@@ -481,7 +481,7 @@ function Details:StartMeUp()
 			if (not trinketData[spellId]) then
 				---@type trinketdata
 				local thisTrinketData = {
-					itemName = C_Item.GetItemNameByID(trinketTable.itemId),
+					itemName = GetItemName(trinketTable.itemId),
 					spellName = GetSpellInfo(spellId) or "spell not found",
 					lastActivation = 0,
 					lastPlayerName = "",

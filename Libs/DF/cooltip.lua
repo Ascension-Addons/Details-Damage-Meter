@@ -15,9 +15,8 @@ local wipe = table.wipe
 local insert = table.insert
 local max = math.max
 
-local GetSpellInfo = GetSpellInfo or function(spellID) if not spellID then return nil end local si = C_Spell.GetSpellInfo(spellID) if si then return si.name, nil, si.iconID, si.castTime, si.minRange, si.maxRange, si.spellID, si.originalIconID end end
-local SPELLBOOK_BANK_PLAYER = Enum.SpellBookSpellBank and Enum.SpellBookSpellBank.Player or "player"
-local IsPassiveSpell = IsPassiveSpell or C_Spell.IsSpellPassive
+local GetSpellInfo = GetSpellInfo
+local IsPassiveSpell = IsPassiveSpell
 
 --api locals
 local PixelUtil = PixelUtil or DFPixelUtil
@@ -1919,10 +1918,10 @@ function DF:CreateCoolTip()
 				local spellDescription = GetSpellDescription(spellId)
 				local cooldownTime, globalCooldown = GetSpellBaseCooldown(spellId)
 				--local cooldown = cooldownTime / 1000
-				local bIsPassive = IsPassiveSpell(spellId, SPELLBOOK_BANK_PLAYER)
-				local chargesAvailable, maxCharges, chargeCooldownStart, rechargeTime, chargeModRate = GetSpellCharges(spellId)
+				local bIsPassive = IsPassiveSpell(spellId, "spell")
+				local chargesAvailable, maxCharges, chargeCooldownStart, rechargeTime = GetSpellCharges(spellId)
 
-				local tResourceCost = GetSpellPowerCost(spellId)
+				local tResourceCost = GetSpellPowerCost and GetSpellPowerCost(spellId)
 				--[=[
 					hasRequiredAura=false,
 					type=0,
@@ -1942,7 +1941,7 @@ function DF:CreateCoolTip()
 				gameCooltip:AddIcon(spellIcon, 1, 1, 20, 20, .1, .9, .1, .9)
 
 				if (not bShowDescriptionOnly) then
-					if (tResourceCost.cost and tResourceCost.cost > 0) then
+					if (tResourceCost and tResourceCost.cost and tResourceCost.cost > 0) then
 						if (maxRange and maxRange > 0) then
 							gameCooltip:AddLine(tResourceCost.cost .. " " .. (_G[tResourceCost.name] or tResourceCost.name), string.format(_G.SPELL_RANGE, math.floor(maxRange)), 1, 1, 1, 1, nil, 12)
 						else
