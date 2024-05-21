@@ -4518,19 +4518,18 @@ end
 --key is instanceId from GetInstanceInfo()
 -- /dump GetInstanceInfo()
 DF.BattlegroundSizes = {
-	[2245] = 15, --Deepwind Gorge
-	[2106] = 10, --Warsong Gulch
-	[2107] = 15, --Arathi Basin
+	[489] = 10, --Warsong Gulch
+	[1682] = 10, --Warsong Gulch (Winter)
+	[529] = 15, --Arathi Basin
+	[1681] = 15, --Arathi Basin (Winter)
 	[566] = 15, --Eye of the Storm
 	[30]  = 40,	--Alterac Valley
-	[628] = 40, --Isle of Conquest
-	[761] = 10, --The Battle for Gilneas
+	[628] = 40, --Isle of conquest
 	[726] = 10, --Twin Peaks
-	[727] = 10, --Silvershard Mines
 	[998] = 10, --Temple of Kotmogu
-	[2118] = 40, --Battle for Wintergrasp
-	[1191] = 25, --Ashran
-	[1803] = 10, --Seething Shore
+	[800] = 100, --???
+	[1280] = 40, --Southshore vs. Tarren Mill
+	[3000] = 40, --TestBG [Alterac Valley]
 }
 
 function DF:GetBattlegroundSize(instanceInfoMapId)

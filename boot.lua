@@ -519,9 +519,41 @@ do
 			}
 
 		--current instances of the exp (need to maintain)
-			_detalhes.InstancesToStoreData = { --mapId
-				[2549] = true, --amirdrassil
-			}
+			local expansion = GetExpansionLevel()
+			if expansion == Enum.Expansion.TBC then
+				_detalhes.InstancesToStoreData = { --GetActiveMapID()
+					[532] = true, --Karazhan 
+					[565] = true, --Gruul's Lair
+					[544] = true, --Magtheridon's Lair
+					[548] = true, --Serpentshrine Cavern
+					[550] = true, --Tempest Keep
+					[534] = true, --Battle for Mount Hyjal
+					[564] = true, --Black Temple
+					[580] = true, --Sunwell Plateau
+				}
+			elseif expansion == Enum.Expansion.WoTLK then
+				_detalhes.InstancesToStoreData = { --GetActiveMapID()
+					[533] = true, --Naxxramas 
+					[615] = true, --Obsidian Sanctum
+					[616] = true, --Eye of Eternity
+					[624] = true, --Vault of Achavon
+					[603] = true, --Ulduar
+					[249] = true, --Onyxia's Lair
+					[649] = true, --Trial of the Crusader
+					[631] = true, --Icecrown Citadel
+					[724] = true, --Ruby Sanctum
+				}
+			else -- vanilla
+				_detalhes.InstancesToStoreData = { --GetActiveMapID()
+					[409] = true, --Molten Core
+					[469] = true, --Blackwing Lair
+					[249] = true, --Onyxia's Lair
+					[509] = true, --Ruins of Ahn'Qiraj
+					[531] = true, --Temple of Ahn'Qiraj
+					[533] = true, --Naxxramas 
+				}
+			end
+			
 
 		--store shield information for absorbs
 			_detalhes.ShieldCache = {}

@@ -1550,8 +1550,7 @@ function Details.Database.StoreWipe(combat)
 		return
 	end
 
-	local name, type, difficulty, difficultyName, maxPlayers, playerDifficulty, isDynamicInstance, mapID, instanceGroupSize = GetInstanceInfo()
-	local bossCLEUID = combat.boss_info and combat.boss_info.id
+	local _, _, _, _, _, _, _, mapID = GetInstanceInfo()
 
 	if (not instancesToStoreData[mapID]) then
 		if (_detalhes.debug) then
@@ -1619,8 +1618,7 @@ function Details.Database.StoreEncounter(combat)
 		return
 	end
 
-	local name, type, difficulty, difficultyName, maxPlayers, playerDifficulty, isDynamicInstance, mapID, instanceGroupSize = GetInstanceInfo()
-	local bossCLEUID = combat.boss_info and combat.boss_info.id
+	local _, _, _, _, _, _, _, mapID = GetInstanceInfo()
 
 	if (not instancesToStoreData[mapID]) then
 		if (_detalhes.debug) then
