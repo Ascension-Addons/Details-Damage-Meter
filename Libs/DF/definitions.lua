@@ -173,7 +173,7 @@
 ---@field GetClassSpecIds fun(self:table, engClass:string):number[]
 ---@field GetClassSpecIDs fun(self:table, engClass:string):number[]
 ---@field IsValidSpecId fun(self:table, specId:number):boolean check if the passed specId is valid for the player class, also return false for tutorial specs
----@field GetDragonlightTalentString fun(self:table):string return the talent config string
+---@field GetAscensionTalentString fun(self:table):string return the talent config string
 ---@field GetClassList fun(self:table):{ID:number, Name:string, FileString:string, Texture:string, TexCoord:number[]}[]
 ---@field DebugVisibility fun(self:table, object:uiobject) print the reason why the frame isn't shown in the screen
 ---@field Dispatch fun(self:table, callback:function, ...) : any dispatch a function call using xpcall, print to chat if the function passed is invalid

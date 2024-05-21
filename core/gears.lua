@@ -2566,25 +2566,6 @@ Details.performanceData = {
 	culpritDesc = "",
 }
 
-function Details:HandleRogueCombatSpecIconByGameVersion()
-	local _, _, _, patchVersion = GetBuildInfo()
-	if (patchVersion >= 70000) then --Legion
-		--rogue combat is a rogue outlaw
-		local rogueCombatCoords = Details.class_specs_coords[260]
-		rogueCombatCoords[1] = 0
-		rogueCombatCoords[2] = 64 / 512
-		rogueCombatCoords[3] = 384 / 512
-		rogueCombatCoords[4] = 448 / 512
-
-		--new versions of the game has a different icon for assassination
-		local rogueAssassinationCoords = Details.class_specs_coords[259]
-		rogueAssassinationCoords[1] = 64 / 512
-		rogueAssassinationCoords[2] = 128 / 512
-		rogueAssassinationCoords[3] = 384 / 512
-		rogueAssassinationCoords[4] = 448 / 512
-	end
-end
-
 function CopyText(text) --[[GLOBAL]]
 	if (not Details.CopyTextField) then
 		Details.CopyTextField = CreateFrame("Frame", "DetailsCopyText", UIParent, "BackdropTemplate")

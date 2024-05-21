@@ -37,8 +37,6 @@ local IsPassiveSpell = IsPassiveSpell
 SMALL_NUMBER = 0.000001
 ALPHA_BLEND_AMOUNT = 0.8400251
 
-local _, _, _, buildInfo = GetBuildInfo()
-
 DF.dversion = dversion
 
 DF.AuthorInfo = {
