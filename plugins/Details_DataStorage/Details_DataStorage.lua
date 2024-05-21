@@ -4,9 +4,10 @@ DETAILS_STORAGE_VERSION = 6
 function Details:CreateStorageDB()
 	DetailsDataStorage = {
 		VERSION = DETAILS_STORAGE_VERSION,
-		[14] = {}, --normal mode (raid)
-		[15] = {}, --heroic mode (raid)
-		[16] = {}, --mythic mode (raid)
+		[1] = {}, --normal mode (raid)
+		[2] = {}, --heroic mode (raid)
+		[3] = {}, --mythic mode (raid)
+		[4] = {}, --ascended mode (raid)
 		["mythic_plus"] = {}, --(dungeons)
 		["saved_encounters"] = {}, --(a segment)
 	}
