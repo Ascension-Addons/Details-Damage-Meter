@@ -732,8 +732,6 @@ function _detalhes.storage:OpenRaidStorage()
 		end
 	end
 
-	do return end
-
 	--get the storage table
 	local db = DetailsDataStorage
 
@@ -1420,8 +1418,6 @@ local createStorageTables = function()
 end
 
 function _detalhes.ScheduleLoadStorage()
-	do return end
-
 	if (InCombatLockdown() or UnitAffectingCombat("player")) then
 		if (_detalhes.debug) then
 			print("|cFFFFFF00Details! storage scheduled to load (player in combat).")

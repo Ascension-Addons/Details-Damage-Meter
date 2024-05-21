@@ -22,12 +22,9 @@ f:SetScript("OnEvent", function(self, event, addonName)
 	if (addonName == "Details_DataStorage") then
 		DetailsDataStorage = DetailsDataStorage or Details:CreateStorageDB()
 		DetailsDataStorage.Data = {}
-print("loaded...")
 		if (DetailsDataStorage.VERSION < DETAILS_STORAGE_VERSION) then
-			print("is outdated")
 			--> do revisions
 			if (DetailsDataStorage.VERSION < 6) then
-				print("outdated two, data wiped!")
 				table.wipe(DetailsDataStorage)
 				DetailsDataStorage = Details:CreateStorageDB()
 			end
