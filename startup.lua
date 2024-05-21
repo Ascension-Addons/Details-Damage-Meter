@@ -256,8 +256,7 @@ function Details:StartMeUp()
 		Details.listener:RegisterEvent("PLAYER_REGEN_ENABLED")
 		Details.listener:RegisterEvent("UNIT_PET")
 
-		Details.listener:RegisterEvent("RAID_ROSTER_UPDATE")
-		Details.listener:RegisterEvent("PARTY_MEMBERS_CHANGED")
+		Details.listener:RegisterEvent("GROUP_ROSTER_UPDATE")
 
 		Details.listener:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 		Details.listener:RegisterEvent("PLAYER_ENTERING_WORLD")

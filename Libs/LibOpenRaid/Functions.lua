@@ -484,7 +484,7 @@ function openRaidLib.GearManager.BuildEquipmentItemLinks(equippedGearList)
 
                     --replace the item color
                     --local r, g, b, hex = GetItemQualityColor(qualityColor)
-                    itemLink = itemLink:gsub("FFEEEEEE", qualityColor.color:GenerateHexColor())
+                    itemLink = itemLink:gsub("FFEEEEEE", qualityColor:GetHex())
 
                     wipe(equipmentTable)
 

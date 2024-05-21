@@ -977,13 +977,14 @@ end
 
     eventFrame:SetScript("OnEvent", function(self, event, ...)
         local eventCallbackFunc = eventFunctions[event]
-        eventCallbackFunc(...)
+        if eventCallbackFunc then
+            eventCallbackFunc(...)
+        end
     end)
 
     --run when PLAYER_ENTERING_WORLD triggers, this avoid any attempt of getting information without the game has completed the load process
     function openRaidLib.OnEnterWorldRegisterEvents()
-        eventFrame:RegisterEvent("RAID_ROSTER_UPDATE")
-        eventFrame:RegisterEvent("PARTY_MEMBERS_CHANGED")
+        eventFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
         eventFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED")
         eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
         eventFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
