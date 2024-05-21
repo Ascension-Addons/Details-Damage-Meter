@@ -4518,18 +4518,47 @@ end
 --key is instanceId from GetInstanceInfo()
 -- /dump GetInstanceInfo()
 DF.BattlegroundSizes = {
-	[489] = 10, --Warsong Gulch
-	[1682] = 10, --Warsong Gulch (Winter)
-	[529] = 15, --Arathi Basin
-	[1681] = 15, --Arathi Basin (Winter)
-	[566] = 15, --Eye of the Storm
-	[30]  = 40,	--Alterac Valley
-	[628] = 40, --Isle of conquest
-	[726] = 10, --Twin Peaks
-	[998] = 10, --Temple of Kotmogu
-	[800] = 100, --???
-	[1280] = 40, --Southshore vs. Tarren Mill
-	[3000] = 40, --TestBG [Alterac Valley]
+	[30] = 40, -- Alterac Valley
+	[489] = 10, -- Warsong Gulch
+	[529] = 15, -- Arathi Basin
+	[566] = 15, -- Eye of the Storm
+	[607] = 15, -- Strand of the Ancients
+	[628] = 40, -- Isle of Conquest
+	[726] = 10, -- Twin Peaks
+	[987] = 10, -- Warsong Gulch
+	[988] = 15, -- Arathi Basin
+	[998] = 10, -- Temple of Kotmogu
+	[1280] = 20, -- Southshore vs. Tarren Mill
+	[1681] = 15, -- Arathi Basin Winter
+	[1682] = 10, -- Warsong Gulch Winter
+	[1686] = 40, -- Assault on Alcaz Island
+	[1690] = 40, -- Alterac Assault
+	[1693] = 40, -- Andorhal Attack
+	[1696] = 40, -- War on Zin-Malor
+	[1700] = 40, -- Battle of Bladespire Hold
+	[1703] = 40, -- Battle of Booty Bay
+	[1706] = 40, -- Skirmish in the Steppes
+	[1709] = 40, -- Clash in The Cauldron
+	[1713] = 40, -- Deatholme Deathmatch
+	[1716] = 40, -- Battle of Dire Maul
+	[1718] = 40, -- Feathermoon Clash
+	[1720] = 40, -- Frostwhisper Fallout
+	[1722] = 40, -- Silverpine Showdown
+	[1725] = 40, -- Battle for Nagrand
+	[1727] = 40, -- Hellfire Havoc
+	[1730] = 40, -- War of the World Tree
+	[1733] = 40, -- Airstrip Assault
+	[1735] = 40, -- Bloodshed in The Barrens
+	[1737] = 40, -- Battle of North Gate Pass
+	[1740] = 40, -- Excavation of Ahn'Qiraj
+	[1741] = 40, -- Stonewatch Slaughter
+	[1748] = 40, -- Slaughter in Stromgarde
+	[1751] = 40, -- Battle for Theramore
+	[1753] = 40, -- Tor'Watha
+	[1754] = 40, -- Carnage in the Crater
+	[1755] = 40, -- Warsong Lumber War
+	[1757] = 40, -- War of Windshear Crag
+	[3000] = 40, -- Alterac Valley
 }
 
 function DF:GetBattlegroundSize(instanceInfoMapId)

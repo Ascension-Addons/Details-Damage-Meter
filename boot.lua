@@ -627,52 +627,86 @@ do
 		--informa��es sobre a arena atual
 			_detalhes.arena_table = {}
 			_detalhes.arena_info = {
-				--need to get the new mapID for 8.0.1
-				[562] = {file = "LoadScreenBladesEdgeArena", coords = {0, 1, 0.29296875, 0.9375}}, -- Circle of Blood Arena
-				[617] = {file = "LoadScreenDalaranSewersArena", coords = {0, 1, 0.29296875, 0.857421875}}, --Dalaran Arena
-				[559] = {file = "LoadScreenNagrandArenaBattlegrounds", coords = {0, 1, 0.341796875, 1}}, --Ring of Trials
-				[980] = {file = "LoadScreenTolvirArena", coords = {0, 1, 0.29296875, 0.857421875}}, --Tol'Viron Arena
-				[572] = {file = "LoadScreenRuinsofLordaeronBattlegrounds", coords = {0, 1, 0.341796875, 1}}, --Ruins of Lordaeron
-				[1134] = {file = "LoadingScreen_Shadowpan_bg", coords = {0, 1, 0.29296875, 0.857421875}}, -- Tiger's Peak
-				--legion, thanks @pas06 on curse forge for the mapIds
-				[1552] = {file = "LoadingScreen_ArenaValSharah_wide", coords = {0, 1, 0.29296875, 0.857421875}}, -- Ashmane's Fall
-				[1504] = {file = "LoadingScreen_BlackrookHoldArena_wide", coords = {0, 1, 0.29296875, 0.857421875}}, --Black Rook Hold
-
-				--"LoadScreenOrgrimmarArena", --Ring of Valor
+				[559] = {file = "LoadScreenNagrandArenaBattlegrounds"}, --Nagrand Arena            
+				[562] = {file = "LoadScreenBladesEdgeArena"}, --Blade's Edge Arena       
+				[572] = {file = "LoadScreenRuinsofLordaeronBattlegrounds"}, --Ruins of Lordaeron       
+				[617] = {file = "LoadScreenDalaranSewersArena"}, --Dalaran Sewers           
+				[618] = {file = "loadscreenbrawlgararena"}, --The Ring of Valor        
+				[980] = {file = "loadscreentolvirarena"}, --Tol'viron Arena          
+				[982] = {file = "loadingscreenulduarcolliseum"}, --Coliseum of Past Echoes  
+				[983] = {file = "loadingscreennerubarena"}, --Imperial Arena of Thakraj
+				[984] = {file = "loadscreenmaldraxxuscoliseum"}, --Maldraxxus Coliseum      
+				[985] = {file = "LoadScreenNagrandArenaBattlegrounds"}, --Nagrand Arena            
+				[986] = {file = "LoadScreenBladesEdgeArena"}, --Blade's Edge Arena       
+				[1007] = {file = "LoadScreenKarazhan"}, --Guardian's Hall          
+				[1134] = {file = "loadingscreenshadowpanbg"}, --The Tiger's Peak         
+				[1401] = {file = "loadscreentolbarad"}, --Baradin Hold Arena       
+				[1402] = {file = "Obelisk_of_the_Stars"}, --Obelisk of the Stars     
+				[1403] = {file = "loadscreenthetwistingnether"}, --The Twisting Nether      
+				[1504] = {file = "loadingscreenblackrookholdarena"}, --Black Rook Hold Arena    
+				[1552] = {file = "loadingscreenarenavalsharah"}, --Ashamane's Fall          
+				[1683] = {file = "the_inventors_library_arena"}, --The Inventor's Library   
+				[1684] = {file = "amphitheater_of_anguish_arena"}, --Amphitheater of Anguish
 			}
 
 			Details.IgnoredEnemyNpcsTable = {
 				[31216] = true, --mirror image
-				[53006] = true, --spirit link totem
-				[63508] = true, --xuen
-				[73967] = true, --xuen
 			}
 
+			local default_coords = {0, 1, 0.265625, 0.8525390625}
 			function _detalhes:GetArenaInfo (mapid)
 				local t = _detalhes.arena_info [mapid]
 				if (t) then
-					return t.file, t.coords
+					return t.file, t.coords or default_coords
 				end
 			end
 			_detalhes.battleground_info = {
-				--need to get the nwee mapID for 8.0.1
-				[489] = {file = "LoadScreenWarsongGulch", coords = {0, 1, 121/512, 484/512}}, --warsong gulch
-				[727] = {file = "LoadScreenSilvershardMines", coords = {0, 1, 251/1024, 840/1024}}, --silvershard mines
-				[529] = {file = "LoadscreenArathiBasin", coords = {0, 1, 126/512, 430/512}}, --arathi basin
-				[566] = {file = "LoadScreenNetherBattlegrounds", coords = {0, 1, 142/512, 466/512}}, --eye of the storm
-				[30] = {file = "LoadScreenPvpBattleground", coords = {0, 1, 127/512, 500/512}}, --alterac valley
-				[761] = {file = "LoadScreenGilneasBG2", coords = {0, 1, 281/1024, 878/1024}}, --the battle for gilneas
-				[726] = {file = "LoadScreenTwinPeaksBG", coords = {0, 1, 294/1024, 876/1024}}, --twin peaks
-				[998] = {file = "LoadScreenValleyofPower", coords = {0, 1, 257/1024, 839/1024}}, --temple of kotmogu
-				[1105] = {file = "LoadScreen_GoldRush", coords = {0, 1, 264/1024, 840/1024}}, --deepwind gorge
-				[607] = {file = "LoadScreenNorthrendBG", coords = {0, 1, 302/1024, 879/1024}}, --strand of the ancients
-				[628] = {file = "LOADSCREENISLEOFCONQUEST", coords = {0, 1, 297/1024, 878/1024}}, --isle of conquest
-				--[] = {file = "", coords = {0, 1, 0, 0}}, --
+				[30] = {file = "LoadScreenPvpBattleground"}, -- Alterac Valley
+				[489] = {file = "LoadScreenWarsongGulch"}, -- Warsong Gulch
+				[529] = {file = "LoadscreenArathiBasin"}, -- Arathi Basin
+				[566] = {file = "LoadScreenNetherBattlegrounds"}, -- Eye of the Storm
+				[607] = {file = "LoadScreenNorthrendBG"}, -- Strand of the Ancients
+				[628] = {file = "LoadScreenIsleOfConquest"}, -- Isle of Conquest
+				[726] = {file = "loadscreentwinpeaksbg"}, -- Twin Peaks
+				[987] = {file = "LoadScreenWarsongGulch"}, -- Warsong Gulch
+				[988] = {file = "LoadscreenArathiBasin"}, -- Arathi Basin
+				[998] = {file = "loadscreenkotmoguscenario"}, -- Temple of Kotmogu
+				[1280] = {file = "LoadScreenEasternKingdom2"}, -- Southshore vs. Tarren Mill
+				[1681] = {file = "loadingscreenarathibasinwinter"}, -- Arathi Basin Winter
+				[1682] = {file = "loadingscreenwsgWinter"}, -- Warsong Gulch Winter
+				[1686] = {file = "LoadScreenPvpBattleground"}, -- Assault on Alcaz Island
+				[1690] = {file = "LoadScreenPvpBattleground"}, -- Alterac Assault
+				[1693] = {file = "LoadScreenPvpBattleground"}, -- Andorhal Attack
+				[1696] = {file = "LoadScreenPvpBattleground"}, -- War on Zin-Malor
+				[1700] = {file = "LoadScreenPvpBattleground"}, -- Battle of Bladespire Hold
+				[1703] = {file = "LoadScreenPvpBattleground"}, -- Battle of Booty Bay
+				[1706] = {file = "LoadScreenPvpBattleground"}, -- Skirmish in the Steppes
+				[1709] = {file = "LoadScreenPvpBattleground"}, -- Clash in The Cauldron
+				[1713] = {file = "LoadScreenPvpBattleground"}, -- Deatholme Deathmatch
+				[1716] = {file = "LoadScreenPvpBattleground"}, -- Battle of Dire Maul
+				[1718] = {file = "LoadScreenPvpBattleground"}, -- Feathermoon Clash
+				[1720] = {file = "LoadScreenPvpBattleground"}, -- Frostwhisper Fallout
+				[1722] = {file = "LoadScreenPvpBattleground"}, -- Silverpine Showdown
+				[1725] = {file = "LoadScreenPvpBattleground"}, -- Battle for Nagrand
+				[1727] = {file = "LoadScreenPvpBattleground"}, -- Hellfire Havoc
+				[1730] = {file = "LoadScreenPvpBattleground"}, -- War of the World Tree
+				[1733] = {file = "LoadScreenPvpBattleground"}, -- Airstrip Assault
+				[1735] = {file = "LoadScreenPvpBattleground"}, -- Bloodshed in The Barrens
+				[1737] = {file = "LoadScreenPvpBattleground"}, -- Battle of North Gate Pass
+				[1740] = {file = "LoadScreenPvpBattleground"}, -- Excavation of Ahn'Qiraj
+				[1741] = {file = "LoadScreenPvpBattleground"}, -- Stonewatch Slaughter
+				[1748] = {file = "LoadScreenPvpBattleground"}, -- Slaughter in Stromgarde
+				[1751] = {file = "LoadScreenPvpBattleground"}, -- Battle for Theramore
+				[1753] = {file = "LoadScreenPvpBattleground"}, -- Tor'Watha
+				[1754] = {file = "LoadScreenPvpBattleground"}, -- Carnage in the Crater
+				[1755] = {file = "LoadScreenPvpBattleground"}, -- Warsong Lumber War
+				[1757] = {file = "LoadScreenPvpBattleground"}, -- War of Windshear Crag
+				[3000] = {file = "LoadScreenPvpBattleground"}, -- Alterac Valley
 			}
 			function _detalhes:GetBattlegroundInfo(mapid)
 				local battlegroundInfo = _detalhes.battleground_info[mapid]
 				if (battlegroundInfo) then
-					return battlegroundInfo.file, battlegroundInfo.coords
+					return battlegroundInfo.file, battlegroundInfo.coords or default_coords
 				end
 			end
 
@@ -716,17 +750,11 @@ do
 
 		---@type table<npcid, textureid>
 		local npcIdToIcon = {
-			[98035] = 1378282, --dreadstalker
-			[17252] = 136216, --felguard
-			[136404] = 132182, --bilescourge
-			[136398] = 626007, --illidari satyr
-			[136403] = 1100177, --void terror
-			[136402] = 1581747, --ur'zyk
-			[136399] = 1709931, --visious hellhound
-			[136406] = 615148, --shivarra
-			[136407] = 615025, --wrathguard
-			[136408] = 1709932, --darkhound
-
+			[17252] = [[Interface\Icons\Spell_shadow_summonfelguard]], --felguard
+			[1860] = [[Interface\Icons\spell_shadow_summonvoidwalker]], -- voidwalker
+			[417] = [[Interface\Icons\spell_shadow_summonfelhunter]], -- felhunter
+			[1863] = [[Interface\Icons\spell_shadow_summonsuccubus]], -- succubus 
+			[416] = [[Interface\Icons\spell_shadow_summonimp]], -- imp
 		}
 		_detalhes.NpcIdToIcon = npcIdToIcon
 
@@ -737,11 +765,8 @@ do
 		--player detail skin
 			_detalhes.playerdetailwindow_skins = {}
 
-		_detalhes.BitfieldSwapDebuffsIDs = {265646, 272407, 269691, 273401, 269131, 260900, 260926, 284995, 292826, 311367, 310567, 308996, 307832, 327414, 337253,
-											36797, 37122, 362397}
-		_detalhes.BitfieldSwapDebuffsSpellIDs = {
-			[360418] = true
-		}
+		_detalhes.BitfieldSwapDebuffsIDs = {}
+		_detalhes.BitfieldSwapDebuffsSpellIDs = {}
 
 		--auto run code
 		_detalhes.RunCodeTypes = {
@@ -1023,48 +1048,15 @@ do
 			NONE = {139/256, 196/256, 69/256, 127/256},
 		}
 
-		Details.player_class = {
-			["HUNTER"] = true,
-			["WARRIOR"] = true,
-			["PALADIN"] = true,
-			["SHAMAN"] = true,
-			["MAGE"] = true,
-			["ROGUE"] = true,
-			["PRIEST"] = true,
-			["WARLOCK"] = true,
-			["DRUID"] = true,
-			["MONK"] = true,
-			["DEATHKNIGHT"] = true,
-			["DEMONHUNTER"] = true,
-		}
-		Details.classstring_to_classid = {
-			["WARRIOR"] = 1,
-			["PALADIN"] = 2,
-			["HUNTER"] = 3,
-			["ROGUE"] = 4,
-			["PRIEST"] = 5,
-			["DEATHKNIGHT"] = 6,
-			["SHAMAN"] = 7,
-			["MAGE"] = 8,
-			["WARLOCK"] = 9,
-			["MONK"] = 10,
-			["DRUID"] = 11,
-			["DEMONHUNTER"] = 12,
-		}
-		Details.classid_to_classstring = {
-			[1] = "WARRIOR",
-			[2] = "PALADIN",
-			[3] = "HUNTER",
-			[4] = "ROGUE",
-			[5] = "PRIEST",
-			[6] = "DEATHKNIGHT",
-			[7] = "SHAMAN",
-			[8] = "MAGE",
-			[9] = "WARLOCK",
-			[10] = "MONK",
-			[11] = "DRUID",
-			[12] = "DEMONHUNTER",
-		}
+		Details.player_class = {}
+		Details.classstring_to_classid = {}
+		Details.classid_to_classstring = {}
+
+		for _, classFile in ipairs(CLASS_SORT_ORDER) do
+			Details.player_class[classFile] = true
+			Details.classstring_to_classid[classFile] = Enum.Class[classFile]
+			Details.classid_to_classstring[Enum.Class[classFile]] = classFile
+		end
 
 		local Loc = LibStub("AceLocale-3.0"):GetLocale ("Details")
 
