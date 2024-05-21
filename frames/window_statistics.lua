@@ -150,12 +150,11 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                 statisticsFrame.SyncTextureGrade:SetTexture([[Interface\COMMON\StreamFrame]])
                 statisticsFrame.SyncTextureGrade:SetSize(32, 32)
 
-                local animationHub = DF:CreateAnimationHub(workingFrame)
+                local animationHub = DF:CreateAnimationHub(statisticsFrame.SyncTextureCircle)
                 animationHub:SetLooping("Repeat")
                 statisticsFrame.WorkingAnimation = animationHub
 
-                local rotation = DF:CreateAnimation(animationHub, "ROTATION", 1, 3, -360)
-                rotation:SetTarget(statisticsFrame.SyncTextureCircle)
+                DF:CreateAnimation(animationHub, "ROTATION", 1, 3, -360)
 
                 statisticsFrame.SyncText = workingFrame:CreateFontString(nil, "border", "GameFontNormal")
                 statisticsFrame.SyncText:SetPoint("right", statisticsFrame.SyncTextureBackground, "left", 0, 0)
@@ -479,10 +478,10 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
             end
 
             local allowedKeysForDifficulty = {
-                [14] = true, --normal
-                [15] = true, --heroic
-                [16] = true, --mythic
-                --[17] = true, --raid finder
+                [1] = true, --normal
+                [2] = true, --heroic
+                [3] = true, --mythic
+                [4] = true, --ascended
             }
 
             local playerGuildName = GetGuildInfo("player")
@@ -540,7 +539,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                             end
 
                             --add the difficult to the dropdown
-                            if (difficulty == 14) then
+                            if (difficulty == 1) then
                                 local alreadyHave = false
                                 for i, t in ipairs(difficultyList) do
                                     if (t.label == "Normal") then
@@ -551,7 +550,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                     table.insert(difficultyList, 1, {value = difficulty, label = "Normal", icon = icon, onclick = onDifficultySelect})
                                 end
 
-                            elseif (difficulty == 15) then
+                            elseif (difficulty == 2) then
                                 local alreadyHave = false
                                 for i, t in ipairs(difficultyList) do
                                     if (t.label == "Heroic") then
@@ -562,7 +561,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                     table.insert(difficultyList, 1, {value = difficulty, label = "Heroic", icon = icon, onclick = onDifficultySelect})
                                 end
 
-                            elseif (difficulty == 16) then
+                            elseif (difficulty == 3) then
                                 local alreadyHave = false
                                 for i, t in ipairs(difficultyList) do
                                     if (t.label == "Mythic") then
@@ -571,6 +570,17 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                 end
                                 if (not alreadyHave) then
                                     table.insert(difficultyList, {value = difficulty, label = "Mythic", icon = icon, onclick = onDifficultySelect})
+                                end
+
+                            elseif (difficulty == 4) then
+                                local alreadyHave = false
+                                for i, t in ipairs(difficultyList) do
+                                    if (t.label == "Ascended") then
+                                        alreadyHave = true
+                                    end
+                                end
+                                if (not alreadyHave) then
+                                    table.insert(difficultyList, {value = difficulty, label = "Ascended", icon = icon, onclick = onDifficultySelect})
                                 end
                             end
                         end
@@ -606,10 +616,10 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
 
         function statisticsFrame.UpdateBossDropdown()
             local allowedKeysForDifficulty = {
-                [14] = true, --normal
-                [15] = true, --heroic
-                [16] = true, --mythic
-                --[17] = true, --raid finder
+                [1] = true, --normal
+                [2] = true, --heroic
+                [3] = true, --mythic
+                [4] = true, --ascended
             }
 
             --make a list of raids and bosses that belong to the current expansion
@@ -641,7 +651,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                             end
 
                             --add the difficult to the dropdown
-                            if (difficulty == 14) then
+                            if (difficulty == 1) then
                                 local alreadyHave = false
                                 for i, t in ipairs(difficultyList) do
                                     if (t.label == "Normal") then
@@ -652,7 +662,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                     table.insert(difficultyList, 1, {value = difficulty, label = "Normal", icon = icon, onclick = onDifficultySelect})
                                 end
 
-                            elseif (difficulty == 15) then
+                            elseif (difficulty == 2) then
                                 local alreadyHave = false
                                 for i, t in ipairs(difficultyList) do
                                     if (t.label == "Heroic") then
@@ -663,7 +673,7 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                     table.insert(difficultyList, 1, {value = difficulty, label = "Heroic", icon = icon, onclick = onDifficultySelect})
                                 end
 
-                            elseif (difficulty == 16) then
+                            elseif (difficulty == 3) then
                                 local alreadyHave = false
                                 for i, t in ipairs(difficultyList) do
                                     if (t.label == "Mythic") then
@@ -672,6 +682,16 @@ function Details:OpenRaidHistoryWindow(raidName, bossEncounterId, difficultyId, 
                                 end
                                 if (not alreadyHave) then
                                     table.insert(difficultyList, {value = difficulty, label = "Mythic", icon = icon, onclick = onDifficultySelect})
+                                end
+                            elseif (difficulty == 4) then
+                                local alreadyHave = false
+                                for i, t in ipairs(difficultyList) do
+                                    if (t.label == "Asecended") then
+                                        alreadyHave = true
+                                    end
+                                end
+                                if (not alreadyHave) then
+                                    table.insert(difficultyList, {value = difficulty, label = "Asecended", icon = icon, onclick = onDifficultySelect})
                                 end
                             end
                         end
