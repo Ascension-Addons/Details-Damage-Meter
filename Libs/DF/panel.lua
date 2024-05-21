@@ -4638,7 +4638,7 @@ function detailsFramework:BuildStatusbarAuthorInfo(f, addonBy, authorsNameString
 
 	local options_dropdown_template = detailsFramework:GetTemplate("dropdown", "OPTIONS_DROPDOWN_TEMPLATE")
 	local discordTextEntry = detailsFramework:CreateTextEntry(f, function()end, 200, 18, "DiscordTextBox", _, _, options_dropdown_template)
-	discordTextEntry:SetText("https://discord.gg/AGSzAZX")
+	discordTextEntry:SetText(--[["https://discord.gg/AGSzAZX"]]"https://discord.gg/classless")
 	discordTextEntry:SetFrameLevel(5000)
 
 	authorName:SetPoint("left", f, "left", 2, 0)

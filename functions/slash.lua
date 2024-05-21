@@ -255,7 +255,7 @@ function SlashCmdList.DETAILS (msg, editbox)
 		Details:OpenNewsWindow()
 
 	elseif (command == "discord") then
-		Details:CopyPaste ("https://discord.gg/AGSzAZX")
+		Details:CopyPaste (--[["https://discord.gg/AGSzAZX"]]"https://discord.gg/classless") -- dont send people to harass official discord.
 
 
 	elseif (command == "m+log") then

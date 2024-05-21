@@ -41,7 +41,7 @@ DF.dversion = dversion
 
 DF.AuthorInfo = {
 	Name = "Terciob",
-	Discord = "https://discord.gg/AGSzAZX",
+	Discord = --[["https://discord.gg/AGSzAZX"]]"https://discord.gg/classless",
 }
 
 function DF:Msg(msg, ...)
