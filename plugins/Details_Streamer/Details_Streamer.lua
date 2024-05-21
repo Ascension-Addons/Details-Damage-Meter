@@ -2349,18 +2349,13 @@ end
 
 
 function StreamOverlay:OnEvent (_, event, ...)
-	--if (DetailsFramework and DetailsFramework.IsClassicWow()) then
-	--	return
-	--end
 	if (event == "ADDON_LOADED") then
 		local AddonName = select (1, ...)
 		if (AddonName == "Details_Streamer") then
 			
 			local interimPlayerName, playerRealm = UnitFullName ("player")
 
-			--if(select(4, GetBuildInfo()) >= 100200) then
-				playerName = interimPlayerName .. '-' .. playerRealm --playerName is an upvalue from the file header
-			--end
+			playerName = interimPlayerName .. '-' .. playerRealm --playerName is an upvalue from the file header
 
 			playerName = _G.Details:Ambiguate(playerName)
 

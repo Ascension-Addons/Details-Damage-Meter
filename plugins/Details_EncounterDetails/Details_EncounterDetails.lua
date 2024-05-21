@@ -828,10 +828,6 @@ end
 
 local installPluginFunc = function()
 	if (Details and Details.InstallOkey and Details:InstallOkey()) then
-		if (DetailsFramework.IsClassicWow()) then
-			return
-		end
-
 		--create widgets
 		CreatePluginFrames(data)
 

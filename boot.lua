@@ -16,7 +16,7 @@
 		end
 
 		local addonName, Details222 = ...
-		local version, build, date, tocversion = GetBuildInfo()
+		local version = GetBuildInfo()
 
 		Details.build_counter = 12755
 		Details.alpha_build_counter = 12755 --if this is higher than the regular counter, use it instead
@@ -40,7 +40,7 @@
 
 		Details = Details
 
-		local gameVersionPrefix = "VWD" --vanilla, wrath, dragonflight
+		local gameVersionPrefix = "ASC"
 
 		Details.gameVersionPrefix = gameVersionPrefix
 
@@ -1418,18 +1418,6 @@ do
 			_G ["BINDING_NAME_DETAILS_BOOKMARK9"] = string.format(Loc ["STRING_KEYBIND_BOOKMARK_NUMBER"], 9)
 			_G ["BINDING_NAME_DETAILS_BOOKMARK10"] = string.format(Loc ["STRING_KEYBIND_BOOKMARK_NUMBER"], 10)
 	--]=]
-end
-
-if (select(4, GetBuildInfo()) >= 100000) then
-	local f = CreateFrame("frame")
-	f:RegisterEvent("ADDON_ACTION_FORBIDDEN")
-	f:SetScript("OnEvent", function()
-		local text = StaticPopup1 and StaticPopup1.text and StaticPopup1.text:GetText()
-		if (text and text:find("Details")) then
-			--fix false-positive taints that are being attributed to random addons
-			StaticPopup1.button2:Click()
-		end
-	end)
 end
 
 local classCacheName = Details222.ClassCache.ByName

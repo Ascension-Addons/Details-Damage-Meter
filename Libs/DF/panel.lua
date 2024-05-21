@@ -16,7 +16,7 @@ local loadstring = loadstring --lua local
 local CreateFrame = CreateFrame
 
 -- TWW compatibility:
-local GetSpellInfo = GetSpellInfo or function(spellID) if not spellID then return nil end local si = C_Spell.GetSpellInfo(spellID) if si then return si.name, nil, si.iconID, si.castTime, si.minRange, si.maxRange, si.spellID, si.originalIconID end end
+local GetSpellInfo = GetSpellInfo
 local GetNumSpellTabs = GetNumSpellTabs
 local GetSpellTabInfo = GetSpellTabInfo
 local GetSpellBookItemInfo = GetSpellBookItemInfo
@@ -1479,92 +1479,41 @@ end
 
 
 ------------color pick
-local _, _, _, toc = GetBuildInfo()
-if ((ColorPickerFrame and ColorPickerFrame.SetupColorPickerAndShow) or toc >= 100205) then -- maybe fallback to only check CPF in the future
-	local color_pick_func = function(...)
-		local r, g, b = ColorPickerFrame:GetColorRGB()
-		local a = ColorPickerFrame:GetColorAlpha()
-		ColorPickerFrame:dcallback (r, g, b, a, ColorPickerFrame.dframe)
-	end
+local color_pick_func = function()
+	local r, g, b = ColorPickerFrame:GetColorRGB()
+	local a = OpacitySliderFrame:GetValue()
+	a = math.abs(a - 1)
+	ColorPickerFrame:dcallback (r, g, b, a, ColorPickerFrame.dframe)
+end
+local color_pick_func_cancel = function()
+	ColorPickerFrame:SetColorRGB (unpack(ColorPickerFrame.previousValues))
+	local r, g, b = ColorPickerFrame:GetColorRGB()
+	local a = OpacitySliderFrame:GetValue()
+	a = math.abs(a - 1)
+	ColorPickerFrame:dcallback (r, g, b, a, ColorPickerFrame.dframe)
+end
 
-	local color_pick_func_cancel = function()
-		local r, g, b, a = ColorPickerFrame.previousValues.r, ColorPickerFrame.previousValues.g, ColorPickerFrame.previousValues.b, ColorPickerFrame.previousValues.a
-		ColorPickerFrame.Content.ColorPicker:SetColorRGB(r, g, b)
-		ColorPickerFrame:dcallback (r, g, b, a, ColorPickerFrame.dframe)
-	end
+function detailsFramework:ColorPick (frame, r, g, b, alpha, callback)
 
-	function detailsFramework:ColorPick(frame, r, g, b, alpha, callback)
+	ColorPickerFrame:ClearAllPoints()
+	ColorPickerFrame:SetPoint("bottomleft", frame, "topright", 0, 0)
 
-		ColorPickerFrame:ClearAllPoints()
-		ColorPickerFrame:SetPoint("bottomleft", frame, "topright", 0, 0)
+	ColorPickerFrame.dcallback = callback
+	ColorPickerFrame.dframe = frame
 
-		ColorPickerFrame.dcallback = callback
-		ColorPickerFrame.dframe = frame
+	ColorPickerFrame.func = color_pick_func
+	ColorPickerFrame.opacityFunc = color_pick_func
+	ColorPickerFrame.cancelFunc = color_pick_func_cancel
 
-		ColorPickerFrame.func = color_pick_func
-		ColorPickerFrame.opacityFunc = color_pick_func
-		ColorPickerFrame.cancelFunc = color_pick_func_cancel
+	alpha = math.abs(alpha - 1)
+	ColorPickerFrame.opacity = alpha
+	ColorPickerFrame.hasOpacity = alpha and true
 
-		ColorPickerFrame.opacity = alpha
-		ColorPickerFrame.hasOpacity = alpha and true
-
-		ColorPickerFrame.previousValues = {r, g, b}
-		ColorPickerFrame.previousAlpha = alpha
-		ColorPickerFrame:SetParent(UIParent)
-		ColorPickerFrame:SetFrameStrata("tooltip")
-
-		local info = {
-			swatchFunc = color_pick_func,
-			hasOpacity = alpha and true,
-			opacityFunc = color_pick_func,
-			opacity = alpha,
-			previousValues = {r = r, g = g, b = b, a = alpha},
-			cancelFunc = color_pick_func_cancel,
-			r = r,
-			g = g,
-			b = b,
-		}
-		--OpenColorPicker(info)
-		ColorPickerFrame:SetupColorPickerAndShow(info)
-
-	end
-else
-	local color_pick_func = function()
-		local r, g, b = ColorPickerFrame:GetColorRGB()
-		local a = OpacitySliderFrame:GetValue()
-		a = math.abs(a - 1)
-		ColorPickerFrame:dcallback (r, g, b, a, ColorPickerFrame.dframe)
-	end
-	local color_pick_func_cancel = function()
-		ColorPickerFrame:SetColorRGB (unpack(ColorPickerFrame.previousValues))
-		local r, g, b = ColorPickerFrame:GetColorRGB()
-		local a = OpacitySliderFrame:GetValue()
-		a = math.abs(a - 1)
-		ColorPickerFrame:dcallback (r, g, b, a, ColorPickerFrame.dframe)
-	end
-
-	function detailsFramework:ColorPick (frame, r, g, b, alpha, callback)
-
-		ColorPickerFrame:ClearAllPoints()
-		ColorPickerFrame:SetPoint("bottomleft", frame, "topright", 0, 0)
-
-		ColorPickerFrame.dcallback = callback
-		ColorPickerFrame.dframe = frame
-
-		ColorPickerFrame.func = color_pick_func
-		ColorPickerFrame.opacityFunc = color_pick_func
-		ColorPickerFrame.cancelFunc = color_pick_func_cancel
-
-		alpha = math.abs(alpha - 1)
-		ColorPickerFrame.opacity = alpha
-		ColorPickerFrame.hasOpacity = alpha and true
-
-		ColorPickerFrame.previousValues = {r, g, b}
-		ColorPickerFrame:SetParent(UIParent)
-		ColorPickerFrame:SetFrameStrata("tooltip")
-		ColorPickerFrame:SetColorRGB (r, g, b)
-		ColorPickerFrame:Show()
-	end
+	ColorPickerFrame.previousValues = {r, g, b}
+	ColorPickerFrame:SetParent(UIParent)
+	ColorPickerFrame:SetFrameStrata("tooltip")
+	ColorPickerFrame:SetColorRGB (r, g, b)
+	ColorPickerFrame:Show()
 end
 
 

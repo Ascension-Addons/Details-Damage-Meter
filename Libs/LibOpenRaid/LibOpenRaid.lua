@@ -29,19 +29,6 @@ BUGS:
 
 LIB_OPEN_RAID_CAN_LOAD = false
 
-local versionString, revision, launchDate, gameVersion = GetBuildInfo()
-
-local isExpansion_Dragonflight = function()
-	if (gameVersion >= 100000) then
-		return true
-	end
-end
-
---don't load if it's not retail, emergencial patch due to classic and bcc stuff not transposed yet
-if (WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE and not isExpansion_Dragonflight()) then
-    return
-end
-
 local major = "LibOpenRaid-1.0"
 
 local CONST_LIB_VERSION = 127

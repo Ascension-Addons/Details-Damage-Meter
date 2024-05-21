@@ -197,8 +197,6 @@ do
 		end
 	end
 
-	local _, _, _, toc = GetBuildInfo() --check game version to know which version of GetFullName to use
-
 	---return the class file name of the unit passed
 	local getFromCache = Details222.ClassCache.GetClassFromCache
 	local Ambiguate = Ambiguate

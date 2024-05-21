@@ -599,10 +599,6 @@ function Details:StartMeUp()
 	if (DetailsFramework:IsNearlyEqual(Details.class_coords.ROGUE[4], 0.375)) then
 		DetailsFramework.table.copy(Details.class_coords, Details.default_profile.class_coords)
 	end
-
-	--shutdown the old OnDeathMenu
-	--cleanup: this line can be removed after the first month of dragonflight
-	Details.on_death_menu = false
 end
 
 Details.AddOnLoadFilesTime = _G.GetTime()

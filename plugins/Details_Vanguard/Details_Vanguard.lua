@@ -1099,10 +1099,6 @@ function Vanguard:OnEvent (_, event, arg1, token, time, who_serial, who_name, wh
 		if (AddonName == "Details_Vanguard") then
 			
 			if (_G.Details) then
-			
-				if (DetailsFramework.IsClassicWow()) then
-					return
-				end
 				
 				local MINIMAL_DETAILS_VERSION_REQUIRED = 1
 				local default_saved_table = {

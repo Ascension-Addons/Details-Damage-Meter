@@ -1,9 +1,3 @@
-
---do not load if this is a classic version of the game
-if (DetailsFramework.IsTBCWow() or DetailsFramework.IsWotLKWow() or DetailsFramework.IsClassicWow() or DetailsFramework.IsCataWow()) then
-	return
-end
-
 local UnitAura = UnitAura
 local UnitBuff = UnitBuff
 local GetSpellInfo = GetSpellInfo
@@ -26,13 +20,7 @@ local runeIds = DF.RuneIDs
 local isDrinking = 257428
 local localizedFoodDrink
 
-local foodList = { --list for previous dragonflight expsansions
-	tier1 = {},
-	tier2 = {},
-	tier3 = {},
-}
-
-local foodInfoList = {} --list for dragonflight and beyond
+local foodInfoList = {}
 
 local getUnitId = function(i)
 	local unitId
@@ -54,16 +42,9 @@ local getUnitId = function(i)
 	return unitId
 end
 
-local gameVersion, buildNumber, releaseData, tocNumber = GetBuildInfo()
-
 local getCleuName = function(unitId)
-	if (tocNumber >= 100200) then
-		local cleuName = Details:GetFullName(unitId)
-		return cleuName
-	else
-		local cleuName = GetCLName(unitId)
-		return cleuName
-	end
+	local cleuName = Details:GetFullName(unitId)
+	return cleuName
 end
 
 --create the plugin object
@@ -73,23 +54,8 @@ DetailsRaidCheck:SetPluginDescription(Loc ["STRING_RAIDCHECK_PLUGIN_DESC"])
 
 local CreatePluginFrames = function()
 	--build food tier list
-	if (DF.IsDragonflightAndBeyond()) then
-		--{tier = {[220] = 1}, status = {"haste"}, localized = {STAT_HASTE}}
-		for spellId, foodInfo in pairs(LIB_OPEN_RAID_FOOD_BUFF) do
-			foodInfoList[spellId] = foodInfo
-		end
-	else
-		for spellId, tier in pairs(LIB_OPEN_RAID_FOOD_BUFF) do
-			if (tier == 1) then
-				foodList.tier1[spellId] = true
-
-			elseif (tier == 2) then
-				foodList.tier2[spellId] = true
-
-			elseif (tier == 3) then
-				foodList.tier3[spellId] = true
-			end
-		end
+	for spellId, foodInfo in pairs(LIB_OPEN_RAID_FOOD_BUFF) do
+		foodInfoList[spellId] = foodInfo
 	end
 
 	DetailsRaidCheck.GetOnlyName = DetailsRaidCheck.GetOnlyName
@@ -982,10 +948,6 @@ function DetailsRaidCheck:OnEvent(_, event, ...)
 		local AddonName = select(1, ...)
 		if (AddonName == "Details_RaidCheck") then
 			if (_G.Details) then
-				if (DetailsFramework.IsClassicWow()) then
-					return
-				end
-
 				--create widgets
 				CreatePluginFrames()
 
