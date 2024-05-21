@@ -802,8 +802,8 @@ local events_to_track = {
 }
 
 local enemy_spell_pool
-local CLEvents = function(self, event)
-	local time, token, hidding, who_serial, who_name, who_flags, who_flags2, alvo_serial, alvo_name, alvo_flags, alvo_flags2, spellid, spellname, school, aura_type = CombatLogGetCurrentEventInfo()
+local CLEvents = function(self, event, ...)
+	local time, token, hidding, who_serial, who_name, who_flags, who_flags2, alvo_serial, alvo_name, alvo_flags, alvo_flags2, spellid, spellname, school, aura_type = CombatLogGetCurrentEventInfo(...)
 
 	if (events_to_track [token] and bitBand(who_flags or 0x0, 0x00000060) ~= 0) then
 		local t = enemy_spell_pool [spellid]

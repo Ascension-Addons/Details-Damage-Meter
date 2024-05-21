@@ -1088,12 +1088,7 @@ Vanguard.OpenOptionsPanel = function()
 	VanguardOptionsWindow:Show()
 end
 
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo
-
-
-
-function Vanguard:OnEvent (_, event, arg1, token, time, who_serial, who_name, who_flags, _, alvo_serial, alvo_name, alvo_flags, _, spellid, spellname, spellschool, tipo)
-
+function Vanguard:OnEvent (_, event, arg1)
 	if (event == "ADDON_LOADED") then
 		local AddonName = arg1
 		if (AddonName == "Details_Vanguard") then
