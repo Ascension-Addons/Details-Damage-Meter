@@ -4,7 +4,7 @@ local addonName, Details222 = ...
 local detailsFramework = DetailsFramework
 local _
 
-local AuraUtil, wipe, C_UnitAuras, GetSpellInfo, GetTime, UnitGUID, UnitExists = AuraUtil, table.wipe, C_UnitAuras, GetSpellInfo, GetTime, UnitGUID, UnitExists
+local AuraUtil, wipe, GetSpellInfo, GetTime, UnitGUID, UnitExists = AuraUtil, table.wipe, GetSpellInfo, GetTime, UnitGUID, UnitExists
 
 local AuraScan = Details222.AuraScan
 AuraScan.Enabled = false
@@ -271,55 +271,11 @@ function AuraScan.OnEvent(frame, eventName, unitId, updateInfo)
     if (not unitGUID) then
         return
     end
-
-    if (not updateInfo or updateInfo.isFullUpdate) then
-        AuraScan.WipeUnitAuraTable(unitGUID)
-        unitAuraTable = AuraScan.GetOrCreateUnitAuraTable(unitGUID)
-        fFullAuraScan(unitId, unitGUID)
-        return
-    end
-
-    targetUnitGUID = unitGUID
-    targetName = Details:GetFullName(unitId)
-
-    --auras added
-    if (updateInfo.addedAuras) then
-        unitAuraTable = AuraScan.GetOrCreateUnitAuraTable(unitGUID)
-        for auraIndex = 1, #updateInfo.addedAuras do
-            ---@type aurainfo
-            local auraInfo = updateInfo.addedAuras[auraIndex]
-            --print(unitId, targetName, auraInfo.name)
-            fAddAura(auraInfo)
-        end
-    end
-
-    --auras updated
-    if (updateInfo.updatedAuraInstanceIDs) then
-        unitAuraTable = AuraScan.GetOrCreateUnitAuraTable(unitGUID)
-        for auraIndex = 1, #updateInfo.updatedAuraInstanceIDs do
-            local auraInstanceId = updateInfo.updatedAuraInstanceIDs[auraIndex]
-            ---@type aurainfo
-            local auraInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitId, auraInstanceId)
-            if (auraInfo and auraInfo.auraInstanceID) then
-                if (auraInfo.name == "Prescience") then
-                    local thisAuraInfo = unitAuraTable[auraInfo.auraInstanceID]
-                    if (not thisAuraInfo) then
-                        Details222.DebugMsg("|cFFFFAA00Prescience Updated, but not found in the table.")
-                    end
-                end
-                fUpdateAura(auraInfo)
-            end
-        end
-    end
-
-    --auras removed
-    if (updateInfo.removedAuraInstanceIDs) then
-        unitAuraTable = AuraScan.GetOrCreateUnitAuraTable(unitGUID)
-        for auraIndex = 1, #updateInfo.removedAuraInstanceIDs do
-            local auraInstanceId = updateInfo.removedAuraInstanceIDs[auraIndex]
-            fRemoveAura(auraInstanceId)
-        end
-    end
+    -- aura updates dont have updateInfo in 3.3.5, this might be expensive
+    AuraScan.WipeUnitAuraTable(unitGUID)
+    unitAuraTable = AuraScan.GetOrCreateUnitAuraTable(unitGUID)
+    fFullAuraScan(unitId, unitGUID)
+    return
 end
 
 
