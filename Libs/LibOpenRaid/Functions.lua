@@ -430,15 +430,7 @@ end
 function openRaidLib.GetFoodTierFromAura(auraInfo)
     local foodTable = openRaidLib.GetFoodInfoBySpellId(auraInfo.spellId)
     if (foodTable) then
-        local points = auraInfo.points
-        if (points) then
-            for i = 1, #points do
-                local foodTier = foodTable.tier[points[i]]
-                if (foodTier) then
-                    return foodTier
-                end
-            end
-        end
+        return foodTable.tier
     end
     return nil
 end

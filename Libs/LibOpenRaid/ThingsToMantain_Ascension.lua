@@ -76,8 +76,6 @@ end
 
 LIB_OPEN_RAID_MANA_POTIONS = {}
 
-LIB_OPEN_RAID_FOOD_BUFF = {} --default
-LIB_OPEN_RAID_FLASK_BUFF = {} --default
 
 LIB_OPEN_RAID_BLOODLUST = {
 	[2825] = true, --bloodlust

@@ -101,11 +101,6 @@ local CreatePluginFrames = function()
 
 	function DetailsRaidCheck.GetPlayerAmount()
 		local playerAmount = GetNumGroupMembers()
-		--limit to 20 if in mythic raid and the option is enabled
-		local _, _, difficulty = GetInstanceInfo()
-		if (difficulty == 16 and DetailsRaidCheck.db.mythic_1_4 and playerAmount > 20) then
-			playerAmount = 20
-		end
 		return playerAmount
 	end
 
@@ -184,10 +179,8 @@ local CreatePluginFrames = function()
 		{text = "Repair", width = 45},
 		{text = "Food", width = 45},
 		{text = "Flask", width = 45},
-		{text = "Rune", width = 45},
-		{text = "M+ Score", width = 60},
-		--{text = "Pre-Pot Last Try", width = 100},
-		--{text = "Using Details!", width = 100},
+		{text = "Pre-Pot Last Try", width = 100},
+		{text = "Using Details!", width = 100},
 	}
 	local headerOptions = {
 		padding = 2,
@@ -266,16 +259,10 @@ local CreatePluginFrames = function()
 		local flaskTierIndicator = DF:CreateLabel(line, "", 12, "white")
 		flaskTierIndicator:SetPoint("left", flaskIndicator, "right", 6, 0)
 
-		--no rune
-		local runeIndicator = DF:CreateImage(line, "", scrollLineHeight, scrollLineHeight)
-
-		--mythic+
-		local mythicPlusIndicator = DF:CreateLabel(line)
-
 		--no pre pot
-		--local PrePotIndicator = DF:CreateImage (line, "", scroll_line_height, scroll_line_height)
+		local PrePotIndicator = DF:CreateImage (line, "", scroll_line_height, scroll_line_height)
 		--using details!
-		--local DetailsIndicator = DF:CreateImage(line, "", scroll_line_height, scroll_line_height)
+		local DetailsIndicator = DF:CreateImage(line, "", scroll_line_height, scroll_line_height)
 
 		line:AddFrameToHeaderAlignment(roleIcon)
 		line:AddFrameToHeaderAlignment(talentsRow)
@@ -283,10 +270,8 @@ local CreatePluginFrames = function()
 		line:AddFrameToHeaderAlignment(repairStatus)
 		line:AddFrameToHeaderAlignment(foodIndicator)
 		line:AddFrameToHeaderAlignment(flaskIndicator)
-		line:AddFrameToHeaderAlignment(runeIndicator)
-		line:AddFrameToHeaderAlignment(mythicPlusIndicator)
-		--line:AddFrameToHeaderAlignment(PrePotIndicator)
-		--line:AddFrameToHeaderAlignment(DetailsIndicator)
+		line:AddFrameToHeaderAlignment(PrePotIndicator)
+		line:AddFrameToHeaderAlignment(DetailsIndicator)
 
 		line:AlignWithHeader(DetailsRaidCheck.Header, "left")
 
@@ -301,10 +286,8 @@ local CreatePluginFrames = function()
 		line.FoodTierIndicator = foodTierIndicator
 		line.FlaskIndicator = flaskIndicator
 		line.FlaskTierIndicator = flaskTierIndicator
-		line.RuneIndicator = runeIndicator
-		line.MythicPlusIndicator = mythicPlusIndicator
-		--line.PrePotIndicator = PrePotIndicator
-		--line.DetailsIndicator = DetailsIndicator
+		line.PrePotIndicator = PrePotIndicator
+		line.DetailsIndicator = DetailsIndicator
 
 		return line
 	end
@@ -431,12 +414,8 @@ local CreatePluginFrames = function()
 						line.FlaskTierIndicator.text = ""
 					end
 
-					line.RuneIndicator.texture = playerTable.Rune and [[Interface\Scenarios\ScenarioIcon-Check]] or ""
-					--line.PrePotIndicator.texture = playerTable.PrePot and [[Interface\Scenarios\ScenarioIcon-Check]] or ""
-					--line.DetailsIndicator.texture = playerTable.UseDetails and [[Interface\Scenarios\ScenarioIcon-Check]] or ""
-
-					--mythic+ score
-					line.MythicPlusIndicator.text = playerTable.MythicPlusScore and playerTable.MythicPlusScore > 0 and playerTable.MythicPlusScore or ""
+					line.PrePotIndicator.texture = playerTable.PrePot and [[Interface\Scenarios\ScenarioIcon-Check]] or ""
+					line.DetailsIndicator.texture = playerTable.UseDetails and [[Interface\Scenarios\ScenarioIcon-Check]] or ""
 				end
 			end
 		end
@@ -548,36 +527,6 @@ local CreatePluginFrames = function()
 					DetailsRaidCheck:SendMsgToChannel(reportString, "PARTY")
 				end
 			end
-
-		elseif (button == "MiddleButton") then
-			--report focus aug
-			local reportString = "Details!: Not using Rune: "
-			local groupMembersAmount = GetNumGroupMembers()
-			local _, _, difficulty = GetInstanceInfo()
-			if (difficulty == 16 and DetailsRaidCheck.db.mythic_1_4 and groupMembersAmount > 20) then
-				groupMembersAmount = 20
-			end
-
-			for i = 1, groupMembersAmount do
-				local unitID = getUnitId(i)
-				local name = UnitName(unitID)
-				local unitSerial = UnitGUID(unitID)
-				if (not DetailsRaidCheck.havefocusaug_table[unitSerial]) then
-					reportString = reportString .. DetailsRaidCheck:GetOnlyName(name) .. " "
-				end
-			end
-
-			if (DetailsRaidCheck.db.use_report_panel) then
-				DetailsRaidCheck.report_lines = reportString
-				DetailsRaidCheck:SendReportWindow(reportFunc)
-			else
-				if (IsInRaid()) then
-					DetailsRaidCheck:SendMsgToChannel(reportString, "RAID")
-				else
-					DetailsRaidCheck:SendMsgToChannel(reportString, "PARTY")
-				end
-			end
-		end
 	end)
 
 	local updateRaidCheckFrame = function(self, deltaTime) --~update
@@ -623,27 +572,6 @@ local CreatePluginFrames = function()
 				end
 			end
 
-			local mythicPlusScore = 0
-			local RaiderIO = _G.RaiderIO
-
-			if (RaiderIO) then
-				local playerName, playerRealm = unitNameWithRealm:match("(.+)%-(.+)")
-				local faction = UnitFactionGroup(unitNameWithRealm)
-				faction = faction == "Horde" and 2 or 1
-
-				--local rioProfile = RaiderIO.GetProfile(playerName, playerRealm, faction == "Horde" and 2 or 1)
-				local rioProfile = RaiderIO.GetProfile(playerName, playerRealm) or RaiderIO.GetProfile(unitName, GetRealmName())
-
-				if (rioProfile and rioProfile.mythicKeystoneProfile) then
-					local mythicPlusProfile = rioProfile.mythicKeystoneProfile
-					local previousScore = mythicPlusProfile.previousScore or 0
-					local currentScore = mythicPlusProfile.currentScore or 0
-					--mythicPlusScore = previousScore and previousScore > currentScore and previousScore or currentScore
-					--mythicPlusScore = mythicPlusScore or currentScore
-					mythicPlusScore = currentScore
-				end
-			end
-
 			--order by class > alphabetically by the unit name
 			unitClassID = (((unitClassID or 0) + 128) ^ 4) + tonumber(string.byte (unitName, 1) .. "" .. string.byte(unitName, 2))
 
@@ -659,10 +587,8 @@ local CreatePluginFrames = function()
 				Food = DetailsRaidCheck.unitWithFoodTable[unitSerial],
 				Flask = DetailsRaidCheck.unitsWithFlaskTable[unitSerial],
 				PrePot = DetailsRaidCheck.usedprepot_table[cleuName],
-				Rune = DetailsRaidCheck.havefocusaug_table[unitSerial],
 				Eating = DetailsRaidCheck.iseating_table[unitSerial],
 				UseDetails = Details.trusted_characters[unitSerial],
-				MythicPlusScore = mythicPlusScore,
 			})
 		end
 
@@ -690,20 +616,6 @@ local CreatePluginFrames = function()
 				end
 			end
 
-			local mythicPlusScore = 0
-			local RaiderIO = _G.RaiderIO
-
-			if (RaiderIO) then
-				local rioProfile = RaiderIO.GetProfile(unitName, GetRealmName())
-				if (rioProfile and rioProfile.mythicKeystoneProfile) then
-					local mythicPlusProfile = rioProfile.mythicKeystoneProfile
-					local previousScore = mythicPlusProfile.previousScore or 0
-					local currentScore = mythicPlusProfile.currentScore or 0
-					mythicPlusScore = previousScore and previousScore > currentScore and previousScore or currentScore
-					mythicPlusScore = mythicPlusScore or currentScore
-				end
-			end
-
 			tinsert (PlayerData, {unitName, unitClassID,
 				Name = unitName,
 				UnitNameRealm = unitNameWithRealm,
@@ -716,10 +628,8 @@ local CreatePluginFrames = function()
 				Food = DetailsRaidCheck.unitWithFoodTable[unitSerial],
 				Flask = DetailsRaidCheck.unitsWithFlaskTable[unitSerial],
 				PrePot = DetailsRaidCheck.usedprepot_table[cleuName],
-				Rune = DetailsRaidCheck.havefocusaug_table[unitSerial],
 				Eating = DetailsRaidCheck.iseating_table[unitSerial],
 				UseDetails = Details.trusted_characters[unitSerial],
-				MythicPlusScore = mythicPlusScore,
 			})
 		end
 
@@ -813,10 +723,6 @@ local CreatePluginFrames = function()
 						end
 					end
 
-					if (runeIds[spellId]) then
-						DetailsRaidCheck.havefocusaug_table[unitSerial] = spellId
-					end
-
 					if (buffName == localizedFoodDrink) then
 						DetailsRaidCheck.iseating_table[unitSerial] = true
 					end
@@ -836,7 +742,6 @@ local CreatePluginFrames = function()
 	function DetailsRaidCheck:BuffTrackTick()
 		wipe(DetailsRaidCheck.unitsWithFlaskTable)
 		wipe(DetailsRaidCheck.unitWithFoodTable)
-		wipe(DetailsRaidCheck.havefocusaug_table)
 		wipe(DetailsRaidCheck.iseating_table)
 
 		local hasConsumables = {
@@ -886,13 +791,6 @@ local buildOptionsPanel = function()
 			desc = "If enabled, pre potion for tanks are also shown.",
 			name = "Track Tank Pre Pot"
 		},
-		{
-			type = "toggle",
-			get = function() return DetailsRaidCheck.db.mythic_1_4 end,
-			set = function (self, fixedparam, value) DetailsRaidCheck.db.mythic_1_4 = value end,
-			desc = "When raiding on Mythic difficult, only check the first 4 groups.",
-			name = "Mythic 1-4 Group Only"
-		},
 
 		{type = "breakline"},
 
@@ -902,21 +800,21 @@ local buildOptionsPanel = function()
 			get = function() return DetailsRaidCheck.db.food_tier1 end,
 			set = function (self, fixedparam, value) DetailsRaidCheck.db.food_tier1 = value end,
 			desc = "Consider players using Tier 1 food.",
-			name = "Food Tier 1 [41]"
+			name = "Food Tier 1 [Normal]"
 		},
 		{
 			type = "toggle",
 			get = function() return DetailsRaidCheck.db.food_tier2 end,
 			set = function (self, fixedparam, value) DetailsRaidCheck.db.food_tier2 = value end,
 			desc = "Consider players using Tier 2 food.",
-			name = "Food Tier 2 [55]"
+			name = "Food Tier 2 [Rare High-Risk]"
 		},
 		{
 			type = "toggle",
 			get = function() return DetailsRaidCheck.db.food_tier3 end,
 			set = function (self, fixedparam, value) DetailsRaidCheck.db.food_tier3 = value end,
 			desc = "Consider players using Tier 3 food.",
-			name = "Food Tier 3 [>= 75]"
+			name = "Food Tier 3 [Epic High-Risk]"
 		},
 	}
 
@@ -957,10 +855,9 @@ function DetailsRaidCheck:OnEvent(_, event, ...)
 				local defaultSettings = {
 					pre_pot_healers = false, --do not report pre pot for healers
 					pre_pot_tanks = false, --do not report pre pot for tanks
-					mythic_1_4 = true, --only track groups 1-4 on mythic
 					use_report_panel = true, --if true, shows the report panel
 
-					food_tier1 = true, --legion food tiers
+					food_tier1 = true,
 					food_tier2 = true,
 					food_tier3 = true,
 				}
