@@ -1379,7 +1379,7 @@ function openRaidLib.UnitInfoManager.GetPlayerFullInfo()
 
     --indexes: specId, renown, covenant, talent, conduits, pvp talents
     --return a placeholder table
-    return {specId, 0, 0, {0, 0, 0, 0, 0, 0, 0}, {0, 0}, 0}
+    return {specId, 0, 0, {0, 0, 0, 0, 0, 0, 0}, {0, 0}, {0}}
 end
 
 --talent update (when the player changes a talent and the lib needs to notify other players in the group)

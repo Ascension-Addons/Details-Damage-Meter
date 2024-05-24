@@ -1070,7 +1070,7 @@ function StreamOverlay:CastFinished (castid)
 	local caststart = CastsTable [castid].CastStart
 	local hascasttime = CastsTable [castid].HasCastTime
 	
-	if (ignoredSpells [spellid]) then
+	if (ignoredSpells [spellid]) or not spellid then
 		return
 	end
 	
