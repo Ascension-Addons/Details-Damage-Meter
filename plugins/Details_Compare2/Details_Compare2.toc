@@ -1,6 +1,7 @@
 ## Interface: 30300
 ## Title: Details!: Compare 2.0
 ## Notes: Replace the Compare tab in the player breakdown window.
+## DefaultState: disabled
 ## RequiredDeps: Details
 ## X-IconTexture: Interface\AddOns\Details\images\minimap
 

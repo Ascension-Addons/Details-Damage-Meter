@@ -1,6 +1,7 @@
 ## Interface: 30300
 ## Title: Details!: Vanguard (plugin)
 ## Notes: Show the health and debuffs for tanks in your group.
+## DefaultState: disabled
 ## SavedVariablesPerCharacter: _detalhes_databaseVanguard
 ## RequiredDeps: Details
 ## OptionalDeps: Ace3
