@@ -1,6 +1,6 @@
 ## Interface: 30300
 ## Title: Details! Damage Meter
-## Notes: Essential tool to impress that chick in your raid.
+## Notes: Essential tool to analyze combat encounters.
 ## Notes-ruRU: Незаменимый инструмент, чтобы произвести впечатление на цыпочку в вашем рейде.
 ## SavedVariables: _detalhes_global, __details_backup, __details_debug
 ## SavedVariablesPerCharacter: _detalhes_database
