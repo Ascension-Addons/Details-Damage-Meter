@@ -3437,14 +3437,6 @@ do
         local on_enter = function(self)
         
             self:SetBackdropColor(.5, .5, .5, .8)
-            
-            if (self ["toolbarPluginsIcon" .. self.id]) then
-                self ["toolbarPluginsIcon" .. self.id]:SetBlendMode("ADD")
-            elseif (self ["raidPluginsIcon" .. self.id]) then
-                self ["raidPluginsIcon" .. self.id]:SetBlendMode("ADD")
-            elseif (self ["soloPluginsIcon" .. self.id]) then
-                self ["soloPluginsIcon" .. self.id]:SetBlendMode("ADD")
-            end
     
             if (self.plugin) then
                 local desc = self.plugin:GetPluginDescription()
@@ -3468,14 +3460,6 @@ do
         
         local on_leave = function(self)
             self:SetBackdropColor(.3, .3, .3, .3)
-            
-            if (self ["toolbarPluginsIcon" .. self.id]) then
-                self ["toolbarPluginsIcon" .. self.id]:SetBlendMode("BLEND")
-            elseif (self ["raidPluginsIcon" .. self.id]) then
-                self ["raidPluginsIcon" .. self.id]:SetBlendMode("BLEND")
-            elseif (self ["soloPluginsIcon" .. self.id]) then
-                self ["soloPluginsIcon" .. self.id]:SetBlendMode("BLEND")
-            end
     
             GameCooltip:Hide()
         end
@@ -3515,19 +3499,16 @@ do
         --then add a 'ghost' plugin so the player can download
     
         local allExistentToolbarPlugins = {
-            {"DETAILS_PLUGIN_CHART_VIEWER", "Details_ChartViewer", "Chart Viewer", "View combat data in handsome charts.", "https://www.curseforge.com/wow/addons/details-chart-viewer-plugin"},
-            {"DETAILS_PLUGIN_DEATH_GRAPHICS", "Details_DeathGraphs", "Advanced Death Logs", "Encounter endurance per player (who's dying more), deaths timeline by enemy spells and regular death logs.", "https://www.curseforge.com/wow/addons/details-advanced-death-logs-plug"},
-            --{"Details_RaidPowerBars", "Raid Power Bars", "Alternate power bar in a details! window", "https://www.curseforge.com/wow/addons/details_raidpowerbars/"},
-            --{"Details_TargetCaller", "Target Caller", "Show raid damage done to an entity since you targetted it.", "https://www.curseforge.com/wow/addons/details-target-caller-plugin"},
-            {"DETAILS_PLUGIN_TIME_LINE", "Details_TimeLine", "Time Line", "View raid cooldowns usage, debuff gain, boss casts in a fancy time line.", "https://www.curseforge.com/wow/addons/details_timeline"},
+            {"DETAILS_PLUGIN_ENCOUNTER_DETAILS", "Details_EncounterDetails", "Encounter Breakdown", "Show detailed information about a boss encounter. Also provide damage per phase, graphic charts, easy weakauras creation.", ""},
+            {"DETAILS_PLUGIN_RAIDCHECK", "Details_RaidCheck", "Raid Check", "Show talents and item level for all members in your group, also shows food and flask state.", ""},
+            {"DETAILS_PLUGIN_STREAM_OVERLAY", "Details_Streamer", "Action Tracker", "Show which spells you are casting, viewers can see what are you doing and follow your steps.", ""},
         }
     
         local allExistentRaidPlugins = {
-            --{"DETAILS_PLUGIN_CHART_VIEWER", "Details_ChartViewer", "Chart Viewer", "View combat data in handsome charts.", "https://www.curseforge.com/wow/addons/details-chart-viewer-plugin"},
-            --{"DETAILS_PLUGIN_DEATH_GRAPHICS", "Details_DeathGraphs", "Advanced Death Logs", "Encounter endurance per player (who's dying more), deaths timeline by enemy spells and regular death logs.", "https://www.curseforge.com/wow/addons/details-advanced-death-logs-plug"},
-            {"DETAILS_PLUGIN_RAID_POWER_BARS", "Details_RaidPowerBars", "Raid Power Bars", "Alternate power bar in a details! window", "https://www.curseforge.com/wow/addons/details_raidpowerbars/"},
+            {"DETAILS_PLUGIN_COMPARETWO_WINDOW", "Details_Compare2", "Compare 2.0", "Replace the Compare tab in the player breakdown window.", ""},
             {"DETAILS_PLUGIN_TARGET_CALLER", "Details_TargetCaller", "Target Caller", "Show raid damage done to an entity since you targetted it.", "https://www.curseforge.com/wow/addons/details-target-caller-plugin"},
-            --{"DETAILS_PLUGIN_TIME_LINE", "Details_TimeLine", "Time Line", "View raid cooldowns usage, debuff gain, boss casts in a fancy time line.", "https://www.curseforge.com/wow/addons/details_timeline"},
+            {"DETAILS_PLUGIN_TINY_THREAT", "Details_TinyThreat", "Tiny Threat", "Threat meter plugin, show threat for group members in the window. Select it from the Plugin menu in the Orange Cogwheel.", ""},
+            {"DETAILS_PLUGIN_VANGUARD", "Details_Vanguard", "Vanguard", "Show the health and debuffs for tanks in your group.", ""}
         }
     
         local installedToolbarPlugins = {}
@@ -3542,6 +3523,7 @@ do
             bframe:SetBackdropColor(.3, .3, .3, .3)
             bframe:SetScript("OnEnter", on_enter)
             bframe:SetScript("OnLeave", on_leave)
+            bframe:EnableMouse(true)
             bframe.plugin = pluginObject
             bframe.id = i
             
@@ -3611,6 +3593,7 @@ do
                 bframe:SetBackdropColor(.3, .3, .3, .3)
                 bframe:SetScript("OnEnter", on_enter)
                 bframe:SetScript("OnLeave", on_leave)
+                bframe:EnableMouse(true)
 
                 bframe.id = i
                 bframe.hasDesc = allExistentToolbarPlugins [o] [4]
@@ -3630,7 +3613,17 @@ do
                 bframe ["toolbarPluginsLabel3"..i]:SetPoint("topleft", anchorFrame, "topleft", 290, y-4)
                 bframe ["toolbarPluginsLabel3"..i].color = notInstalledColor
     
-                local installButton = DF:CreateButton(bframe, function() Details:CopyPaste (allExistentToolbarPlugins [o] [5]) end, 120, 20, "Install")
+                local installButton = DF:CreateButton(bframe, function(self)
+                    local _, _, _, _, _, state = GetAddOnInfo(allExistentToolbarPlugins[o][2])
+                    if state == "DISABLED" then
+                        EnableAddOn(allExistentToolbarPlugins[o][2])
+                        StaticPopup_Show("RELOAD_UI_NEEDED")
+                        self:Disable()
+                        self:SetText("Installed (Reload UI)")
+                    elseif state == "MISSING" then
+                        Details:Msg("This plugin was not found in your game folder. You may need to install it from the launcher!")
+                    end
+                end, 120, 20, "Install")
                 installButton:SetTemplate(options_button_template)
                 installButton:SetPoint("topleft", anchorFrame, "topleft", 510, y-0)
                 
@@ -3677,6 +3670,7 @@ do
             bframe:SetBackdropColor(.3, .3, .3, .3)
             bframe:SetScript("OnEnter", on_enter)
             bframe:SetScript("OnLeave", on_leave)
+            bframe:EnableMouse(true)
             bframe.plugin = pluginObject
             bframe.id = i
             
@@ -3749,6 +3743,7 @@ do
                 bframe:SetBackdropColor(.3, .3, .3, .3)
                 bframe:SetScript("OnEnter", on_enter)
                 bframe:SetScript("OnLeave", on_leave)
+                bframe:EnableMouse(true)
 
                 bframe.id = i
                 bframe.hasDesc = allExistentRaidPlugins [o] [4]
@@ -3768,7 +3763,17 @@ do
                 bframe ["toolbarPluginsLabel3"..i]:SetPoint("topleft", anchorFrame, "topleft", 290, y-4)
                 bframe ["toolbarPluginsLabel3"..i].color = notInstalledColor
     
-                local installButton = DF:CreateButton(bframe, function() Details:CopyPaste (allExistentRaidPlugins [o] [5]) end, 120, 20, "Install")
+                local installButton = DF:CreateButton(bframe, function(self)
+                    local _, _, _, _, _, state = GetAddOnInfo(allExistentRaidPlugins[o][2])
+                    if state == "DISABLED" then
+                        EnableAddOn(allExistentRaidPlugins[o][2])
+                        StaticPopup_Show("RELOAD_UI_NEEDED")
+                        self:Disable()
+                        self:SetText("Installed (Reload UI)")
+                    elseif state == "MISSING" then
+                        Details:Msg("This plugin was not found in your game folder. You may need to install it from the launcher!")
+                    end
+                end, 120, 20, "Install")
                 installButton:SetTemplate(options_button_template)
                 installButton:SetPoint("topleft", anchorFrame, "topleft", 510, y-0)
                 
