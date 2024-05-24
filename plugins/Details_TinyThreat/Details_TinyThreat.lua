@@ -34,18 +34,14 @@ local _
 local UnitDetailedThreatSituation = UnitDetailedThreatSituation
 local _UnitDetailedThreatSituation
 
-if (detailsFramework.IsTimewalkWoW()) then
-	_UnitDetailedThreatSituation = function(source, target)
-		local isTanking, status, threatpct, rawthreatpct, threatvalue = UnitDetailedThreatSituation(source, target)
+_UnitDetailedThreatSituation = function(source, target)
+	local isTanking, status, threatpct, rawthreatpct, threatvalue = UnitDetailedThreatSituation(source, target)
 
-		if (threatvalue) then
-			threatvalue = floor(threatvalue / 100)
-		end
-
-		return isTanking, status, threatpct, rawthreatpct, threatvalue
+	if (threatvalue) then
+		threatvalue = floor(threatvalue / 100)
 	end
-else
-	_UnitDetailedThreatSituation = UnitDetailedThreatSituation
+
+	return isTanking, status, threatpct, rawthreatpct, threatvalue
 end
 
 local function CreatePluginFrames (data)
@@ -565,12 +561,7 @@ local function CreatePluginFrames (data)
 						thisRow:SetColor (_unpack (options.playercolor))
 
 					elseif (options.useclasscolors) then
-						local color = RAID_CLASS_COLORS [threatActor [5]]
-						if (color) then
-							thisRow:SetColor (color.r, color.g, color.b)
-						else
-							thisRow:SetColor (1, 1, 1, 1)
-						end
+						thisRow:SetColor(_unpack(Details.class_colors[threatActor[5]] or RAID_CLASS_COLORS["PRIEST"]))
 					else
 						if threatActor[3] then
 							-- color main tank based on highest non-tank threat
