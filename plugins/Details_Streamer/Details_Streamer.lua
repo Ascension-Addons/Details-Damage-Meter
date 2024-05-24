@@ -335,27 +335,31 @@ local function CreatePluginFrames()
 	end
 	
 	function StreamOverlay:UpdateCooldownFrame(square, inCooldown, startTime, endTime, castInfo)
-
 		if (castInfo and castInfo.Interrupted and castInfo.InterruptedPct) then
-			CooldownFrame_SetDisplayAsPercentage(square.cooldown, abs(castInfo.InterruptedPct - 1))
+			local _, curDuration = square.cooldown:GetCooldownTimes()
+			local duration = abs(castInfo.InterruptedPct - 1)
+			if not square.cooldown:IsPaused() and duration * 1000 ~= curDuration then
+				CooldownFrame_SetDisplayAsPercentage(square.cooldown, duration)
+			end
 			--square.interruptedTexture:Show()
 			return
+		else
+			square.cooldown:Resume()
 		end
 
-		if (endTime and endTime < GetTime()) then
+		if (not endTime or endTime < GetTime()) then
 			CooldownFrame_Clear(square.cooldown)
-			square.cooldown:Hide()
 			return
 		end
 
 		if (inCooldown) then
 			local duration = endTime - startTime
-			CooldownFrame_Set(square.cooldown, startTime, duration, duration > 0, true)
-			square.cooldown:Show()
-
+			local curStart, curDuration = square.cooldown:GetCooldownTimes()
+			if curStart ~= startTime or duration * 1000 ~= curDuration then
+				CooldownFrame_Set(square.cooldown, startTime, duration, duration > 0, true)
+			end
 		else
 			CooldownFrame_Clear(square.cooldown)
-			square.cooldown:Hide()
 		end
 	end
 
@@ -378,8 +382,8 @@ local function CreatePluginFrames()
 		local cooldownFrame = CreateFrame("cooldown", "$parentCooldown", newSquare, "CooldownFrameTemplate, BackdropTemplate")
 		cooldownFrame:SetAllPoints()
 		cooldownFrame:EnableMouse(false)
-		cooldownFrame:SetHideCountdownNumbers(true)
 		newSquare.cooldown = cooldownFrame
+		
 
 		StreamOverlay.squares[#StreamOverlay.squares+1] = newSquare
 		newSquare.in_use = 1
@@ -456,7 +460,6 @@ local function CreatePluginFrames()
 		end
 
 		FauxScrollFrame_Update(autoscroll, StreamOverlay.total_lines, StreamOverlay.total_lines, 20)
-
 		for index = 1, StreamOverlay.total_lines do
 			--> here gets the bar and the table with the information to shown on the bar
 			local data = StreamOverlay.battle_content [index]
@@ -539,12 +542,16 @@ local function CreatePluginFrames()
 				if (castinfo.Success) then
 					line.spark:SetVertexColor(1, 1, 1, 0.4)
 					line.spark:SetPoint("left", line.statusbar, "left", (line.statusbar:GetWidth() / 100 * percent) - 8, 0)
+					line.statusbar_texture:SetVertexColor(0, 1, 0, 0.4)
 
 				elseif (castinfo.Interrupted) then
 					line.spark:SetVertexColor(1, 0, 0, 0.4)
 					line.spark:SetPoint("left", line.statusbar, "left", (line.statusbar:GetWidth() / 100 * percent) - 8, 0)
+					line.statusbar_texture:SetVertexColor(1, 0, 0, 0.4)
+				else
+					line.statusbar_texture:SetVertexColor(unpack(StreamOverlay.db.row_color))
 				end
-				
+
 				line.in_use = data.CastStart
 				StreamOverlay:RefreshInUse (line)
 			else
@@ -562,7 +569,9 @@ local function CreatePluginFrames()
 
 		--CastStart from the cast_send
 		table.insert (StreamOverlay.battle_content, 1, {icon1, text1, color1, icon2, icon2coords, text2, color2, backgroundcolor, bordercolor, CastID = ID, CastStart = CastStart, startTime = startTime, endTime = endTime})
-		table.remove (StreamOverlay.battle_content, StreamOverlay.total_lines+1)
+		while #StreamOverlay.battle_content > StreamOverlay.total_lines do
+			table.remove (StreamOverlay.battle_content, StreamOverlay.total_lines+1)
+		end
 
 		if (StreamOverlay.db.use_square_mode) then
 			StreamOverlay:UpdateSquares()
@@ -1049,9 +1058,9 @@ function StreamOverlay:CastStart (castGUID)
 	else
 		color2 = DefaultColor
 	end
-	
+
 	target = parse_target_name (target)
-	
+
 	StreamOverlay:NewText (spellicon, spellname, color1, icon2, icon2coords, target, color2, backgroundcolor, bordercolor, castGUID, caststart, startTime, endTime)
 end
 
@@ -1090,7 +1099,6 @@ function StreamOverlay:CastFinished (castid)
 		end
 		
 		target = parse_target_name (target)
-		
 		StreamOverlay:NewText (spellicon, spellname, nil, icon2, icon2coords, target, color2, backgroundcolor, bordercolor, castid, caststart, GetTime(), GetTime()+1.2)
 	end
 end
@@ -1113,12 +1121,14 @@ eventFrame.track_spell_cast = function()
 						castinfo.Percent = 100
 						line.statusbar:SetValue (100)
 						line.spark:SetPoint ("left", line.statusbar, "left", (line.statusbar:GetWidth() / 100 * 100) - 8, 0)
+						line.statusbar_texture:SetVertexColor(0, 1, 0, 0.4)
 						--line.spark:Hide()
 						
 					elseif (castinfo.Interrupted) then
 						--> has been interrupted
 						castinfo.Done = true
 						line.spark:SetVertexColor (1, 0.7, 0)
+						line.statusbar_texture:SetVertexColor(1, 0, 0, 0.4)
 						
 					elseif (castinfo.IsChanneled) then
 						--> casting a channeled spell
@@ -1143,10 +1153,10 @@ eventFrame.track_spell_cast = function()
 							line.spark:SetVertexColor(1, 1, 1, 1)
 							line.spark:SetPoint("left", line.statusbar, "left", (line.statusbar:GetWidth() / 100 * percent) - 6, 0)
 						end
-
+						line.statusbar_texture:SetVertexColor(unpack(StreamOverlay.db.row_color))
 					else
 						--> still casting
-						local spell, displayName, icon, startTime, endTime, isTradeSkill, castID, interrupt = UnitCastingInfo("player")
+						local spell, rank, displayName, icon, startTime, endTime, isTradeSkill, castID, interrupt = UnitCastingInfo("player")
 						if (spell) then
 							startTime = startTime / 1000
 							endTime = endTime / 1000
@@ -1165,6 +1175,7 @@ eventFrame.track_spell_cast = function()
 							line.spark:SetVertexColor(1, 1, 1, 1)
 							line.spark:SetPoint("left", line.statusbar, "left", (line.statusbar:GetWidth() / 100 * percent) - 6, 0)
 						end
+						line.statusbar_texture:SetVertexColor(unpack(StreamOverlay.db.row_color))
 					end
 					
 				else
@@ -1174,6 +1185,7 @@ eventFrame.track_spell_cast = function()
 						castinfo.Percent = 100
 						line.statusbar:SetValue (100)
 						line.spark:SetPoint ("left", line.statusbar, "left", (line.statusbar:GetWidth() / 100 * 100) - 8, 0)
+						line.statusbar_texture:SetVertexColor(0, 1, 0, 0.4)
 						--line.spark:Hide()
 					else
 						local startTime = castinfo.CastStart
@@ -1194,6 +1206,7 @@ eventFrame.track_spell_cast = function()
 						
 						line.spark:SetVertexColor (1, 1, 1, 1)
 						line.spark:SetPoint ("left", line.statusbar, "left", (line.statusbar:GetWidth() / 100 * percent) - 6, 0)
+						line.statusbar_texture:SetVertexColor(unpack(StreamOverlay.db.row_color))
 					end
 				end
 				
@@ -1243,7 +1256,7 @@ eventFrame.track_spell_cast = function()
 
 					else
 						--> still casting
-						local spell, displayName, icon, startTime, endTime, isTradeSkill, castID, interrupt = UnitCastingInfo ("player")
+						local spell, rank, displayName, icon, startTime, endTime, isTradeSkill, castID, interrupt = UnitCastingInfo ("player")
 						if (spell) then
 							startTime = startTime / 1000
 							endTime = endTime / 1000
@@ -1278,7 +1291,7 @@ eventFrame.track_spell_cast = function()
 
 			elseif (castinfo.Done and line) then
 				if (castinfo.Interrupted and castinfo.InterruptedPct) then
-					StreamOverlay:UpdateCooldownFrame(line, true, castinfo.CastTimeStart, castinfo.InterruptedTime, castinfo)
+					StreamOverlay:UpdateCooldownFrame(line, true, castinfo.CastStart, castinfo.InterruptedTime, castinfo)
 				end
 			end
 		end
@@ -1297,11 +1310,6 @@ function eventFrame:RegisterMyEvents()
 	eventFrame:RegisterEvent ("UNIT_SPELLCAST_CHANNEL_STOP")
 	eventFrame:RegisterEvent ("UNIT_SPELLCAST_CHANNEL_UPDATE")
 	eventFrame:RegisterEvent ("UNIT_SPELLCAST_STOP")
-
-	if (not DetailsFramework.IsTBCWow() and not DetailsFramework.IsWotLKWow()) then
-		eventFrame:RegisterEvent ("UNIT_SPELLCAST_INTERRUPTIBLE")
-		eventFrame:RegisterEvent ("UNIT_SPELLCAST_NOT_INTERRUPTIBLE")
-	end
 end
 
 function eventFrame:UnregisterMyEvents()
@@ -1316,14 +1324,9 @@ function eventFrame:UnregisterMyEvents()
 	eventFrame:UnregisterEvent ("UNIT_SPELLCAST_CHANNEL_STOP")
 	eventFrame:UnregisterEvent ("UNIT_SPELLCAST_CHANNEL_UPDATE")
 	eventFrame:UnregisterEvent ("UNIT_SPELLCAST_STOP")
-
-	if (not DetailsFramework.IsTBCWow() and not DetailsFramework.IsWotLKWow()) then
-		eventFrame:UnregisterEvent ("UNIT_SPELLCAST_INTERRUPTIBLE")
-		eventFrame:UnregisterEvent ("UNIT_SPELLCAST_NOT_INTERRUPTIBLE")
-	end
 end
 
-local lastspell, lastcastid, lastchannelid, ischanneling, lastspellID
+local lastspell, lastcastid, lastchannelid, ischanneling, lastspellID, lastCastSentTime, lastTarget
 local channelspells = {}
 local lastChannelSpell = ""
 
@@ -1340,7 +1343,10 @@ APM_FRAME:RegisterEvent ("PLAYER_STOPPED_MOVING")
 APM_FRAME:SetScript ("OnEvent", function()
 	ACTIONS = ACTIONS + 1
 end)
-
+local GetSpellID = function (spellName, spellRank)
+	local spellID = tonumber(string.match(GetSpellLink(spellName, spellRank) or "", "Hspell:(%d+)"))
+	return spellID
+end
 eventFrame:SetScript ("OnEvent", function (self, event, ...)
 	if (event ~= "UNIT_SPELLCAST_SENT" and event ~= "UNIT_SPELLCAST_SUCCEEDED" and ACTIONS_EVENT_TIME [event] ~= GetTime()) then
 		ACTIONS = ACTIONS + 1
@@ -1348,36 +1354,34 @@ eventFrame:SetScript ("OnEvent", function (self, event, ...)
 	end
 
 	if (event == "UNIT_SPELLCAST_SENT") then
-		local unitID, target, castGUID, spellID = ...
-		--local unitID, spell, rank, target, id = ...
-		local spell = GetSpellInfo (spellID)
-		
+		local unitID, spellName, spellRank, target = ...
 		if (unitID == "player") then
-			CastsTable [castGUID] = {Target = target or "", Id = castGUID, CastStart = GetTime()}
-			lastChannelSpell = castGUID
-			lastspell = spell
-			lastspellID = spellID
-			lastcastid = castGUID
+			local spellID = GetSpellID(spellName, spellRank)
+			if spellID then
+				lastTarget = target
+				lastspellID = spellID
+				lastchannelid = spellID
+				lastCastSentTime = GetTime()
+			end
 		end
 	
 	elseif (event == "UNIT_SPELLCAST_START") then
-		--spell, rank, id, 
-		local unitID, castGUID, spellID = ...
-		
-		if (unitID == "player" and CastsTable [castGUID]) then
-			CastsTable [castGUID].SpellId = spellID
-			CastsTable [castGUID].HasCastTime = true
+		local unitID, spellName, spellRank, castGUID = ...
+		local spellID = GetSpellID(spellName, spellRank)
+		if (unitID == "player" and lastspellID == spellID) then
+			CastsTable [castGUID] = {Target = lastTarget or "", Id = castGUID, SpellId = spellID, CastStart = lastCastSentTime, HasCastTime = true}
+			lastChannelSpell = castGUID
+			lastspell = spell
+			lastcastid = castGUID
 
-			local name, text, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellId = UnitCastingInfo("player")
+			local name, rank, displayName, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellId = UnitCastingInfo("player")
 			CastsTable [castGUID].CastTimeStart = startTime / 1000
 			CastsTable [castGUID].CastTimeEnd = endTime / 1000
-
 			StreamOverlay:CastStart(castGUID)
 		end
 	
 	elseif (event == "UNIT_SPELLCAST_INTERRUPTED") then
-		--local unitID, spell, rank, id, spellID = ...
-		local unitID, castGUID, spellID = ...
+		local unitID, spellName, spellRank, castGUID = ...
 		
 		if (unitID == "player" and CastsTable [castGUID]) then
 			CastsTable [castGUID].Interrupted = true
@@ -1386,8 +1390,7 @@ eventFrame:SetScript ("OnEvent", function (self, event, ...)
 
 	--> channels isn't passing the CastID / cast id for channels is always Zero.
 	elseif (event == "UNIT_SPELLCAST_CHANNEL_STOP") then
-		--local unitID, spell, rank, id, spellID = ...
-		local unitID, castGUID, spellID = ...
+		local unitID, spellName, spellRank, castGUID = ...
 		
 		if (unitID == "player") then
 			castGUID = lastchannelid
@@ -1406,10 +1409,10 @@ eventFrame:SetScript ("OnEvent", function (self, event, ...)
 	
 	elseif (event == "UNIT_SPELLCAST_CHANNEL_START") then
 		
-		local unitID, castGUID, spellID = ...
-		
+		local unitID, spellName, spellRank = ...
+		local spellID = GetSpellID(spellName, spellRank)
 		if (unitID == "player" and (CastsTable [castGUID] or spellID == lastspellID)) then
-			if (castGUID == "" or not castGUID) then
+			if (not castGUID) then
 				castGUID = lastcastid
 			end
 			
@@ -1441,19 +1444,18 @@ eventFrame:SetScript ("OnEvent", function (self, event, ...)
 	
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED") then
 		--local unitID, spell, rank, id, spellID = ...
-		local unitID, castGUID, spellID = ...
-		local spell = GetSpellInfo (spellID)
-		
-		if (unitID == "player" and CastsTable[castGUID] and not channelspells [spell]) then
-			if (CastsTable[castGUID].HasCastTime and not CastsTable[castGUID].IsChanneled) then
-				--> a cast (non channeled) just successful finished
-				CastsTable [castGUID].Success = true
-				StreamOverlay:CastFinished (castGUID)
-				
-			elseif (not CastsTable[castGUID].HasCastTime) then
-				--> instant cast finished
-				CastsTable [castGUID].SpellId = spellID
-				CastsTable [castGUID].Success = true
+		local unitID, spellName, spellRank, castGUID = ...
+		local spellID = GetSpellID(spellName, spellRank)
+		if (unitID == "player" and lastspellID == spellID and not channelspells [spellName]) then
+			if (CastsTable[castGUID]) then
+				if (CastsTable[castGUID].HasCastTime and not CastsTable[castGUID].IsChanneled) then
+					--> a cast (non channeled) just successful finished
+					CastsTable [castGUID].Success = true
+					StreamOverlay:CastFinished (castGUID)
+				end
+			else
+				--> instant cast
+				CastsTable [castGUID] = {Target = lastTarget or "", Id = castGUID, SpellId = spellID, CastStart = lastCastSentTime, HasCastTime = false, Success = true }
 				StreamOverlay:CastFinished (castGUID)
 			end
 		end
@@ -1465,16 +1467,15 @@ local format_time = function (v) return "-" .. format ("%.2f", v) end
 
 --when the player die, show the events before the death
 function StreamOverlay.OnDeath (_, token, time, who_serial, who_name, who_flags, alvo_serial, alvo_name, alvo_flags, death_table, last_cooldown, death_at_combattime, max_health)
-
 	if (alvo_serial ~= UnitGUID ("player")) then
 		return
 	end
 
 	StreamOverlay:ClearAll()
-
-	for i = 1, #death_table do
-		local ev = death_table [i]
-		if (ev and type (ev) == "table" and ev[1] and type (ev[1]) == "boolean") then
+	local lastEvents = death_table[1]
+	for i = #lastEvents, 1, -1 do
+		local ev = lastEvents[i]
+		if (ev and type (ev) == "table" and type(ev[1]) == "boolean") then
 			--> it's a damage
 			local spellid = ev[2]
 			local amount = ev[3]
@@ -1525,7 +1526,7 @@ function StreamOverlay.OnDeath (_, token, time, who_serial, who_name, who_flags,
 			
 			--adds the text to the line
 			StreamOverlay:NewText (spellicon, at .. " | " .. damage_color .. StreamOverlay:ToK2 (amount) .. "|r (" .. spellname .. ")", {1, 1, 1, 1}, classIcon, {l, r, t, b}, source, {r=1, g=1, b=1}, {1, 1, 1, 0.6}, {0, 0, 0}, CastInfoIndex, GetTime())
-			
+			break
 --			:NewText (icon1, text1, color1, icon2, icon2coords, text2, color2, backgroundcolor, bordercolor, ID, CastStart)
 		end
 	end
@@ -2435,13 +2436,6 @@ function StreamOverlay:OnEvent (_, event, ...)
 
 				if (StreamOverlay.db.is_first_run and not Details:GetTutorialCVar ("STREAMER_PLUGIN_FIRSTRUN")) then
 					local show_frame = function()
-
-						if ("Don't Show The Welcome Screen") then
-							StreamOverlay.db.is_first_run = false
-							Details:DisablePlugin ("DETAILS_PLUGIN_STREAM_OVERLAY")
-							return
-						end
-
 						if ((DetailsWelcomeWindow and DetailsWelcomeWindow:IsShown()) or not StreamOverlay.db.is_first_run) then
 							return
 						end

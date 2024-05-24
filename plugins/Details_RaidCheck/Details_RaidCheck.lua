@@ -527,6 +527,7 @@ local CreatePluginFrames = function()
 					DetailsRaidCheck:SendMsgToChannel(reportString, "PARTY")
 				end
 			end
+		end
 	end)
 
 	local updateRaidCheckFrame = function(self, deltaTime) --~update
