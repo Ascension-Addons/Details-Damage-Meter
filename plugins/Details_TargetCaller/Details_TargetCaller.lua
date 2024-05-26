@@ -118,22 +118,19 @@ do
 	end
 	
 	function targetCaller.UpdateRoster()
-		local unitType = IsInRaid() and "raid" or "party"
-		
 		--> update the hash table (this is in case if we need to get a single actor, so we do rosterTable [rosterHashTable [name]])
 		for index, actor in ipairs (rosterTable) do
 			rosterHashTable [actor.name] = index
 		end
 		
 		--> update raid members
-		for i = 1, GetNumGroupMembers() do
-			local unit = "" .. unitType .. i
+		for unit in GroupUtil.EnumerateGroupMembers() do
 			local name = GetUnitName (unit, true)
-			if (not rosterHashTable [name] and not UnitIsUnit (unit, "player")) then
+			if (not rosterHashTable [name]) then
 				local actor = {}
 				actor.name = name
 				actor.displayName = targetCaller:GetOnlyName (name) or name or ""
-				actor.class = select (2, UnitClass (unit)) or "PRIEST"
+				actor.class = select (2, UnitClass (unit)) or "HERO"
 				actor.total = 0
 				actor.overall = 0
 				actor.breakpoint = 0
