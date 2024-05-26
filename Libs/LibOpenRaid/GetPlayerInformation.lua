@@ -51,6 +51,10 @@ function openRaidLib.UnitInfoManager.GetPlayerPvPTalents()
     -- talentsPvP[index] = talentID
 end
 
+function openRaidLib.UnitInfoManager.GetPlayerLegendaryEnchant()
+    return IsHeroClass("player") and MysticEnchantUtil.GetLegendaryEnchantID("player") or 0
+end
+
 --return the current specId of the player
 function openRaidLib.GetPlayerSpecId()
     return GetSpecialization() or 1

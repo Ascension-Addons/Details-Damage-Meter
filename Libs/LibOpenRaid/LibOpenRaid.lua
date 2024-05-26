@@ -91,6 +91,7 @@ end
     local CONST_COMM_PLAYERINFO_PREFIX = "P"
     local CONST_COMM_PLAYERINFO_TALENTS_PREFIX = "T"
     local CONST_COMM_PLAYERINFO_PVPTALENTS_PREFIX = "V"
+    local CONST_COMM_PLAYERINFO_LEGENDARY_PREFIX = "L"
 
     local CONST_COMM_KEYSTONE_DATA_PREFIX = "K"
     local CONST_COMM_KEYSTONE_DATAREQUEST_PREFIX = "J"
@@ -765,6 +766,7 @@ end
         ["playerPetChange"] = {},
         ["mythicDungeonEnd"] = {},
         ["unitAuraRemoved"] = {},
+        ["legendaryEnchantUpdate"] = {},
     }
 
     openRaidLib.internalCallback.RegisterCallback = function(event, func)
@@ -904,6 +906,10 @@ end
             openRaidLib.internalCallback.TriggerEvent("pvpTalentUpdate")
         end,
 
+        ["MYSTIC_ENCHANT_SLOT_UPDATE"] = function(...)
+            openRaidLib.internalCallback.TriggerEvent("legendaryEnchantUpdate")
+        end,
+
         ["PLAYER_DEAD"] = function(...)
             openRaidLib.mainControl.UpdatePlayerAliveStatus()
         end,
@@ -998,6 +1004,7 @@ end
         eventFrame:RegisterEvent("MYTHIC_PLUS_STARTED")
         eventFrame:RegisterEvent("MYTHIC_PLUS_COMPLETE")
         eventFrame:RegisterEvent("ASCENSION_KNOWN_ENTRIES_UPDATED")
+        eventFrame:RegisterEvent("MYSTIC_ENCHANT_SLOT_UPDATE")
     end
 
 
@@ -1244,7 +1251,7 @@ end
         table.wipe(openRaidLib.UnitInfoManager.UnitData)
     end
 
-    function openRaidLib.UnitInfoManager.SetUnitInfo(unitName, unitInfo, specId, renown, covenantId, talentsTableUnpacked, conduitsTableUnpacked, pvpTalentsTableUnpacked)
+    function openRaidLib.UnitInfoManager.SetUnitInfo(unitName, unitInfo, specId, legendaryEnchant, covenantId, talentsTableUnpacked, conduitsTableUnpacked, pvpTalentsTableUnpacked)
         local className, classString, classId = UnitClass(unitName)
 
         --cold login bug where the player class info cannot be retrived by the player name, after a /reload it's all good
@@ -1287,7 +1294,7 @@ end
         unitInfo.specId = specId or unitInfo.specId
         unitInfo.specName = specName or unitInfo.specName
         unitInfo.role = role or "DAMAGER"
-        unitInfo.renown = renown or unitInfo.renown
+        unitInfo.legendaryEnchant = legendaryEnchant or unitInfo.legendaryEnchant
         unitInfo.covenantId = covenantId or unitInfo.covenantId
         unitInfo.talents = talentsTableUnpacked or unitInfo.talents
         unitInfo.conduits = conduitsTableUnpacked or unitInfo.conduits
@@ -1375,11 +1382,12 @@ end
 --index 5: talents 2: borrowed power talents: length vary from expansions
 --index 6: talents 3: pvp talents
 function openRaidLib.UnitInfoManager.GetPlayerFullInfo()
-    local specId = GetSpecialization() or 1
+    local specId = openRaidLib.GetPlayerSpecId()
+    local mysticEnchant = openRaidLib.UnitInfoManager.GetPlayerLegendaryEnchant()
 
-    --indexes: specId, renown, covenant, talent, conduits, pvp talents
+    --indexes: specId, legendaryRE, covenant, talent, conduits, pvp talents
     --return a placeholder table
-    return {specId, 0, 0, {0, 0, 0, 0, 0, 0, 0}, {0, 0}, {0}}
+    return {specId, mysticEnchant, 0, {0, 0, 0, 0, 0, 0, 0}, {0, 0}, {0}}
 end
 
 --talent update (when the player changes a talent and the lib needs to notify other players in the group)
@@ -1490,6 +1498,48 @@ function openRaidLib.UnitInfoManager.OnLeaveCombat()
 end
 openRaidLib.internalCallback.RegisterCallback("onLeaveCombat", openRaidLib.UnitInfoManager.OnLeaveCombat)
 
+--legendary enchant update (when the player changes their mystic enchants the lib needs to notify other players in the group)
+function openRaidLib.UnitInfoManager.SendLegendaryEnchantUpdate()
+    --legendary enchant
+    local playerName = UnitName("player")
+    local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo(playerName, true)
+    local legendaryEnchant = openRaidLib.UnitInfoManager.GetPlayerLegendaryEnchant()
+    unitInfo.legendaryEnchant = legendaryEnchant
+
+    local dataToSend = "" .. CONST_COMM_PLAYERINFO_LEGENDARY_PREFIX .. ","
+    dataToSend = dataToSend .. legendaryEnchant
+
+    --send the data
+    openRaidLib.commHandler.SendCommData(dataToSend)
+    diagnosticComm("SendLegendaryEnchantUpdateData| " .. dataToSend) --debug
+end
+
+function openRaidLib.UnitInfoManager.OnPlayerLegendaryEnchantChanged()
+    --update the local player
+    local playerName = UnitName("player")
+    local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo(playerName, true)
+    local legendaryEnchant = openRaidLib.UnitInfoManager.GetPlayerLegendaryEnchant()
+    unitInfo.legendaryEnchant = legendaryEnchant
+
+    --schedule send to the group
+    openRaidLib.Schedules.NewUniqueTimer(1 + math.random(0, 1), openRaidLib.UnitInfoManager.SendLegendaryEnchantUpdate, "UnitInfoManager", "sendLegendaryEnchant_Schedule")
+
+    --trigger public callback event
+    openRaidLib.publicCallback.TriggerCallback("LegendaryEnchantUpdate", "player", legendaryEnchant, unitInfo, openRaidLib.UnitInfoManager.GetAllUnitsInfo())
+end
+openRaidLib.internalCallback.RegisterCallback("legendaryEnchantUpdate", openRaidLib.UnitInfoManager.OnPlayerLegendaryEnchantChanged)
+
+function openRaidLib.UnitInfoManager.OnReceiveLegendaryEnchantUpdate(data, unitName)
+    local legendaryEnchant = tonumber(data[1])
+
+    local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo(unitName, true)
+    if (unitInfo) then
+        unitInfo.legendaryEnchant = legendaryEnchant
+        --trigger public callback event
+        openRaidLib.publicCallback.TriggerCallback("LegendaryEnchantUpdate", openRaidLib.GetUnitID(unitName), legendaryEnchant, unitInfo, openRaidLib.UnitInfoManager.GetAllUnitsInfo())
+    end
+end
+openRaidLib.commHandler.RegisterComm(CONST_COMM_PLAYERINFO_LEGENDARY_PREFIX, openRaidLib.UnitInfoManager.OnReceiveLegendaryEnchantUpdate)
 
 --------------------------------------------------------------------------------------------------------------------------------
 --~equipment
