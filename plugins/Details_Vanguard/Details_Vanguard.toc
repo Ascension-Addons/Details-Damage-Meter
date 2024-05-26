@@ -8,9 +8,4 @@
 ## X-IconTexture: Interface\AddOns\Details\images\minimap
 
 ## X-Wago-ID: ZQ6abgKW
-
-#@no-lib-strip@
-embeds.xml
-#@end-no-lib-strip@
-
 Details_Vanguard.lua
