@@ -3502,13 +3502,13 @@ do
             {"DETAILS_PLUGIN_ENCOUNTER_DETAILS", "Details_EncounterDetails", "Encounter Breakdown", "Show detailed information about a boss encounter. Also provide damage per phase, graphic charts, easy weakauras creation.", ""},
             {"DETAILS_PLUGIN_RAIDCHECK", "Details_RaidCheck", "Raid Check", "Show talents and item level for all members in your group, also shows food and flask state.", ""},
             {"DETAILS_PLUGIN_STREAM_OVERLAY", "Details_Streamer", "Action Tracker", "Show which spells you are casting, viewers can see what are you doing and follow your steps.", ""},
-        }
+            }
     
         local allExistentRaidPlugins = {
             {"DETAILS_PLUGIN_COMPARETWO_WINDOW", "Details_Compare2", "Compare 2.0", "Replace the Compare tab in the player breakdown window.", ""},
-            {"DETAILS_PLUGIN_TARGET_CALLER", "Details_TargetCaller", "Target Caller", "Show raid damage done to an entity since you targetted it.", "https://www.curseforge.com/wow/addons/details-target-caller-plugin"},
+            {"DETAILS_PLUGIN_TARGET_CALLER", "Details_TargetCaller", "racks your current target and show in the window who is doing damage to it. The amount of damage shown is the amount dealt since you selected the target.", ""},
             {"DETAILS_PLUGIN_TINY_THREAT", "Details_TinyThreat", "Tiny Threat", "Threat meter plugin, show threat for group members in the window. Select it from the Plugin menu in the Orange Cogwheel.", ""},
-            {"DETAILS_PLUGIN_VANGUARD", "Details_Vanguard", "Vanguard", "Show the health and debuffs for tanks in your group.", ""}
+            --{"DETAILS_PLUGIN_VANGUARD", "Details_Vanguard", "Vanguard", "Show the health and debuffs for tanks in your group.", ""}
         }
     
         local installedToolbarPlugins = {}

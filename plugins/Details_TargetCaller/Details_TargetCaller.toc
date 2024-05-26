@@ -1,0 +1,22 @@
+## Interface: 30300
+## Title: Details Target Caller
+## DefaultState: disabled
+## Notes: racks your current target and show in the window who is doing damage to it. The amount of damage shown is the amount dealt since you selected the target.
+## RequiredDeps: Details
+
+## X-Curse-Project-ID: 95101
+## X-Wago-ID: 0mKOpYGx
+
+locales\enUS.lua
+locales\deDE.lua
+locales\esES.lua
+locales\esMX.lua
+locales\frFR.lua
+locales\itIT.lua
+locales\koKR.lua
+locales\ptBR.lua
+locales\ruRU.lua
+locales\zhCN.lua
+locales\zhTW.lua
+
+Details_TargetCaller.lua
