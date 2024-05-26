@@ -109,7 +109,7 @@ unitInfo = {
     .specId = number
     .specName = string
     .role = string
-    .renown = number
+    .legendaryEnchant = number
     .covenantId = number
     .talents = {talentId, talentId, talentId, ...}
     .pvpTalents = {talentId, talentId, talentId}
@@ -369,7 +369,7 @@ function MyAddonObject.OnUnitUpdate(unitId, unitInfo, allUnitsInfo)
         local specId = unitInfo.specId
         local specName = unitInfo.specName
         local role = unitInfo.role
-        local renown = unitInfo.renown
+        local legendaryEnchant = unitInfo.legendaryEnchant
         local covenantId = unitInfo.covenantId
         local talents = unitInfo.talents
         local pvpTalents = unitInfo.pvpTalents
