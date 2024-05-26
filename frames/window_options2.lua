@@ -462,7 +462,3 @@ function Details:OpenOptionsWindow(instance, bNoReopen, section)
 
     DetailsPluginContainerWindowMenuFrame:SetColor(unpack(Details.frame_background_color))
 end
-
-function Details:OpenOptionsPanel(instance, bNoReopen, section) --alias
-    Details:OpenOptionsWindow(instance, bNoReopen, section)
-end
