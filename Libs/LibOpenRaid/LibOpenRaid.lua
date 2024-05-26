@@ -1220,7 +1220,7 @@ end
             specId = 0,
             specName = "",
             role = "",
-            renown = 1,
+            legendaryEnchant = 0,
             covenantId = 0,
             talents = {},
             conduits = {},
@@ -1306,9 +1306,9 @@ end
         unitInfo.nameFull = unitName
     end
 
-    function openRaidLib.UnitInfoManager.AddUnitInfo(unitName, specId, renown, covenantId, talentsTableUnpacked, conduitsTableUnpacked, pvpTalentsTableUnpacked)
+    function openRaidLib.UnitInfoManager.AddUnitInfo(unitName, specId, legendaryEnchant, covenantId, talentsTableUnpacked, conduitsTableUnpacked, pvpTalentsTableUnpacked)
         local unitInfo = openRaidLib.UnitInfoManager.GetUnitInfo(unitName, true)
-        openRaidLib.UnitInfoManager.SetUnitInfo(unitName, unitInfo, specId, renown, covenantId, talentsTableUnpacked, conduitsTableUnpacked, pvpTalentsTableUnpacked)
+        openRaidLib.UnitInfoManager.SetUnitInfo(unitName, unitInfo, specId, legendaryEnchant, covenantId, talentsTableUnpacked, conduitsTableUnpacked, pvpTalentsTableUnpacked)
         openRaidLib.publicCallback.TriggerCallback("UnitInfoUpdate", openRaidLib.GetUnitID(unitName), openRaidLib.UnitInfoManager.UnitData[unitName], openRaidLib.UnitInfoManager.GetAllUnitsInfo())
     end
 
