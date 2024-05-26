@@ -3506,7 +3506,7 @@ do
     
         local allExistentRaidPlugins = {
             {"DETAILS_PLUGIN_COMPARETWO_WINDOW", "Details_Compare2", "Compare 2.0", "Replace the Compare tab in the player breakdown window.", ""},
-            {"DETAILS_PLUGIN_TARGET_CALLER", "Details_TargetCaller", "racks your current target and show in the window who is doing damage to it. The amount of damage shown is the amount dealt since you selected the target.", ""},
+            {"DETAILS_PLUGIN_TARGET_CALLER", "Details_TargetCaller", "Target Caller", "Tracks your current target and show in the window who is doing damage to it. The amount of damage shown is the amount dealt since you selected the target.", ""},
             {"DETAILS_PLUGIN_TINY_THREAT", "Details_TinyThreat", "Tiny Threat", "Threat meter plugin, show threat for group members in the window. Select it from the Plugin menu in the Orange Cogwheel.", ""},
             --{"DETAILS_PLUGIN_VANGUARD", "Details_Vanguard", "Vanguard", "Show the health and debuffs for tanks in your group.", ""}
         }
