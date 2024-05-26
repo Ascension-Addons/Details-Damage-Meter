@@ -1069,7 +1069,6 @@ function StreamOverlay:CastFinished (castid)
 	local target = CastsTable [castid].Target
 	local caststart = CastsTable [castid].CastStart
 	local hascasttime = CastsTable [castid].HasCastTime
-	
 	if (ignoredSpells [spellid]) or not spellid then
 		return
 	end
@@ -1366,18 +1365,18 @@ eventFrame:SetScript ("OnEvent", function (self, event, ...)
 		end
 	
 	elseif (event == "UNIT_SPELLCAST_START") then
-		local unitID, spellName, spellRank, castGUID = ...
-		local spellID = GetSpellID(spellName, spellRank)
-		if (unitID == "player" and lastspellID == spellID) then
-			CastsTable [castGUID] = {Target = lastTarget or "", Id = castGUID, SpellId = spellID, CastStart = lastCastSentTime, HasCastTime = true}
-			lastChannelSpell = castGUID
-			lastspell = spell
-			lastcastid = castGUID
-
-			local name, rank, displayName, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellId = UnitCastingInfo("player")
-			CastsTable [castGUID].CastTimeStart = startTime / 1000
-			CastsTable [castGUID].CastTimeEnd = endTime / 1000
-			StreamOverlay:CastStart(castGUID)
+		local unitID, _, _, castGUID = ...
+		if unitID == "player" then
+			local name, rank, displayName, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID = UnitCastingInfo("player")
+			if (lastspellID == spellID) then
+				CastsTable [castGUID] = {Target = lastTarget or "", Id = castGUID, SpellId = spellID, CastStart = lastCastSentTime, HasCastTime = true}
+				lastChannelSpell = castGUID
+				lastspell = spell
+				lastcastid = castGUID
+				CastsTable [castGUID].CastTimeStart = startTime / 1000
+				CastsTable [castGUID].CastTimeEnd = endTime / 1000
+				StreamOverlay:CastStart(castGUID)
+			end
 		end
 	
 	elseif (event == "UNIT_SPELLCAST_INTERRUPTED") then
@@ -1411,42 +1410,45 @@ eventFrame:SetScript ("OnEvent", function (self, event, ...)
 		
 		local unitID, spellName, spellRank = ...
 		local spellID = GetSpellID(spellName, spellRank)
-		if (unitID == "player" and (CastsTable [castGUID] or spellID == lastspellID)) then
-			if (not castGUID) then
-				castGUID = lastcastid
-			end
-			
-			if (ischanneling) then
-				--> channel updated
-				CastsTable [lastchannelid].Interrupted = true
-				CastsTable [lastchannelid].InterruptedTime = GetTime()
-			end
-			
-			if (not CastsTable [castGUID]) then
-				castGUID = lastChannelSpell
-			end
-			
-			CastsTable [castGUID].HasCastTime = true
-			CastsTable [castGUID].IsChanneled = true
-			CastsTable [castGUID].SpellId = spellID
-			lastchannelid = castGUID
-			ischanneling = true
+		if (unitID == "player") then
+			local name, rank, displayName, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID = UnitChannelInfo("player")
+			if spellID == lastspellID then
+				if not castID then
+					return
+				end
+				local castGUID = castID
+				
+				if (ischanneling) then
+					--> channel updated
+					CastsTable [lastchannelid].Interrupted = true
+					CastsTable [lastchannelid].InterruptedTime = GetTime()
+				end
+				
+				if (not CastsTable [castGUID]) then
+					castGUID = lastChannelSpell
+				end
+				
+				CastsTable [castGUID].HasCastTime = true
+				CastsTable [castGUID].IsChanneled = true
+				CastsTable [castGUID].SpellId = spellID
+				lastchannelid = castGUID
+				ischanneling = true
 
-			local name, text, texture, startTime, endTime, isTradeSkill, notInterruptible, spellId = UnitChannelInfo("player")
-			CastsTable [castGUID].CastTimeStart = startTime / 1000
-			CastsTable [castGUID].CastTimeEnd = endTime / 1000
-			
-			local spell = GetSpellInfo(spellID)
-			channelspells[spell] = true
-			
-			StreamOverlay:CastStart(castGUID)
+				CastsTable [castGUID].CastTimeStart = startTime / 1000
+				CastsTable [castGUID].CastTimeEnd = endTime / 1000
+				
+				local spell = GetSpellInfo(spellID)
+				channelspells[spell] = true
+				
+				StreamOverlay:CastStart(castGUID)
+			end
 		end
 	
 	elseif (event == "UNIT_SPELLCAST_SUCCEEDED") then
 		--local unitID, spell, rank, id, spellID = ...
 		local unitID, spellName, spellRank, castGUID = ...
 		local spellID = GetSpellID(spellName, spellRank)
-		if (unitID == "player" and lastspellID == spellID and not channelspells [spellName]) then
+		if (unitID == "player" and spellID and lastspellID == spellID and not channelspells [spellName]) then
 			if (CastsTable[castGUID]) then
 				if (CastsTable[castGUID].HasCastTime and not CastsTable[castGUID].IsChanneled) then
 					--> a cast (non channeled) just successful finished
