@@ -415,6 +415,7 @@ end
         [CONST_COMM_PLAYERINFO_PVPTALENTS_PREFIX] = {}, --pvp talents info
         [CONST_COMM_KEYSTONE_DATA_PREFIX] = {}, --received keystone data
         [CONST_COMM_KEYSTONE_DATAREQUEST_PREFIX] = {}, --received a request to send keystone data
+        [CONST_COMM_PLAYERINFO_LEGENDARY_PREFIX] = {}, --received a legendary enchant update
     }
 
     function openRaidLib.commHandler.RegisterComm(prefix, func)
