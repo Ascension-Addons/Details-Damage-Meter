@@ -33,7 +33,7 @@ function DF:CreateCoolTip()
 		return
 	end
 
-	local maxStatusBarValue = 100000000
+	local maxStatusBarValue = 100
 
 	local defaultBackdrop = {bgFile = [[Interface\Tooltips\UI-Tooltip-Background]], edgeFile = [[Interface\Buttons\WHITE8X8]], edgeSize = 1,
 	tile = true, tileSize = 16, insets = {left = 0, right = 0, top = 0, bottom = 0}}
@@ -1353,9 +1353,10 @@ function DF:CreateCoolTip()
 		menuButton.spark:SetAlpha(sparkAlpha)
 
 		menuButton.spark:ClearAllPoints()
-		menuButton.spark:SetPoint("left", menuButton.statusbar, "left", (menuButton.statusbar:GetValue() * (menuButton.statusbar:GetWidth() / 100)) - 5 + positionXOffset, 0 + positionYOffset)
+		local width = (menuButton.statusbar:GetWidth() - 20) / 100
+		menuButton.spark:SetPoint("left", menuButton.statusbar, "left", (menuButton.statusbar:GetValue() * width) - 5 + positionXOffset, 0 + positionYOffset)
 		menuButton.spark2:ClearAllPoints()
-		menuButton.spark2:SetPoint("left", menuButton.statusbar, "left", menuButton.statusbar:GetValue() * (menuButton.statusbar:GetWidth()/100) - 16 + positionXOffset, 0 + positionYOffset)
+		menuButton.spark2:SetPoint("left", menuButton.statusbar, "left", (menuButton.statusbar:GetValue() * width) - 16 + positionXOffset, 0 + positionYOffset)
 	end
 
 	function gameCooltip:StatusBar(menuButton, statusBarSettings)
@@ -1372,6 +1373,7 @@ function DF:CreateCoolTip()
 			end
 
 			if (statusBarSettings[7]) then
+				
 				menuButton.statusbar2:SetValue(Clamp(statusBarSettings[7].value, 0, maxStatusBarValue))
 				menuButton.statusbar2.texture:SetTexture(statusBarSettings[7].texture or [[Interface\RaidFrame\Raid-Bar-Hp-Fill]])
 				if (statusBarSettings[7].specialSpark) then
@@ -1751,7 +1753,7 @@ function DF:CreateCoolTip()
 		end
 
 		frame2:EnableMouse(false)
-
+		
 		--width
 		if (gameCooltip.OptionsTable.FixedWidthSub) then
 			frame2:SetWidth(gameCooltip.OptionsTable.FixedWidthSub)
@@ -2128,6 +2130,10 @@ function DF:CreateCoolTip()
 		--fix sparks
 		for i = 1, gameCooltip.Indexes do
 			local menuButton = frame1.Lines[i]
+			local width = frame1:GetWidth()
+			menuButton:SetWidth(width)
+			menuButton.statusbar:SetWidth(width)
+			menuButton.statusbar2:SetWidth(width)
 			if (menuButton.spark:IsShown() or menuButton.spark2:IsShown()) then
 				gameCooltip:RefreshSpark(menuButton)
 			end
