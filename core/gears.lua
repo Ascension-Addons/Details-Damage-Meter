@@ -1704,7 +1704,7 @@ function Details.Database.StoreEncounter(combat)
 
 
 	--check for heroic and mythic
-	if (storageDebug or (diff == 15 or diff == 16 or diff == 14)) then --test on raid finder:  ' or diff == 17' -- normal mode: diff == 14 or
+	if (storageDebug or (diff == 1 or diff == 2 or diff == 3 or diff == 4)) then --test on raid finder:  ' or diff == 17' -- normal mode: diff == 14 or
 
 		--check the guild name
 		local match = 0
@@ -1757,7 +1757,7 @@ function Details.Database.StoreEncounter(combat)
 			local role = UnitGroupRolesAssigned("raid" .. i)
 
 			if (UnitIsInMyGuild ("raid" .. i)) then
-				if (role == "DAMAGER" or role == "TANK") then
+				if (role == "NONE" or role == "DAMAGER" or role == "TANK") then
 					local player_name = Details:GetFullName("raid" .. i)
 					local _, _, class = Details:GetUnitClassFull(player_name)
 
@@ -1767,7 +1767,7 @@ function Details.Database.StoreEncounter(combat)
 						this_combat_data.damage [player_name] = {floor(damage_actor.total), _detalhes.item_level_pool [guid] and _detalhes.item_level_pool [guid].ilvl or 0, class or 0}
 					end
 
-				elseif (role == "HEALER") then
+				elseif (role == "HEALER" or role == "SUPPORT") then
 					local player_name = Details:GetFullName("raid" .. i)
 
 					local _, _, class = Details:GetUnitClassFull(player_name)

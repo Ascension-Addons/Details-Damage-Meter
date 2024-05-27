@@ -358,9 +358,6 @@ end
             if (not dataTypePrefix) then
                 openRaidLib.DiagnosticError("Invalid dataTypePrefix from player:", sender, "data:", data, "dataTypePrefix:", dataTypePrefix)
                 return
-            elseif (openRaidLib.commPrefixDeprecated[dataTypePrefix]) then
-                openRaidLib.DiagnosticError("Invalid dataTypePrefix from player:", sender, "data:", data, "dataTypePrefix:", dataTypePrefix)
-                return
             end
 
             --if this is isn't a keystone data comm, check if the lib can receive comms

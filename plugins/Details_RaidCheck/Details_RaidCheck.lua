@@ -1,9 +1,6 @@
-local UnitAura = UnitAura
-local UnitBuff = UnitBuff
 local GetSpellInfo = GetSpellInfo
 local UnitClass = UnitClass
 local UnitName = UnitName
-local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
 
 local Loc = LibStub("AceLocale-3.0"):GetLocale("Details")
 local openRaidLib = LibStub:GetLibrary("LibOpenRaid-1.0")

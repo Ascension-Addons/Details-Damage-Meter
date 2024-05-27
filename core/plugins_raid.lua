@@ -16,8 +16,6 @@
 
 	local _GetSpellInfo = _detalhes.getspellinfo --details api
 
-	local CLASS_ICON_TCOORDS = CLASS_ICON_TCOORDS
-
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --constants
 
@@ -359,7 +357,7 @@
 				local class_color = "|cFFFF3333"
 
 				if (class) then
-					local coords = CLASS_ICON_TCOORDS [class]
+					local coords = Details.class_coords[class]
 					class_color = "|TInterface\\AddOns\\Details\\images\\classes_small_alpha:12:12:0:0:128:128:" .. coords[1]/2*128 .. ":" .. coords[2]/2*128 .. ":" .. coords[3]/2*128 .. ":" .. coords[4]/2*128 .. "|t |c" .. RAID_CLASS_COLORS [class].colorStr
 				end
 
@@ -464,12 +462,12 @@
 			local class_color2 = "|cFFFFFFFF"
 
 			if (class) then
-				local coords = CLASS_ICON_TCOORDS [class]
+				local coords = Details.class_coords[class]
 				class_color = "|TInterface\\AddOns\\Details\\images\\classes_small_alpha:12:12:0:0:128:128:" .. coords[1]/2*128 .. ":" .. coords[2]/2*128 .. ":" .. coords[3]/2*128 .. ":" .. coords[4]/2*128 .. "|t |c" .. RAID_CLASS_COLORS [class].colorStr
 			end
 
 			if (class2) then
-				local coords = CLASS_ICON_TCOORDS [class2]
+				local coords = Details.class_coords[class2]
 				class_color2 = " -> |TInterface\\AddOns\\Details\\images\\classes_small_alpha:12:12:0:0:128:128:" .. coords[1]/2*128 .. ":" .. coords[2]/2*128 .. ":" .. coords[3]/2*128 .. ":" .. coords[4]/2*128 .. "|t |c" .. RAID_CLASS_COLORS [class2].colorStr
 				alvo_name = _detalhes:GetOnlyName(alvo_name)
 			else
@@ -560,7 +558,7 @@
 				local class_color = "|cFFFFFFFF"
 
 				if (class) then
-					local coords = CLASS_ICON_TCOORDS [class]
+					local coords = Details.class_coords [class]
 					class_color = "|TInterface\\AddOns\\Details\\images\\classes_small_alpha:12:12:0:0:256:256:" .. coords[1]/2*256 .. ":" .. coords[2]/2*256 .. ":" .. coords[3]/2*256 .. ":" .. coords[4]/2*256 .. "|t |c" .. RAID_CLASS_COLORS [class].colorStr
 				end
 				msg = "Death: " .. class_color .. alvo_name .. "|r ->"

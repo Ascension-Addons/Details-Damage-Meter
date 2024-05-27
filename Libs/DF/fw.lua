@@ -122,9 +122,10 @@ local roleBySpecTextureName = {
 ---@return string
 function DF.UnitGroupRolesAssigned(unitId, bUseSupport, specId)
 	local _, class = UnitClass(unitId)
-	if class == "HERO" then
-		return UnitGroupRolesAssignedKey(unitId)
-	else
+	local role = UnitGroupRolesAssignedKey(unitId)
+	if role and role ~= "NONE" then
+		return role
+	elseif class ~= "HERO" then
 		local specInfo = C_ClassInfo.GetSpecInfoByID(specId)
 
 		if specInfo then
@@ -1128,7 +1129,7 @@ end
 ---@return number, number, number, number, string
 function DF:GetClassTCoordsAndTexture(class)
 	local l, r, t, b = unpack(CLASS_ICON_TCOORDS[class])
-	return l, r, t, b, [[Interface\WORLDSTATEFRAME\Icons-Classes]]
+	return l, r, t, b, [[Interface\GLUES\CHARACTERCREATE\UI-CharacterCreate-Classes]]
 end
 
 ---create a string with the spell icon and the spell name using |T|t scape codes to add the icon inside the string

@@ -65,7 +65,6 @@
 	local FormatTooltipNumber = ToKFunctions[8]
 	local TooltipMaximizedMethod = 1
 
-	--local CLASS_ICON_TCOORDS = _G.CLASS_ICON_TCOORDS
 	local is_player_class = Details.player_class
 
 	Details.tooltip_key_overlay1 = {1, 1, 1, .2}

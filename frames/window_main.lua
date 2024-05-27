@@ -2110,22 +2110,14 @@ local iconFrame_OnEnter = function(self)
 				GameCooltip:AddLine(format(localizedItemLevelString, 0))
 				GameCooltip:AddIcon([[]], 1, 1, 1, 20)
 				Details:AddTooltipBackgroundStatusbar()
-				gotInfo = true
+				gotInfo = false
 			end
 
-			local localizedTalentsString = _G.TALENTS
-
-			if (gotInfo) then
-				GameCooltip:AddLine(format(localizedItemLevelString, Loc["STRING_QUERY_INSPECT_REFRESH"]))
-				GameCooltip:AddIcon([[]], 1, 1, 1, 24)
-				Details:AddTooltipBackgroundStatusbar()
-			end
-
-			local height = 66
+			local height = 54
 			if (not gotInfo) then
 				GameCooltip:AddLine(Loc["STRING_QUERY_INSPECT"], nil, 1, "orange")
 				GameCooltip:AddIcon([[Interface\TUTORIALFRAME\UI-TUTORIAL-FRAME]], 1, 1, 12, iconSize, 8/512, 70/512, 224/512, 306/512)
-				height = 54
+				height = 66
 			end
 
 			local combat = instance:GetShowingCombat()
