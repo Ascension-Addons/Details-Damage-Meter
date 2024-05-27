@@ -1639,7 +1639,9 @@
 
 		if (not object.ToolTip) then
 			if (object.__destroyed) then
-				Details:Msg("object:ToolTip() is invalid.", object.__destroyedBy)
+				if (Details.debug) then
+					Details:Msg("object:ToolTip() is invalid.", object.__destroyedBy)
+				end
 				self:ResetWindow()
 				self:RefreshWindow(true)
 				return
