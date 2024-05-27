@@ -648,6 +648,7 @@ end
         "PvPTalentUpdate",
         "KeystoneUpdate",
         "KeystoneWipe",
+        "LegendaryEnchantUpdate",
     }
 
     --save build the table to avoid lose registered events on older versions

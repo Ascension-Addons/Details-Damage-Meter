@@ -3022,7 +3022,7 @@ do
 
                     if (selectedWindow) then
                         Details:DeleteInstance(selectedWindow)
-                        ReloadUI()
+                        StaticPopup_Show("RELOAD_UI_NEEDED")
                     end
                 end,
                 name = Loc ["STRING_OPTIONS_INSTANCE_DELETE"],
