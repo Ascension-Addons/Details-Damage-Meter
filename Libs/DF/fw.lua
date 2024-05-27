@@ -1174,7 +1174,7 @@ function DF:AddClassIconToText(text, playerName, englishClassName, useSpec, icon
 		local specString = ""
 		local L, R, T, B = unpack(Details.class_specs_coords[spec])
 		if (L) then
-			specString = "|TInterface\\AddOns\\Details\\images\\spec_icons_normal:" .. size .. ":" .. size .. ":0:0:512:512:" .. (L * 512) .. ":" .. (R * 512) .. ":" .. (T * 512) .. ":" .. (B * 512) .. "|t"
+			specString = "|TInterface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS:" .. size .. ":" .. size .. ":0:0:512:512:" .. (L * 512) .. ":" .. (R * 512) .. ":" .. (T * 512) .. ":" .. (B * 512) .. "|t"
 			return specString .. " " .. text
 		end
 	end

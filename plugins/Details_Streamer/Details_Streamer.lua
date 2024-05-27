@@ -983,12 +983,12 @@ local parse_target_icon = function (targetObject, target)
 				icon2coords = PetCoords
 			elseif (class and RAID_CLASS_COLORS [class]) then
 				if (targetObject.spec) then
-					icon2 = [[Interface\AddOns\Details\images\spec_icons_normal_alpha]]
+					icon2 = [[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]]
 					icon2coords = Details.class_specs_coords [targetObject.spec]
 				else
 					local spec_from_cache = Details.cached_specs [targetObject.serial]
 					if (spec_from_cache) then
-						icon2 = [[Interface\AddOns\Details\images\spec_icons_normal_alpha]]
+						icon2 = [[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]]
 						icon2coords = Details.class_specs_coords [spec_from_cache]
 					else
 						icon2 = [[Interface\AddOns\Details\images\classes_small_alpha]]

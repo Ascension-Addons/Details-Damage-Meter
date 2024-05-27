@@ -739,7 +739,7 @@ function breakdownWindowFrame.SetClassIcon(actorObject, class)
 		breakdownWindowFrame.classIcon:SetTexCoord(.1, .9, .1, .9)
 
 	elseif (actorObject.spec) then
-		breakdownWindowFrame.classIcon:SetTexture([[Interface\AddOns\Details\images\spec_icons_normal_alpha]])
+		breakdownWindowFrame.classIcon:SetTexture([[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]])
 		breakdownWindowFrame.classIcon:SetTexCoord(unpack(_detalhes.class_specs_coords [actorObject.spec]))
 	else
 		local coords = CLASS_ICON_TCOORDS[class]

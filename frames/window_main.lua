@@ -2093,7 +2093,7 @@ local iconFrame_OnEnter = function(self)
 			end
 
 			if (specL) then
-				GameCooltip:AddIcon([[Interface\AddOns\Details\images\spec_icons_normal_alpha]], 1, 2, iconSize, iconSize, specL, specR, specT, specB)
+				GameCooltip:AddIcon([[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]], 1, 2, iconSize, iconSize, specL, specR, specT, specB)
 			else
 				GameCooltip:AddIcon([[Interface\GossipFrame\IncompleteQuestIcon]], 1, 2, iconSize, iconSize)
 			end

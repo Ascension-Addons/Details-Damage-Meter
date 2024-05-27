@@ -447,7 +447,7 @@ function Details:CreateEventTrackerFrame(parentObject, name)
 
 		local get_player_icon = function(spec, class)
 			if (spec) then
-				return [[Interface\AddOns\Details\images\spec_icons_normal]], unpack(Details.class_specs_coords [spec])
+				return [[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]], unpack(Details.class_specs_coords [spec])
 			elseif (class) then
 				return [[Interface\AddOns\Details\images\classes_small]], unpack(Details.class_coords [class])
 			else

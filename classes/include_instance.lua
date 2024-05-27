@@ -320,7 +320,7 @@ _detalhes.instance_defaults = {
 				fast_ps_update = false,
 			--show spec icons
 				use_spec_icons = false,
-				spec_file = [[Interface\AddOns\Details\images\spec_icons_normal]],
+				spec_file = [[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]],
 			--show faction icon
 				show_faction_icon = true,
 				faction_icon_size_offset = -10,

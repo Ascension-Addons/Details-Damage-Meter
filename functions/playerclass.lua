@@ -86,9 +86,9 @@ do
 
 		if (iconType == "spec") then
 			if (bWithAlpha) then
-				return [[Interface\AddOns\Details\images\spec_icons_normal_alpha]]
+				return [[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]]
 			else
-				return [[Interface\AddOns\Details\images\spec_icons_normal]]
+				return [[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]]
 			end
 		else --if is class
 			if (bWithAlpha) then
@@ -206,9 +206,9 @@ do
 		end
 
 		if (useAlpha) then
-			return [[Interface\AddOns\Details\images\spec_icons_normal_alpha]], unpack(Details.class_specs_coords [spec])
+			return [[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]], unpack(Details.class_specs_coords [spec])
 		else
-			return [[Interface\AddOns\Details\images\spec_icons_normal]], unpack(Details.class_specs_coords[spec])
+			return [[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]], unpack(Details.class_specs_coords[spec])
 		end
 	end
 
@@ -251,7 +251,7 @@ do
 		if (playerObject) then
 			local spec = playerObject.spec
 			if (spec) then
-				texturePath = [[Interface\AddOns\Details\images\spec_icons_normal]]
+				texturePath = [[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]]
 				left, right, top, bottom = unpack(Details.class_specs_coords[spec])
 
 			elseif (playerObject.classe) then

@@ -448,7 +448,7 @@ function encounterDetails:CreatePhaseIndicators(chartPanel, phaseTooltip)
                 tooltipBar:SetStatusBarColor(red, green, blue)
 
                 if (spec) then
-                    tooltipBar.icon.texture = [[Interface\AddOns\Details\images\spec_icons_normal]]
+                    tooltipBar.icon.texture = [[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECSl]]
                     tooltipBar.icon.texcoord = encounterDetails.class_specs_coords[spec]
 
                 elseif (class) then
@@ -496,7 +496,7 @@ function encounterDetails:CreatePhaseIndicators(chartPanel, phaseTooltip)
                 tooltipBar:SetStatusBarColor(red, green, blue)
 
                 if (spec) then
-                    tooltipBar.icon.texture = [[Interface\AddOns\Details\images\spec_icons_normal]]
+                    tooltipBar.icon.texture = [[Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS]]
                     tooltipBar.icon.texcoord = encounterDetails.class_specs_coords[spec]
 
                 elseif (class) then

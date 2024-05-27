@@ -363,9 +363,9 @@ do
 			local L, R, T, B = unpack(Details.class_specs_coords[spec])
 			if (L) then
 				if (useAlphaIcons) then
-					specString = "|TInterface\\AddOns\\Details\\images\\spec_icons_normal_alpha:" .. iconSize .. ":" .. iconSize .. ":0:0:512:512:" .. (L * 512) .. ":" .. (R * 512) .. ":" .. (T * 512) .. ":" .. (B * 512) .. "|t"
+					specString = "|TInterface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS:" .. iconSize .. ":" .. iconSize .. ":0:0:512:512:" .. (L * 512) .. ":" .. (R * 512) .. ":" .. (T * 512) .. ":" .. (B * 512) .. "|t"
 				else
-					specString = "|TInterface\\AddOns\\Details\\images\\spec_icons_normal:" .. iconSize .. ":" .. iconSize .. ":0:0:512:512:" .. (L * 512) .. ":" .. (R * 512) .. ":" .. (T * 512) .. ":" .. (B * 512) .. "|t"
+					specString = "|TInterface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES-SPECS:" .. iconSize .. ":" .. iconSize .. ":0:0:512:512:" .. (L * 512) .. ":" .. (R * 512) .. ":" .. (T * 512) .. ":" .. (B * 512) .. "|t"
 				end
 				return specString .. " " .. thisString
 			end
