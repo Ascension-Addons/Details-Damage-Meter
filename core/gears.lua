@@ -1862,7 +1862,7 @@ function ilvl_core:HasQueuedInspec (unitName)
 end
 
 local inspect_frame = CreateFrame("frame")
-inspect_frame:RegisterEvent("INSPECT_READY")
+inspect_frame:RegisterEvent("INSPECT_TALENT_READY")
 
 local two_hand = {
 	["INVTYPE_2HWEAPON"] = true,
@@ -1871,7 +1871,7 @@ local two_hand = {
 }
 
 local MAX_INSPECT_AMOUNT = 1
-local MIN_ILEVEL_TO_STORE = 50
+local MIN_ILEVEL_TO_STORE = 1
 local LOOP_TIME = 7
 
 function _detalhes:IlvlFromNetwork (player, realm, core, serialNumber, itemLevel, talentsSelected, currentSpec)
@@ -1929,7 +1929,6 @@ end
 --/run wipe(_detalhes.item_level_pool)
 
 function ilvl_core:CalcItemLevel (unitid, guid, shout)
-
 	if (type(unitid) == "table") then
 		shout = unitid [3]
 		guid = unitid [2]
@@ -1938,37 +1937,7 @@ function ilvl_core:CalcItemLevel (unitid, guid, shout)
 
 	--disable due to changes to CheckInteractDistance()
 	if (not InCombatLockdown() and unitid and UnitPlayerControlled(unitid) and CheckInteractDistance(unitid, CONST_INSPECT_ACHIEVEMENT_DISTANCE) and CanInspect(unitid)) then
-
-		--16 = all itens including main and off hand
-		local item_amount = 16
-		local item_level = 0
-		local failed = 0
-
-		for equip_id = 1, 17 do
-			if (equip_id ~= 4) then --shirt slot
-				local item = GetInventoryItemLink (unitid, equip_id)
-				if (item) then
-					local _, _, itemRarity, iLevel, _, _, _, _, equipSlot = GetItemInfo (item)
-					if (iLevel) then
-						item_level = item_level + iLevel
-
-						--16 = main hand 17 = off hand
-						-- if using a two-hand, ignore the off hand slot
-						if (equip_id == 16 and two_hand [equipSlot]) then
-							item_amount = 15
-							break
-						end
-					end
-				else
-					failed = failed + 1
-					if (failed > 2) then
-						break
-					end
-				end
-			end
-		end
-
-		local average = item_level / item_amount
+		local average = UnitAverageItemLevel(unitid)
 
 		--register
 		if (average > 0) then
@@ -2002,7 +1971,15 @@ end
 _detalhes.ilevel.CalcItemLevel = ilvl_core.CalcItemLevel
 
 inspect_frame:SetScript("OnEvent", function(self, event, ...)
-	local guid = select(1, ...)
+	local guid
+	for queue_guid in pairs(inspecting) do -- get first guid
+		guid = queue_guid
+		break
+	end
+
+	if not guid or guild == "" then
+		return
+ 	end
 
 	if (inspecting [guid]) then
 		local unitid, cancel_tread = inspecting [guid] [1], inspecting [guid] [2]

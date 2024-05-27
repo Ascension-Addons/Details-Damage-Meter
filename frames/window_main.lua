@@ -2102,12 +2102,12 @@ local iconFrame_OnEnter = function(self)
 			local gotInfo
 			local localizedItemLevelString = _G.AVERAGE_ITEM_LEVEL_S
 			if (ilvl) then
-				GameCooltip:AddLine(format(localizedItemLevelString, ilvl) and "|T:" .. 24 .. ":" .. 24 ..":0:0:64:64:4:60:4:60|t" .. floor(ilvl.ilvl) or "|T:" .. 24 .. ":" .. 24 ..":0:0:64:64:4:60:4:60|t ??") --Loc from GlobalStrings.lua
+				GameCooltip:AddLine(format(localizedItemLevelString, floor(ilvl.ilvl)))
 				GameCooltip:AddIcon([[]], 1, 1, 1, 20)
 				Details:AddTooltipBackgroundStatusbar()
 				gotInfo = true
 			else
-				GameCooltip:AddLine(format(localizedItemLevelString, 0))
+				GameCooltip:AddLine(format(localizedItemLevelString, "??"))
 				GameCooltip:AddIcon([[]], 1, 1, 1, 20)
 				Details:AddTooltipBackgroundStatusbar()
 				gotInfo = false
