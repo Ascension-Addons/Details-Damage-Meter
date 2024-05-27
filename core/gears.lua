@@ -1938,7 +1938,6 @@ function ilvl_core:CalcItemLevel (unitid, guid, shout)
 	--disable due to changes to CheckInteractDistance()
 	if (not InCombatLockdown() and unitid and UnitPlayerControlled(unitid) and CheckInteractDistance(unitid, CONST_INSPECT_ACHIEVEMENT_DISTANCE) and CanInspect(unitid)) then
 		local average = UnitAverageItemLevel(unitid)
-
 		--register
 		if (average > 0) then
 			if (shout) then
@@ -2029,6 +2028,11 @@ function ilvl_core:GetItemLevel (unitid, guid, is_forced, try_number)
 		return
 	end
 
+	if UnitIsUnit(unitid, "player") then
+		ilvl_core:CalcItemLevel(unitid, guid)
+		return
+	end
+
 	if (AscensionInspectFrame and AscensionInspectFrame:IsShown() or InCombatLockdown() or not unitid or not CanInspect(unitid) or not UnitPlayerControlled(unitid) or not CheckInteractDistance(unitid, CONST_INSPECT_ACHIEVEMENT_DISTANCE)) then
 		if (is_forced) then
 			try_number = try_number or 0
@@ -2055,7 +2059,7 @@ local NotifyInspectHook = function(unitid) --not in use
 		local guid = UnitGUID(unitid)
 		local name = Details:GetFullName(unitid)
 		if (guid and name and not inspecting [guid]) then
-			for i = 1, GetNumGroupMembers() do
+			for i = 1, GetNumGroupMembers()-1 do
 				if (name == Details:GetFullName(unit .. i)) then
 					unitid = unit .. i
 					break
@@ -2095,6 +2099,9 @@ function ilvl_core:QueryInspect (unitName, callback, param1)
 				unitid = "party" .. i
 				break
 			end
+		end
+		if not unitid then -- player
+			unitid = unitName
 		end
 	else
 		unitid = unitName
