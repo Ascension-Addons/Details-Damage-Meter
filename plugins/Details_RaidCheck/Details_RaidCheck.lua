@@ -327,21 +327,7 @@ local CreatePluginFrames = function()
 				if (line) then
 					addedLinesAmount = addedLinesAmount + 1
 					local thisPlayerInfo = playersInfoData[playerTable.UnitNameRealm]
-					if (thisPlayerInfo) then
-						if (DF.IsShadowlandsWow()) then
-							local playerCovenantId = thisPlayerInfo.covenantId
-							if (playerCovenantId > 0) then
-								line.CovenantIcon:SetTexture(LIB_OPEN_RAID_COVENANT_ICONS[playerCovenantId])
-								line.CovenantIcon:SetTexCoord(.05, .95, .05, .95)
-							else
-								line.CovenantIcon:SetTexture("")
-							end
-						else
-							line.CovenantIcon:SetTexture("")
-						end
-					else
-						line.CovenantIcon:SetTexture("")
-					end
+					line.CovenantIcon:SetTexture("")
 
 					--repair status
 					local thisPlayerGearInfo = playersGearData[playerTable.UnitNameRealm]
@@ -367,13 +353,13 @@ local CreatePluginFrames = function()
 
 					line.TalentsRow:ClearIcons()
 
-					if (playerTable.Talents and type(playerTable.Talents) == "table") then
-						for i = 1, #playerTable.Talents do
-							local talent = playerTable.Talents[i]
-							local talentID, name, texture, selected, available = GetTalentInfoByID(talent)
-							line.TalentsRow:SetIcon(false, false, false, false, texture)
-						end
-					end
+					-- if (playerTable.Talents and type(playerTable.Talents) == "table") then
+					-- 	for i = 1, #playerTable.Talents do
+					-- 		local talent = playerTable.Talents[i]
+					-- 		local talentID, name, texture, selected, available = GetTalentInfoByID(talent)
+					-- 		line.TalentsRow:SetIcon(false, false, false, false, texture)
+					-- 	end
+					-- end
 
 					local classColor = Details.class_colors[playerTable.Class]
 					if (classColor) then
