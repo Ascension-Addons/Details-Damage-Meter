@@ -1353,7 +1353,7 @@ function DF:CreateCoolTip()
 		menuButton.spark:SetAlpha(sparkAlpha)
 
 		menuButton.spark:ClearAllPoints()
-		local width = (menuButton.statusbar:GetWidth() - 20) / 100
+		local width = (menuButton.statusbar:GetWidth()) / 100
 		menuButton.spark:SetPoint("left", menuButton.statusbar, "left", (menuButton.statusbar:GetValue() * width) - 5 + positionXOffset, 0 + positionYOffset)
 		menuButton.spark2:ClearAllPoints()
 		menuButton.spark2:SetPoint("left", menuButton.statusbar, "left", (menuButton.statusbar:GetValue() * width) - 16 + positionXOffset, 0 + positionYOffset)
@@ -2132,8 +2132,8 @@ function DF:CreateCoolTip()
 			local menuButton = frame1.Lines[i]
 			local width = frame1:GetWidth()
 			menuButton:SetWidth(width)
-			menuButton.statusbar:SetWidth(width)
-			menuButton.statusbar2:SetWidth(width)
+			menuButton.statusbar:SetWidth(width-20)
+			menuButton.statusbar2:SetWidth(width-20)
 			if (menuButton.spark:IsShown() or menuButton.spark2:IsShown()) then
 				gameCooltip:RefreshSpark(menuButton)
 			end
