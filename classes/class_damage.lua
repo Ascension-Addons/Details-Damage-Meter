@@ -2028,7 +2028,7 @@ function damageClass:RefreshWindow(instanceObject, combatObject, bForceUpdate, b
 											this_spell [2] = this_spell [2] + on_player
 											total = total + on_player
 										else
-											error("error - no spell id for DTBS friendly fire " .. spellid)
+											--error("error - no spell id for DTBS friendly fire " .. spellid)
 										end
 									end
 								end
@@ -3769,6 +3769,11 @@ function damageClass:ToolTip_DamageDone (instancia, numero, barra, keydown)
 				local petDPS = damageTable[3]
 
 				petName = damageTable[1]:gsub(("%s%<.*"), "")
+
+				if (instance.row_info.textL_translit_text) then
+					petName = Translit:Transliterate(petName, "!")
+				end
+
 				if (instancia.sub_atributo == 1) then
 					GameCooltip:AddLine(petName, FormatTooltipNumber(_, petDamageDone) .. " (" .. math.floor(petDamageDone/self.total*100) .. "%)")
 				else

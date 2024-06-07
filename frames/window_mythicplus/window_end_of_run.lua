@@ -16,6 +16,7 @@ local UIParent = UIParent
 local PixelUtil = PixelUtil
 local C_Timer = C_Timer
 local GameTooltip = GameTooltip
+local SOUNDKIT = SOUNDKIT
 
 local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
 
@@ -68,6 +69,124 @@ _G.MythicDungeonFrames = mythicDungeonFrames
 ---@field LootIconBorder texture
 ---@field LootItemLevel fontstring
 ---@field itemLink string
+
+---@class details_loot_cache : table
+---@field playerName string
+---@field itemLink string
+---@field effectiveILvl number
+---@field itemQuality number
+---@field itemID number
+---@field time number
+
+---@class lootframe : frame
+---@field LootCache details_loot_cache[]
+
+--frame to handle loot events
+local lootFrame = CreateFrame("frame", "DetailsEndOfMythicLootFrame", UIParent)
+lootFrame:RegisterEvent("BOSS_KILL")
+lootFrame:RegisterEvent("ENCOUNTER_LOOT_RECEIVED")
+
+--register the loot players looted at the end of the mythic dungeon
+lootFrame.LootCache = {}
+
+--currently being called after a updatPlayerBanner()
+function lootFrame.UpdateUnitLoot(unitBanner)
+	local unitId = unitBanner.unitId
+	local unitName = unitBanner.unitName
+
+	local timeNow = GetTime()
+	local lootCache = lootFrame.LootCache[unitName]
+
+	---@type details_loot_cache[]
+	local lootCandidates = {}
+
+	if (lootCache) then
+		local lootCacheSize = #lootCache
+		if (lootCacheSize > 0) then
+			local lootIndex = 1
+			for i = lootCacheSize, 1, -1 do
+				---@type details_loot_cache
+				local lootInfo = lootCache[i]
+				if (timeNow - lootInfo.time < 10) then
+					lootCandidates[lootIndex] = lootInfo
+					lootIndex = lootIndex + 1
+				end
+			end
+		end
+	end
+
+	for i = 1, #lootCandidates do
+		local lootInfo = lootCandidates[i]
+		local itemLink = lootInfo.itemLink
+		local effectiveILvl = lootInfo.effectiveILvl
+		local itemQuality = lootInfo.itemQuality
+		local itemID = lootInfo.itemID
+
+		local lootSquare = unitBanner:GetLootSquare()
+		lootSquare.itemLink = itemLink --will error if this the thrid lootSquare (creates only 2 per banner)
+
+		local rarityColor = --[[GLOBAL]]ITEM_QUALITY_COLORS[itemQuality]
+		lootSquare.LootIconBorder:SetVertexColor(rarityColor.r, rarityColor.g, rarityColor.b, 1)
+
+		lootSquare.LootIcon:SetTexture(GetItemIcon(itemID))
+		lootSquare.LootItemLevel:SetText(effectiveILvl or "0")
+
+		mythicDungeonFrames.ReadyFrame.StopTextDotAnimation()
+
+		lootSquare:Show()
+	end
+end
+
+--debug data to test encounter loot received event:
+--/run _G.DetailsEndOfMythicLootFrame:OnEvent("ENCOUNTER_LOOT_RECEIVED", 1, 207788, "|cffa335ee|Hitem:207788::::::::60:264::16:5:7208:6652:1501:5858:6646:1:28:1279:::|h[Shadowgrasp Totem]|h|r", 1, "Fera", "EVOKER")
+
+lootFrame:SetScript("OnEvent", function(self, event, ...)
+	if (event == "BOSS_KILL") then
+		local encounterID, name = ...;
+
+	elseif (event == "ENCOUNTER_LOOT_RECEIVED") then
+		local lootEncounterId, itemID, itemLink, quantity, unitName, className = ...
+
+		unitName = Ambiguate(unitName, "none")
+
+		local _, instanceType = GetInstanceInfo()
+		if (instanceType == "party" or CONST_DEBUG_MODE) then
+			local effectiveILvl, nop, baseItemLevel = GetDetailedItemLevelInfo(itemLink)
+
+			local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType,
+			itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType,
+			expacID, setID, isCraftingReagent = GetItemInfo(itemLink)
+
+			if (Details.debug) then
+				Details222.DebugMsg("Loot Received:", unitName, itemLink, effectiveILvl, itemQuality, baseItemLevel, "itemType:", itemType, "itemSubType:", itemSubType, "itemEquipLoc:", itemEquipLoc)
+			end
+
+			if (effectiveILvl > 300 and baseItemLevel > 5) then --avoid showing loot that isn't items
+				lootFrame.LootCache[unitName] = lootFrame.LootCache[unitName] or {}
+				---@type details_loot_cache
+				local lootCacheTable = {
+					playerName = unitName,
+					itemLink = itemLink,
+					effectiveILvl = effectiveILvl,
+					itemQuality = itemQuality, --this is a number
+					itemID = itemID,
+					time = time()
+				}
+				table.insert(lootFrame.LootCache[unitName], lootCacheTable)
+
+				--check if the end of mythic plus frame is opened and call a function to update the loot frame of the player
+				if (mythicDungeonFrames.ReadyFrame and mythicDungeonFrames.ReadyFrame:IsVisible()) then
+					C_Timer.After(1.5, function()
+						local unitBanner = mythicDungeonFrames.ReadyFrame.unitCacheByName[unitName]
+						if (unitBanner) then
+							lootFrame.UpdateUnitLoot(unitBanner)
+						end
+					end)
+				end
+			end
+		end
+	end
+end)
 
 local createLootSquare = function(playerBanner, name, parent, lootIndex)
 	---@type details_lootsquare
@@ -364,7 +483,7 @@ local updatPlayerBanner = function(unitId, bannerIndex)
 
 		---@type playerbanner
 		local playerBanner = readyFrame.PlayerBanners[bannerIndex]
-		readyFrame.playerCacheByName[unitName] = playerBanner
+		readyFrame.unitCacheByName[unitName] = playerBanner
 		playerBanner.unitId = unitId
 		playerBanner.unitName = unitName
 		playerBanner:Show()
@@ -406,6 +525,8 @@ local updatPlayerBanner = function(unitId, bannerIndex)
 			playerBanner.DungeonTexture:SetTexture([[Interface\ICONS\INV_Misc_QuestionMark]])
 			playerBanner.LevelFontString:SetText("")
 		end
+
+		lootFrame.UpdateUnitLoot(playerBanner)
 		return true
 	end
 end
@@ -503,7 +624,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		readyFrame:Hide()
 
 		---@type playerbanner[]
-		readyFrame.playerCacheByName = {}
+		readyFrame.unitCacheByName = {}
 
 		do
 			--register to libwindow
@@ -742,19 +863,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 			end
 		end
 
-		--frame to handle loot events
-		local lootFrame = CreateFrame("frame", "$parentLootFrame", readyFrame)
-		lootFrame:RegisterEvent("BOSS_KILL");
-
-		local bossKillEncounterId
-
-		lootFrame:SetScript("OnEvent", function(self, event, ...)
-			if (event == "BOSS_KILL") then
-				local encounterID, name = ...;
-				bossKillEncounterId = encounterID
-				--print("BOSS_KILL", GetTime(), bossKillEncounterId)
-			end
-		end)
+		--here was the loot frame events ~loot
 
 		--[=[
 		Details222.MythicPlus.MapID = mapID
@@ -860,7 +969,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 
 	local mythicDungeonInfo = overallMythicDungeonCombat:GetMythicDungeonInfo()
 
-	if (not mythicDungeonInfo) then
+	if (not mythicDungeonInfo and not CONST_DEBUG_MODE) then
 		return
 	end
 
@@ -873,7 +982,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		readyFrame.DungeonBackdropTexture:SetTexture(overallMythicDungeonCombat.is_mythic_dungeon.DungeonTexture)
 	end
 
-	wipe(readyFrame.playerCacheByName)
+	wipe(readyFrame.unitCacheByName)
 
 	if (Details222.MythicPlus.OnTime) then
 		readyFrame.YouBeatTheTimerLabel:SetFormattedText(MYTHIC_PLUS_COMPLETE_BEAT_TIMER .. " | " .. MYTHIC_PLUS_COMPLETE_KEYSTONE_UPGRADED, Details222.MythicPlus.KeystoneUpgradeLevels) --"You beat the timer!"
