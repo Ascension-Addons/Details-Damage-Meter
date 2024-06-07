@@ -52,17 +52,17 @@
 	local container_pets = {}
 
 	--flags
-	local REACTION_HOSTILE	=	0x00000040
-	local IS_GROUP_OBJECT 	= 	0x00000007
-	local REACTION_FRIENDLY	=	0x00000010
-	local OBJECT_TYPE_MASK =	0x0000FC00
-	local OBJECT_TYPE_OBJECT =	0x00004000
-	local OBJECT_TYPE_PETGUARDIAN =	0x00003000
-	local OBJECT_TYPE_GUARDIAN =	0x00002000
-	local OBJECT_TYPE_PET =		0x00001000
-	local OBJECT_TYPE_NPC =		0x00000800
-	local OBJECT_TYPE_PLAYER =	0x00000400
-	local OBJECT_TYPE_PETS = 	OBJECT_TYPE_PET + OBJECT_TYPE_GUARDIAN
+	local REACTION_HOSTILE			=	0x00000040
+	local IS_GROUP_OBJECT 			= 	0x00000007
+	local REACTION_FRIENDLY			=	0x00000010
+	local OBJECT_TYPE_MASK 			=	0x0000FC00
+	local OBJECT_TYPE_OBJECT 		=	0x00004000
+	local OBJECT_TYPE_PET 			=	0x00001000
+	local OBJECT_TYPE_GUARDIAN		= 	0x00002000
+	local OBJECT_TYPE_CONTROL_NPC	= 	0x00000200
+	local OBJECT_TYPE_PETGUARDIAN 	=	OBJECT_TYPE_PET + OBJECT_TYPE_GUARDIAN
+	local OBJECT_TYPE_NPC 			=	0x00000800
+	local OBJECT_TYPE_PLAYER 		=	0x00000400
 
 	local debugPetname = false
 
@@ -210,8 +210,7 @@ end
 								end
 							end
 						else
-
-							for playerName in actorName:gmatch("([^%s]+)") do
+							for playerName in actorName:gmatch("([^%s']+)") do
 								playerName = playerName:gsub(",", "")
 								local playerIsOnRaidCache = Details.tabela_vigente.raid_roster[playerName]
 								if (playerIsOnRaidCache) then

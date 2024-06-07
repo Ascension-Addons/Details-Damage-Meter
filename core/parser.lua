@@ -184,11 +184,12 @@
 --constants
 	local container_misc = Details.container_type.CONTAINER_MISC_CLASS
 
-	local OBJECT_TYPE_ENEMY	=	0x00000040
-	local OBJECT_TYPE_PLAYER 	=	0x00000400
-	local OBJECT_TYPE_PETS 	=	0x00003000
-	local AFFILIATION_GROUP 	=	0x00000007
-	local REACTION_FRIENDLY 	=	0x00000010
+	local OBJECT_TYPE_ENEMY			=	0x00000040
+	local OBJECT_TYPE_PLAYER 		=	0x00000400
+	local OBJECT_TYPE_PETS 			=	0x00003000
+	local OBJECT_TYPE_GUARDIAN		= 	0x00002000
+	local AFFILIATION_GROUP 		=	0x00000007
+	local REACTION_FRIENDLY 		=	0x00000010
 
 	local ENVIRONMENTAL_FALLING_NAME	= Loc ["STRING_ENVIRONMENTAL_FALLING"]
 	local ENVIRONMENTAL_DROWNING_NAME	= Loc ["STRING_ENVIRONMENTAL_DROWNING"]
@@ -445,7 +446,7 @@
 	function parser:spell_dmg(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetRaidFlags, spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical, glacing, crushing, isoffhand, isreflected)
 		--early checks and fixes
 		if (sourceSerial == "") then
-			if (sourceFlags and bitBand(sourceFlags, OBJECT_TYPE_PETS) ~= 0) then
+			if (sourceFlags and (bitBand(sourceFlags, OBJECT_TYPE_PETS) ~= 0 or bitBand(sourceFlags, OBJECT_TYPE_GUARDIAN) ~= 0)) then
 				--pets must have a serial
 				return
 			end
@@ -1650,7 +1651,7 @@
 		end
 
 		local npcId = GetCreatureIDFromGUID(petSerial)
-		if bitBand(sourceFlags, OBJECT_TYPE_PETS) ~= 0 then
+		if bitBand(sourceFlags, OBJECT_TYPE_PETS) ~= 0 or bitBand(sourceFlags, OBJECT_TYPE_GUARDIAN) ~= 0 then
 			if sub_pet_ids[npcId] then
 				C_Timer.After(0.1, function()
 					parser:summon(token, time, sourceSerial, sourceName, sourceFlags, petSerial, petName, petFlags, petRaidFlags, spellId, spellName)
@@ -1803,7 +1804,7 @@
 
 		--check invalid serial against pets
 		if (sourceSerial == "") then
-			if (sourceFlags and bitBand(sourceFlags, OBJECT_TYPE_PETS) ~= 0) then --is pet
+			if (sourceFlags and (bitBand(sourceFlags, OBJECT_TYPE_PETS) ~= 0) or bitBand(sourceFlags, OBJECT_TYPE_GUARDIAN) ~= 0) then --is pet
 				return
 			end
 		end
@@ -1918,7 +1919,7 @@
 
 		--check invalid serial against pets
 		if (sourceSerial == "") then
-			if (sourceFlags and bitBand(sourceFlags, OBJECT_TYPE_PETS) ~= 0) then
+			if (sourceFlags and (bitBand(sourceFlags, OBJECT_TYPE_PETS) ~= 0 or bitBand(sourceFlags, OBJECT_TYPE_GUARDIAN) ~= 0)) then
 				--it's a pet without a serial number, ignore
 				return
 			end
