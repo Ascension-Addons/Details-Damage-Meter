@@ -161,13 +161,13 @@
 		--aura scanner
 		Details222.AuraScan = {}
 
-        local GetSpellInfo = GetSpellInfo or C_Spell.GetSpellInfo
+        local GetSpellInfo = GetSpellInfo 
         Details222.GetSpellInfo = GetSpellInfo
 
-		local UnitBuff = UnitBuff or C_UnitAuras.GetBuffDataByIndex
+		local UnitBuff = UnitBuff
 		Details222.UnitBuff = UnitBuff
 
-		local UnitDebuff = UnitDebuff or C_UnitAuras.GetDebuffDataByIndex
+		local UnitDebuff = UnitDebuff
 		Details222.UnitDebuff = UnitDebuff
 
 
