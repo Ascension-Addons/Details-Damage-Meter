@@ -2207,7 +2207,7 @@ end
 		--todo: see what 'UnitTargetsVehicleInRaidUI' is, there's a call for this in the CompactUnitFrame.lua but zero documentation
 		CheckVehiclePossession = function(self)
 			--this unit is possessing a vehicle?
-			local unitPossessVehicle = (IS_WOW_PROJECT_MAINLINE) and UnitHasVehicleUI(self.unit)	or false
+			local unitPossessVehicle = UnitHasVehicleUI(self.unit) or false
 			if (unitPossessVehicle) then
 				if (not self.unitInVehicle) then
 					if (UnitIsUnit("player", self.unit)) then

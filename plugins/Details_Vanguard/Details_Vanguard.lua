@@ -409,8 +409,8 @@ local function CreatePluginFrames (data)
 			}
 			
 			local healthBarSettingsOverride = {
-				ShowHealingPrediction = not DetailsFramework.IsTBCWow(),
-				ShowShields = not DetailsFramework.IsTBCWow(),
+				ShowHealingPrediction = false,
+				ShowShields = true,
 			}
 			
 			local castBarSettingsOverride = {

@@ -1,9 +1,5 @@
 
 --do not load if this is a classic version of the game
-if (DetailsFramework.IsTBCWow() or DetailsFramework.IsWotLKWow() or DetailsFramework.IsClassicWow() or DetailsFramework.IsCataWow()) then
-	return
-end
-
 local Details = _G.Details
 local GetSpellInfo = Details.GetSpellInfo
 local UnitAura = UnitAura
