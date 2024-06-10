@@ -257,8 +257,6 @@
 
 	--ignore soul link (damage from the warlock on his pet - current to demonology only)
 	local SPELLID_WARLOCK_SOULLINK = 25228
-	--brewmaster monk guard talent
-	local SPELLID_MONK_GUARD = 115295
 
 	--shaman earth shield (bcc)
 	local SPELLID_SHAMAN_EARTHSHIELD_HEAL = 379
@@ -2360,34 +2358,6 @@
 					ignore_death_cache [sourceName] = true
 				end)
 				return
-
-			elseif (spellId == SPELLID_MONK_GUARD) then
-				--BfA monk talent
-				monk_guard_talent [sourceSerial] = amount
-
-			elseif (spellId == 272790 and cacheAnything.track_hunter_frenzy) then --hunter pet Frenzy quick fix for show the Frenzy uptime
-				if (pet_frenzy_cache[sourceName]) then
-					if (detailsFramework:IsNearlyEqual(pet_frenzy_cache[sourceName], time, 0.2)) then
-						return
-					end
-				end
-
-				if (not Details.in_combat) then
-					C_Timer.After(1, function()
-						if (Details.in_combat) then
-							if (pet_frenzy_cache[sourceName]) then
-								if (detailsFramework:IsNearlyEqual(pet_frenzy_cache[sourceName], time, 0.2)) then
-									return
-								end
-							end
-							return parser:add_buff_uptime(token, time, sourceSerial, sourceName, sourceFlags, sourceSerial, sourceName, sourceFlags, 0x0, spellId, spellName, "BUFF_UPTIME_IN")
-						end
-					end)
-					return
-				end
-
-				pet_frenzy_cache[sourceName] = time --when the buffIN happened
-				return parser:add_buff_uptime(token, time, sourceSerial, sourceName, sourceFlags, sourceSerial, sourceName, sourceFlags, 0x0, spellId, spellName, "BUFF_UPTIME_IN")
 			end
 
 			if (SHAMAN_EARTHSHIELD_BUFF[spellId]) then
@@ -2592,17 +2562,6 @@
 
 			elseif (buffs_to_other_players[spellId]) then
 				parser:add_buff_uptime(token, time, targetSerial, targetName, targetFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, "BUFF_UPTIME_OUT")
-			end
-
-			if (spellId == SPELLID_MONK_GUARD) then
-				--BfA monk talent
-				if (monk_guard_talent[sourceSerial]) then
-					local damage_prevented = monk_guard_talent[sourceSerial] - (amount or 0)
-					parser:heal(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, spellSchool, damage_prevented, ceil (amount or 0), 0, 0, true)
-				end
-
-			elseif (spellId == 388007 or spellId == 388011) then --buff: bleesing of the summer
-				cacheAnything.paladin_vivaldi_blessings[targetSerial] = nil
 			end
 
 			------------------------------------------------------------------------------------------------
