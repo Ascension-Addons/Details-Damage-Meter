@@ -299,14 +299,13 @@ do
 				return
 			end
 			--> delay startloop, sometimes we get a roster event update after the enter combat event
-			local timer = C_Timer.NewTimer (5, targetCaller.StartLoop)
+			local timer = C_Timer.NewTimer (0.1, targetCaller.StartLoop)
 			targetCaller.StartDelay = timer
 		end
 	end
 	
 	--> when receiving an event from details, handle it here
 	local handle_details_event = function (event, ...)
-			
 		if (event == "HIDE") then
 			--> the user closed the window or selected other plugin / mode
 		 	targetCaller.EndLoop()
@@ -380,7 +379,6 @@ do
 	end
 	
 	function targetCaller:OnEvent (_, event, ...)
-	
 		if (event == "GROUP_ROSTER_UPDATE") then
 			targetCaller.UpdateRoster()
 			
