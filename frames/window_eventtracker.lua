@@ -1,6 +1,7 @@
 
 local Details = _G.Details
 local C_Timer = _G.C_Timer
+local GetSpellInfo = Details.GetSpellInfo
 local libwindow = LibStub("LibWindow-1.1")
 
 function Details:OpenEventTrackerOptions(bFromOptionsPanel)

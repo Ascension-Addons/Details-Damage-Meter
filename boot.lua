@@ -1,8 +1,8 @@
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --global name declaration
 --local _StartDebugTime = debugprofilestop() print(debugprofilestop() - _StartDebugTime)
---test if the packager will deploy to wago
 --https://github.com/LuaLS/lua-language-server/wiki/Annotations#documenting-types
+--updated the lib open raid for v11
 
 		local _ = nil
 		_G.Details = LibStub("AceAddon-3.0"):NewAddon("_detalhes", "AceTimer-3.0", "AceComm-3.0", "AceSerializer-3.0", "NickTag-1.0")
@@ -18,8 +18,8 @@
 		local addonName, Details222 = ...
 		local version = GetBuildInfo()
 
-		Details.build_counter = 12755
-		Details.alpha_build_counter = 12755 --if this is higher than the regular counter, use it instead
+		Details.build_counter = 12801
+		Details.alpha_build_counter = 12801 --if this is higher than the regular counter, use it instead
 		Details.dont_open_news = true
 		Details.game_version = version
 		Details.userversion = version .. " " .. Details.build_counter
@@ -161,6 +161,41 @@
 		--aura scanner
 		Details222.AuraScan = {}
 
+        local GetSpellInfo = GetSpellInfo or C_Spell.GetSpellInfo
+        Details222.GetSpellInfo = GetSpellInfo
+
+		local UnitBuff = UnitBuff or C_UnitAuras.GetBuffDataByIndex
+		Details222.UnitBuff = UnitBuff
+
+		local UnitDebuff = UnitDebuff or C_UnitAuras.GetDebuffDataByIndex
+		Details222.UnitDebuff = UnitDebuff
+
+        if (DetailsFramework.IsWarWow()) then
+            Details222.GetSpellInfo = function(...)
+                local result = GetSpellInfo(...)
+                if result then
+                    return result.name, 1, result.iconID
+                end
+            end
+
+			Details222.UnitBuff = function(unitToken, index, filter)
+				local auraData = C_UnitAuras.GetBuffDataByIndex(unitToken, index, filter)
+				if (not auraData) then
+					return nil
+				end
+				return AuraUtil.UnpackAuraData(auraData)
+			end
+
+			Details222.UnitDebuff = function(unitToken, index, filter)
+				local auraData = C_UnitAuras.GetDebuffDataByIndex(unitToken, index, filter)
+				if (not auraData) then
+					return nil
+				end
+				return AuraUtil.UnpackAuraData(auraData)
+			end
+        end
+
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --initialization stuff
 local _
@@ -172,6 +207,15 @@ do
 	local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
 
 	local news = {
+		{"v10.2.7.12800.156", "June 06th, 2024"},
+		"Added transliteration for pet names in Cyrillic.",
+		"Fixed an error with extra power bars (alternate power) on cataclysm classic.",
+		"Fixed a rare error shown as 'combat already deleted' when trying to reset data.",
+		"Fixed an issue which was preventing to open the death recap window.",
+		"Fixed cataclysm classic attempting to calculate Evoker buffs.",
+		"Fixed battleground problems with cataclysm classic. (Flamanis)",
+		"Fixed an issue with player nicknames not showing properly when the player isn't inside a guild. (Flamanis)",
+
 		{"v10.2.7.12755.156", "May 19th, 2024"},
 		"Pet names on tooltips are now transliterate from Cyrillic.",
 		"Default segments amount are now 25 and save 15, users with different amount set won't have their settings changed.",
@@ -1240,7 +1284,7 @@ do
 			--check if this is a spellId
 			local spellId = tonumber(value)
 			if (spellId) then
-				local spellInfo = {GetSpellInfo(spellId)}
+				local spellInfo = {Details222.GetSpellInfo(spellId)}
 				if (type(spellInfo[1]) == "string") then
 					return Details:Dump(spellInfo)
 				end
@@ -1795,3 +1839,36 @@ function Details:DestroyActor(actorObject, actorContainer, combatObject, callSta
 	actorObject.__destroyed = true
 	actorObject.__destroyedBy = debugstack(callStackDepth or 2, 1, 0)
 end
+
+local restrictedAddons = {
+    '!!WWAddOnsFix',
+}
+
+local restrictedAddonFrame = CreateFrame('frame')
+restrictedAddonFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
+
+local function disableRestrictedAddons()
+    for _, addonName in pairs(restrictedAddons) do
+        if C_AddOns.GetAddOnEnableState(addonName) ~= 0 then
+            StaticPopupDialogs["DETAILS_RESTRICTED_ADDON"] = {
+                text = "You are running " .. addonName .. " which is incompatible with Details! Damage Meter. It must be disabled for Details to function properly.",
+                button1 = "Disable " .. addonName,
+                button2 = "Disable Details!",
+                OnAccept = function()
+                    C_AddOns.DisableAddOn(addonName)
+                    ReloadUI()
+                 end,
+                OnCancel = function()
+                    C_AddOns.DisableAddOn('Details')
+                    ReloadUI()
+                end,
+                timeout = 0,
+                whileDead = true,
+            }
+            StaticPopup_Show("DETAILS_RESTRICTED_ADDON")
+            break
+        end
+    end
+end
+
+restrictedAddonFrame:SetScript('OnEvent', function() C_Timer.After(2, disableRestrictedAddons) end )

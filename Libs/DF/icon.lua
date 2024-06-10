@@ -6,7 +6,12 @@ if (not detailsFramework or not DetailsFrameworkCanLoad) then
 end
 
 local unpack = unpack
-local CreateFrame = CreateFrame
+local G_CreateFrame = _G.CreateFrame
+local CreateFrame = function (frameType , name, parent, template, id)
+	local frame = G_CreateFrame(frameType , name, parent, template, id)
+	detailsFramework:Mixin(frame, detailsFramework.FrameFunctions)
+	return frame
+end
 local PixelUtil = PixelUtil
 local GetTime = GetTime
 local GetSpellInfo = GetSpellInfo
