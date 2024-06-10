@@ -1451,7 +1451,7 @@ function _detalhes:CatchRaidDebuffUptime(sOperationType) -- "DEBUFF_UPTIME_IN"
 					checked [his_target] = true
 
 					for debuffIndex = 1, 40 do
-						local name, _, _, _, _, _, _, unitCaster, _, _, spellid  = UnitAura ("party"..raidIndex.."target", debuffIndex, 'HARMFUL')
+						local name, _, _, _, _, _, _, unitCaster, _, _, spellid = UnitAura ("party"..raidIndex.."target", debuffIndex, 'HARMFUL')
 						if (name and unitCaster) then
 							local playerName, realmName = _UnitName (unitCaster)
 							local playerGUID = UnitGUID(unitCaster)
@@ -1535,7 +1535,7 @@ function _detalhes:CatchRaidBuffUptime(sOperationType)
 				end
 
 				for buffIndex = 1, 41 do
-					local name, _, _, _, _, _, _, unitCaster, _, _, spellid  = UnitAura(unitId, buffIndex, "HELPFUL")
+					local name, _, _, _, _, _, _, unitCaster, _, _, spellId  = UnitAura(unitId, buffIndex, "HELPFUL")
 					if (name and unitCaster and UnitExists(unitCaster) and UnitExists(unitId) and UnitIsUnit(unitCaster, unitId)) then
 						_detalhes.parser:add_buff_uptime(nil, cacheGetTime, playerGUID, playerName, 0x00000514, playerGUID, playerName, 0x00000514, 0x0, spellId, name, sOperationType)
 
@@ -1579,7 +1579,7 @@ function _detalhes:CatchRaidBuffUptime(sOperationType)
 			local unitId = "party" .. groupIndex
 			for buffIndex = 1, 41 do
 				if (UnitExists(unitId)) then
-					local name, _, _, _, _, _, _, unitCaster, _, _, spellid  = UnitAura(unitId, buffIndex, 'HELPFUL')
+					local name, _, _, _, _, _, _, unitCaster, _, _, spellId  = UnitAura(unitId, buffIndex, 'HELPFUL')
 					if (auraName) then
 						if (UnitExists(unitCaster)) then
 							local bBuffIsPlacedOnTarget = Details.CreditBuffToTarget[spellId]
@@ -1622,7 +1622,7 @@ function _detalhes:CatchRaidBuffUptime(sOperationType)
 		--player it self (while in a party that isn't a raid group)
 		local unitId = "player"
 		for buffIndex = 1, 41 do
-			local auraName, _, _, _, _, _, _, unitCaster, _, _, spellid  = UnitAura(unitId, buffIndex, 'HELPFUL')
+			local auraName, _, _, _, _, _, _, unitCaster, _, _, spellId = UnitAura(unitId, buffIndex, 'HELPFUL')
 			if (auraName) then
 				if (UnitExists(unitCaster)) then -- and unitCaster and UnitExists(unitCaster) and UnitIsUnit(unitCaster, unitId)
 					local bBuffIsPlacedOnTarget = Details.CreditBuffToTarget[spellId]
@@ -1681,7 +1681,7 @@ function _detalhes:CatchRaidBuffUptime(sOperationType)
 		local focus_augmentation = {}
 
 		for buffIndex = 1, 41 do
-			local auraName, _, _, _, _, _, _, unitCaster, _, _, spellid  = UnitAura ("player", buffIndex, "HELPFUL")
+			local auraName, _, _, _, _, _, _, unitCaster, _, _, spellid = UnitAura ("player", buffIndex, "HELPFUL")
 			if (auraName and unitCaster and UnitExists(unitCaster) and UnitIsUnit(unitCaster, "player")) then
 				local playerName = Details.playername
 				local playerGUID = UnitGUID("player")
