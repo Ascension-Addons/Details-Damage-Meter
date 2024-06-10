@@ -170,31 +170,6 @@
 		local UnitDebuff = UnitDebuff or C_UnitAuras.GetDebuffDataByIndex
 		Details222.UnitDebuff = UnitDebuff
 
-        if (DetailsFramework.IsWarWow()) then
-            Details222.GetSpellInfo = function(...)
-                local result = GetSpellInfo(...)
-                if result then
-                    return result.name, 1, result.iconID
-                end
-            end
-
-			Details222.UnitBuff = function(unitToken, index, filter)
-				local auraData = C_UnitAuras.GetBuffDataByIndex(unitToken, index, filter)
-				if (not auraData) then
-					return nil
-				end
-				return AuraUtil.UnpackAuraData(auraData)
-			end
-
-			Details222.UnitDebuff = function(unitToken, index, filter)
-				local auraData = C_UnitAuras.GetDebuffDataByIndex(unitToken, index, filter)
-				if (not auraData) then
-					return nil
-				end
-				return AuraUtil.UnpackAuraData(auraData)
-			end
-        end
-
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --initialization stuff
