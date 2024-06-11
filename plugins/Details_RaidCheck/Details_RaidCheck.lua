@@ -19,8 +19,10 @@ local detailsFramework = DetailsFramework
 --build the list of buffs to track
 local flaskList = LIB_OPEN_RAID_FLASK_BUFF
 local runeIds = DF.RuneIDs
-local isDrinking = 257428
-local localizedFoodDrink
+local isDrinking = 432
+local isEating = 27094
+local localizedFood
+local localizedDrink
 
 local foodInfoList = {}
 
@@ -86,7 +88,8 @@ local CreatePluginFrames = function()
 		elseif (event == "COMBAT_PLAYER_ENTER") then
 
 		elseif (event == "DETAILS_STARTED") then
-			localizedFoodDrink = GetSpellInfo(isDrinking)
+			localizedDrink = GetSpellInfo(isDrinking)
+			localizedFood = GetSpellInfo(isEating)
 			DetailsRaidCheck:CheckCanShowIcon()
 
 		elseif (event == "PLUGIN_DISABLED") then
@@ -684,35 +687,13 @@ local CreatePluginFrames = function()
 
 					local foodInfo = foodInfoList[spellId]
 
-					if (DetailsRaidCheck.db.food_tier1) then
-						if (foodInfo) then
-							local foodTier = openRaidLib.GetFoodTierFromAura(auraInfo)
-							DetailsRaidCheck.unitWithFoodTable[unitSerial] = {spellId, foodTier or 1, auraInfo.icon}
-							consumableTable.Food = consumableTable.Food + 1
-						end
+					if (foodInfo) then
+						local foodTier = openRaidLib.GetFoodTierFromAura(auraInfo)
+						DetailsRaidCheck.unitWithFoodTable[unitSerial] = {spellId, foodTier or 1, auraInfo.icon}
+						consumableTable.Food = consumableTable.Food + 1
 					end
 
-					if (DetailsRaidCheck.db.food_tier2) then
-						if (foodInfo) then
-							local foodTier = openRaidLib.GetFoodTierFromAura(auraInfo)
-							if (foodTier and foodTier >= 2) then
-								DetailsRaidCheck.unitWithFoodTable[unitSerial] = {spellId, foodTier, auraInfo.icon}
-								consumableTable.Food = consumableTable.Food + 1
-							end
-						end
-					end
-
-					if (DetailsRaidCheck.db.food_tier3) then
-						if (foodInfo) then
-							local foodTier = openRaidLib.GetFoodTierFromAura(auraInfo)
-							if (foodTier and foodTier >= 3) then
-								DetailsRaidCheck.unitWithFoodTable[unitSerial] = {spellId, foodTier, auraInfo.icon}
-								consumableTable.Food = consumableTable.Food + 1
-							end
-						end
-					end
-
-					if (buffName == localizedFoodDrink) then
+					if (buffName == localizedFood) then
 						DetailsRaidCheck.iseating_table[unitSerial] = true
 					end
 				end
@@ -780,31 +761,6 @@ local buildOptionsPanel = function()
 			desc = "If enabled, pre potion for tanks are also shown.",
 			name = "Track Tank Pre Pot"
 		},
-
-		{type = "breakline"},
-
-		{type = "label", get = function() return "Food Level Tracking:" end, text_template = DF:GetTemplate("font", "ORANGE_FONT_TEMPLATE")},
-		{
-			type = "toggle",
-			get = function() return DetailsRaidCheck.db.food_tier1 end,
-			set = function (self, fixedparam, value) DetailsRaidCheck.db.food_tier1 = value end,
-			desc = "Consider players using Tier 1 food.",
-			name = "Food Tier 1 [Normal]"
-		},
-		{
-			type = "toggle",
-			get = function() return DetailsRaidCheck.db.food_tier2 end,
-			set = function (self, fixedparam, value) DetailsRaidCheck.db.food_tier2 = value end,
-			desc = "Consider players using Tier 2 food.",
-			name = "Food Tier 2 [Rare High-Risk]"
-		},
-		{
-			type = "toggle",
-			get = function() return DetailsRaidCheck.db.food_tier3 end,
-			set = function (self, fixedparam, value) DetailsRaidCheck.db.food_tier3 = value end,
-			desc = "Consider players using Tier 3 food.",
-			name = "Food Tier 3 [Epic High-Risk]"
-		},
 	}
 
 	local options_text_template = DF:GetTemplate("font", "OPTIONS_FONT_TEMPLATE")
@@ -845,10 +801,6 @@ function DetailsRaidCheck:OnEvent(_, event, ...)
 					pre_pot_healers = false, --do not report pre pot for healers
 					pre_pot_tanks = false, --do not report pre pot for tanks
 					use_report_panel = true, --if true, shows the report panel
-
-					food_tier1 = true,
-					food_tier2 = true,
-					food_tier3 = true,
 				}
 
 				DetailsRaidCheck.RosterDelay = GetTime()
