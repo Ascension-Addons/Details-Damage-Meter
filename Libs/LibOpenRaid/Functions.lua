@@ -426,7 +426,7 @@ end
 function openRaidLib.GetFoodTierFromAura(auraInfo)
     local foodTable = openRaidLib.GetFoodInfoBySpellId(auraInfo.spellId)
     if (foodTable) then
-        return foodTable.tier
+        return 1
     end
     return nil
 end
