@@ -412,15 +412,7 @@ end
 function openRaidLib.GetFlaskTierFromAura(auraInfo)
     local flaskTable = openRaidLib.GetFlaskInfoBySpellId(auraInfo.spellId)
     if (flaskTable) then
-        local points = auraInfo.points
-        if (points) then
-            for i = 1, #points do
-                local flaskTier = flaskTable.tier[points[i]]
-                if (flaskTier) then
-                    return flaskTier
-                end
-            end
-        end
+        return 1
     end
     return nil
 end
