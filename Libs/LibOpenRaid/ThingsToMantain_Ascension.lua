@@ -80,7 +80,6 @@ LIB_OPEN_RAID_MANA_POTIONS = {}
 LIB_OPEN_RAID_BLOODLUST = {
 	[2825] = true, --bloodlust
 	[32182] = true, --heroism
-	[80353] = true, --timewarp
 }
 
 --which gear slots can be enchanted on the latest retail version of the game
@@ -93,7 +92,7 @@ LIB_OPEN_RAID_ENCHANT_SLOTS = {
 	[INVSLOT_FINGER2] = true, --for all
 	[INVSLOT_MAINHAND] = true, --for all
 	[INVSLOT_OFFHAND] = true, --for all
-	[INVSLOT_RANGED] = true, --for all
+	--[INVSLOT_RANGED] = true, --for all
 	[INVSLOT_FEET] =  true, --for all
 	[INVSLOT_WRIST] = true, --for all
 	[INVSLOT_HAND] =  true, --for all
@@ -116,11 +115,34 @@ LIB_OPEN_RAID_FLASK_BUFF = {}
 LIB_OPEN_RAID_ALL_POTIONS = {}
 
 LIB_OPEN_RAID_HEALING_POTIONS = {
+	-- level 60
+	[9421] = true, --Major Healthstone (0/2)
+	[19012] = true, --Major Healthstone (1/2)
+	[19013] = true, --Major Healthstone (2/2)
+
+	[13446] = true, --Major Healing Potion
+	[220889] = true, --Battleground Healing Potion
+
+	-- level 70
+	[22103] = true, --Master Healthstone (0/2)
+	[22104] = true, --Master Healthstone (1/2)
+	[22105] = true, --Master Healthstone (2/2)
+
+	[22829] = true, --Super Healing Potion
+	[32947] = true, --Auchenai Healing Potion
+	[43531] = true, --Argent Healing Potion
+	[220888] = true, --Battleground Healing Potion
+	[23822] = true, --Healing Potion Injector (Engineering)
+	[33092] = true, --Healing Potion Injector (Engineering)
+
+	-- level 80
+	[36892] = true, --Fel Healthstone (0/2)
+	[36893] = true, --Fel Healthstone (1/2)
+	[36894] = true, --Fel Healthstone (2/2)
+
 	[33447] = true, --Runic Healing Potion
-	[41166] = true, --Runic Healing Injector
-	[47875] = true, --Warlock's Healthstone (0/2 Talent)
-	[47867] = true, --Warlock's Healthstone (1/2 Talent)
-	[47877] = true, --Warlock's Healthstone (2/2 Talent)
+	[41166] = true, --Runic Healing Injector (Engineering)
+	[43569] = true, --Endless Healing Potion (Alchemy)
 }
 
 LIB_OPEN_RAID_MELEE_SPECS = {}
@@ -149,21 +171,23 @@ local ENUM_SPELL_TYPE = {
 	PersonalUtility = 5,
 	Interrupt = 6,
 }
+
 LIB_OPEN_RAID_COOLDOWNS_INFO = {
 	--interrupts
-	[6552] = {class = "WARRIOR", specs = {64, 65, 66}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Pummel
-	[2139] = {class = "MAGE", specs = {85, 86, 87}, cooldown = 24, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Counterspell
-	[15487] = {class = "PRIEST", specs = {78}, cooldown = 45, silence = 4, talent = false, cooldownWithTalent = 30, cooldownTalentId = 23137, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Silence (shadow) Last Word Talent to reduce cooldown in 15 seconds
-	[1766] = {class = "ROGUE", specs = {73, 74, 75}, cooldown = 15, silence = 5, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Kick
-	[96231] = {class = "PALADIN", specs = {67, 68, 69}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Rebuke (protection and retribution)
-	[57994] = {class = "SHAMAN", specs = {82, 83, 84}, cooldown = 12, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Wind Shear
-	[47528] = {class = "DEATHKNIGHT", specs = {79, 80, 81}, cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Mind Freeze
-	[106839] = {class = "DRUID", specs = {92}, cooldown = 15, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Skull Bash (feral, guardian)
-	[78675] = {class = "DRUID", specs = {91 ,93}, cooldown = 60, silence = 8, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Solar Beam (balance)
-	[147362] = {class = "HUNTER", specs = {70, 71, 7}, cooldown = 24, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Counter Shot (beast mastery, marksmanship)
-	[19647] = {class = "WARLOCK", specs = {88, 89, 90}, cooldown = 24, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, pet = 417, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Spell Lock (pet felhunter ability)
-	[89766] = {class = "WARLOCK", specs = {90}, cooldown = 30, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, pet = 17252, type = ENUM_SPELL_TYPE.Interrupt, charges = 1}, --Axe Toss (pet felguard ability)
-
+	-- Classless
+	[6552] =	 {class = "WARRIOR",	specs = {64, 65, 66},	cooldown = 12, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Pummel
+	[2139] =	 {class = "MAGE",		specs = {85, 86, 87},	cooldown = 40, silence = 5, talent = false, cooldownWithTalent = 30, 	cooldownTalentId = 435,   type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Counterspell
+	[955071] =	 {class = "MAGE",		specs = {85, 86, 87},	cooldown = 35, silence = 2, talent = false, cooldownWithTalent = 25, 	cooldownTalentId = 435,   type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Fizzle
+	[15487] =	 {class = "PRIEST",		specs = {78},			cooldown = 45, silence = 4, talent = 552, 	cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Silence (shadow)
+	[1766] =	 {class = "ROGUE",		specs = {73, 74, 75},	cooldown = 12, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Kick
+	[955070] =	 {class = "PALADIN",	specs = {67, 68, 69},	cooldown = 22, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Rebuke
+	[57994] =	 {class = "SHAMAN",		specs = {82, 83, 84},	cooldown = 22, silence = 2, talent = false, cooldownWithTalent = 16, 	cooldownTalentId = 1143,  type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Wind Shear
+	[47528] =	 {class = "DEATHKNIGHT",specs = {79, 80, 81},	cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Mind Freeze
+	[47476] =	 {class = "DEATHKNIGHT",specs = {79, 80, 81},	cooldown = 120,silence = 5, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Strangulate
+	[78675] =	 {class = "DRUID",		specs = {91},			cooldown = 50, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Solar Beam (balance)
+	[34490] =	 {class = "HUNTER",		specs = {71},			cooldown = 30, silence = 2, talent = 926,	cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Silencing Shot (Marksmanship)
+	[19647] =	 {class = "WARLOCK",	specs = {88, 89, 90},	cooldown = 60, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = 417	}, --Spell Lock (pet felhunter ability)
+	
 	--paladin
 	-- 67 - Holy
 	-- 68 - Protection
