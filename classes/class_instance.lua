@@ -3966,8 +3966,10 @@ function Details:envia_relatorio (linhas, custom)
 	end
 
 	if (to_who == "RAID" or to_who == "PARTY") then
-		if (GetNumGroupMembers (LE_PARTY_CATEGORY_INSTANCE) > 0) then
-			to_who = "INSTANCE_CHAT"
+		if (GetNumRaidMembers() > 0) then
+			to_who = "RAID"
+		else
+			to_who = "PARTY"
 		end
 	end
 
