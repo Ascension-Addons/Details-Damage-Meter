@@ -187,6 +187,16 @@ LIB_OPEN_RAID_COOLDOWNS_INFO = {
 	[78675] =	 {class = "DRUID",		specs = {91},			cooldown = 50, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Solar Beam (balance)
 	[34490] =	 {class = "HUNTER",		specs = {71},			cooldown = 30, silence = 2, talent = 926,	cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Silencing Shot (Marksmanship)
 	[19647] =	 {class = "WARLOCK",	specs = {88, 89, 90},	cooldown = 60, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = 417	}, --Spell Lock (pet felhunter ability)
+	[1106552] =	 {class = "WARRIOR",	specs = {64, 65, 66},	cooldown = 12, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Pummel
+	[1102139] =	 {class = "MAGE",		specs = {85, 86, 87},	cooldown = 40, silence = 5, talent = false, cooldownWithTalent = 30, 	cooldownTalentId = 435,   type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Counterspell
+	[1115487] =	 {class = "PRIEST",		specs = {78},			cooldown = 45, silence = 4, talent = 552, 	cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Silence (shadow)
+	[1101766] =	 {class = "ROGUE",		specs = {73, 74, 75},	cooldown = 12, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Kick
+	[1157994] =	 {class = "SHAMAN",		specs = {82, 83, 84},	cooldown = 22, silence = 2, talent = false, cooldownWithTalent = 16, 	cooldownTalentId = 1143,  type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Wind Shear
+	[1147528] =	 {class = "DEATHKNIGHT",specs = {79, 80, 81},	cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Mind Freeze
+	[1147476] =	 {class = "DEATHKNIGHT",specs = {79, 80, 81},	cooldown = 120,silence = 5, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Strangulate
+	[1178675] =	 {class = "DRUID",		specs = {91},			cooldown = 50, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Solar Beam (balance)
+	[1134490] =	 {class = "HUNTER",		specs = {71},			cooldown = 30, silence = 2, talent = 926,	cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Silencing Shot (Marksmanship)
+	[1119647] =	 {class = "WARLOCK",	specs = {88, 89, 90},	cooldown = 60, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = 417	}, --Spell Lock (pet felhunter ability)
 	
 	--paladin
 	-- 67 - Holy
@@ -484,32 +494,31 @@ LIB_OPEN_RAID_SPELL_CUSTOM_NAMES = {
 --interrupt list using proxy from cooldown list
 --this list should be expansion and combatlog safe
 LIB_OPEN_RAID_SPELL_INTERRUPT = {
+	-- [Classless]
 	[6552] = LIB_OPEN_RAID_COOLDOWNS_INFO[6552], --Pummel
-
 	[2139] = LIB_OPEN_RAID_COOLDOWNS_INFO[2139], --Counterspell
-
-	[15487] = LIB_OPEN_RAID_COOLDOWNS_INFO[15487], --Silence (shadow) Last Word Talent to reduce cooldown in 15 seconds
-
+	[955071] = LIB_OPEN_RAID_COOLDOWNS_INFO[955071], -- Fizzle
+	[15487] = LIB_OPEN_RAID_COOLDOWNS_INFO[15487], --Silence (shadow)
 	[1766] = LIB_OPEN_RAID_COOLDOWNS_INFO[1766], --Kick
-
-	[96231] = LIB_OPEN_RAID_COOLDOWNS_INFO[96231], --Rebuke (protection and retribution)
-
-	[116705] = LIB_OPEN_RAID_COOLDOWNS_INFO[116705], --Spear Hand Strike (brewmaster and windwalker)
-
+	[955070] = LIB_OPEN_RAID_COOLDOWNS_INFO[955070], --Rebuke
 	[57994] = LIB_OPEN_RAID_COOLDOWNS_INFO[57994], --Wind Shear
-
 	[47528] = LIB_OPEN_RAID_COOLDOWNS_INFO[47528], --Mind Freeze
-
-	[106839] = LIB_OPEN_RAID_COOLDOWNS_INFO[106839], --Skull Bash (feral, guardian)
+	[47476] = LIB_OPEN_RAID_COOLDOWNS_INFO[47476], --Strangulate
 	[78675] = LIB_OPEN_RAID_COOLDOWNS_INFO[78675], --Solar Beam (balance)
-
-	[147362] = LIB_OPEN_RAID_COOLDOWNS_INFO[147362], --Counter Shot (beast mastery, marksmanship)
-	[187707] = LIB_OPEN_RAID_COOLDOWNS_INFO[187707], --Muzzle (survival)
-
-	[183752] = LIB_OPEN_RAID_COOLDOWNS_INFO[183752], --Disrupt
-
+	[34490] = LIB_OPEN_RAID_COOLDOWNS_INFO[34490], --Silencing Shot
 	[19647] = LIB_OPEN_RAID_COOLDOWNS_INFO[19647], --Spell Lock (pet felhunter ability)
-	[89766] = LIB_OPEN_RAID_COOLDOWNS_INFO[89766], --Axe Toss (pet felguard ability)
+
+	-- [Reborn]
+	[1106552] = LIB_OPEN_RAID_COOLDOWNS_INFO[1106552], --Pummel
+	[1102139] = LIB_OPEN_RAID_COOLDOWNS_INFO[1102139], --Counterspell
+	[1115487] = LIB_OPEN_RAID_COOLDOWNS_INFO[1115487], --Silence (shadow)
+	[1101766] = LIB_OPEN_RAID_COOLDOWNS_INFO[1101766], --Kick
+	[1157994] = LIB_OPEN_RAID_COOLDOWNS_INFO[1157994], --Wind Shear
+	[1147528] = LIB_OPEN_RAID_COOLDOWNS_INFO[1147528], --Mind Freeze
+	[1147476] = LIB_OPEN_RAID_COOLDOWNS_INFO[1147476], --Strangulate
+	[1178675] = LIB_OPEN_RAID_COOLDOWNS_INFO[1178675], --Solar Beam (balance)
+	[1134490] = LIB_OPEN_RAID_COOLDOWNS_INFO[1134490], --Silencing Shot
+	[1119647] = LIB_OPEN_RAID_COOLDOWNS_INFO[1119647], --Spell Lock (pet felhunter ability)
 }
 
 --override list of spells with more than one effect, example: multiple types of polymorph
