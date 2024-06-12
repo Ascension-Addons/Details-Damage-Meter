@@ -517,4 +517,279 @@ LIB_OPEN_RAID_SPELL_DEFAULT_IDS = {
 	--[id_to_override] = original_id
 }
 
+-- list of spells that map to a specific spec ID, this is used for spec guessing
+LIB_OPEN_RAID_SPEC_SPELL_LIST = {
+	-- [spellID] = specID
+	-- Arms Warrior [64]
+	
+	-- Fury Warrior [65]
+
+	-- Protection Warrior [66]
+
+	-- Holy Paladin [67]
+
+	-- Protection Paladin [68]
+
+	-- Retribution Paladin [69]
+
+	-- Beast Mastery Hunter [70]
+
+	-- Marksmanship Hunter [71]
+
+	-- Survival Hunter [72]
+
+	-- Assassination Rogue [73]
+
+	-- Combat Rogue [74]
+
+	-- Subtlety Rogue [75]
+
+	-- Discipline Priest [76]
+
+	-- Holy Priest [77]
+
+	-- Shadow Priest [78]
+
+	-- Blood Death Knight [79]
+
+	-- Frost Death Knight [80]
+
+	-- Unholy Death Knight [81]
+
+	-- Elemental Shaman [82]
+
+	-- Enhancement Shaman [83]
+
+	-- Restoration Shaman [84]
+
+	-- Arcane Mage [85]
+
+	-- Fire Mage [86]
+
+	-- Frost Mage [87]
+
+	-- Affliction Warlock [88]
+
+	-- Demonology Warlock [89]
+
+	-- Destruction Warlock [90]
+
+	-- Balance Druid [91]
+
+	-- Feral Druid [92]
+
+	-- Restoration Druid [93]
+
+	-- Hero [94]
+
+	-- Tactics Barbarian [1]
+
+	-- Brutality Barbarian [2]
+
+	-- Ancestry Barbarian [3]
+
+	-- Shadowhunting Witch Doctor [4]
+
+	-- Voodoo Witch Doctor [5]
+
+	-- Brewing Witch Doctor [6]
+
+	-- Felblood Felsworn (Demon Hunter) [7]
+
+	-- Slaying Felsworn (Demon Hunter) [8]
+
+	-- Demonology Felsworn (Demon Hunter) [9]
+
+	-- Boltslinger Witch Hunter [10]
+
+	-- Darkness Witch Hunter [11]
+
+	-- Inquisition Witch Hunter [12]
+
+	-- Witch Knight Witch Hunter [97]
+
+	-- Wind Stormbringer [13]
+
+	-- Gifts Stormbringer [14]
+
+	-- Lightning Stormbringer [15]
+
+	-- Hellfire Knight of Xoroth (Fleshwarden) [16]
+
+	-- Defiance Knight of Xoroth (Fleshwarden) [17]
+
+	-- War Knight of Xoroth (Fleshwarden) [18]
+
+	-- Gladiator Guardian [19]
+	
+	-- Inspiration Guardian [20]
+
+	-- Protection Guardian [21]
+
+	-- Discipline Templar (Monk) [22]
+	
+	-- Fighting Templar (Monk) [23]
+
+	-- Runes Templar (Monk) [24]
+
+	-- Fleshweaver Son of Arugal [25]
+
+	-- Blood Son of Arugal [26]
+
+	-- Ferocity Son of Arugal [27]
+	
+	-- Packleader Son of Arugal [99]
+
+	-- Archery Ranger [28]
+
+	-- Survival Ranger [29]
+
+	-- Dueling Ranger [30]
+
+	-- Displacement Chronomancer [31]
+
+	-- Duality Chronomancer [32]
+
+	-- Time Chronomancer [33]
+
+	-- Death Necromancer [34]
+
+	-- Animation Necromancer [35]
+
+	-- Rime Necromancer [36]
+
+	-- Destruction Pyromancer [37]
+
+	-- Incineration Pyromancer [38]
+
+	-- Draconic Pyromancer [39]
+
+	-- Influence Cultist [40]
+
+	-- Corruption Cultist [41]
+
+	-- Godblade Cultist [42]
+
+	-- Bulwark Cultist [96]
+
+	-- Tides Starcaller [43]
+
+	-- Moonbow Starcaller [44]
+
+	-- Hydromancy Starcaller [45]
+
+	-- Astral Warfare Starcaller [100]
+
+	-- Piety Sun Cleric [46]
+
+	-- Valkyr Sun Cleric [47]
+
+	-- Seraphim Sun Cleric [48]
+
+	-- Blessings Sun Cleric [98]
+
+	-- Mechanics Tinker [49]
+
+	-- Invention Tinker [50]
+
+	-- Firearms Tinker [51]
+
+	-- Fortitude Venomancer (Prophet) [52]
+
+	-- Stalking Venomancer (Prophet) [53]
+
+	-- Venom Venomancer (Prophet) [54]
+
+	-- Vizier Venomancer (Prophet) [101]
+
+	-- Soul Reaper [55]
+
+	-- Reaping Reaper [56]
+
+	-- Domination Reaper [57]
+
+	-- Life Primalist (Wildwalker) [58]
+
+	-- Primal Primalist (Wildwalker) [59]
+
+	-- Mountain King Primalist (Wildwalker) [60]
+
+	-- Geomancy Primalist (Wildwalker) [95]
+
+	-- Runic Runemaster (Spiritmage) [61]
+
+	-- Arcane Runemaster (Spiritmage) [62]
+
+	-- Riftblade Runemaster (Spiritmage) [63]
+}
+
+-- list of spells that map to a specific spec ID, this is used for class guessing
+LIB_OPEN_RAID_CLASS_SPELL_LIST = {
+	-- [spellID] = "CLASS"
+	-- "HERO"
+
+	-- "WARRIOR"
+
+	-- "DEATHKNIGHT"
+
+	-- "PALADIN"
+
+	-- "PRIEST"
+
+	-- "SHAMAN"
+
+	-- "DRUID"
+
+	-- "ROGUE"
+
+	-- "MAGE"
+
+	-- "WARLOCK"
+
+	-- "HUNTER"
+
+	-- "NECROMANCER"
+
+	-- "PYROMANCER"
+
+	-- "CULTIST"
+
+	-- "STARCALLER"
+
+	-- "SUNCLERIC"
+
+	-- "TINKER"
+
+	-- "SPIRITMAGE"
+
+	-- "WILDWALKER"
+
+	-- "REAPER"
+
+	-- "PROPHET"
+
+	-- "CHRONOMANCER"
+
+	-- "SONOFARUGAL"
+
+	-- "GUARDIAN"
+
+	-- "STORMBRINGER"
+
+	-- "DEMONHUNTER"
+
+	-- "BARBARIAN"
+
+	-- "WITCHDOCTOR"
+
+	-- "WITCHHUNTER"
+
+	-- "FLESHWARDEN"
+
+	-- "MONK"
+
+	-- "RANGER"
+
+}
+
 LIB_OPEN_RAID_DATABASE_LOADED = true
