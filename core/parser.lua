@@ -608,7 +608,7 @@
 
 					Details.WhoAggroTimer = C_Timer.NewTimer(0.1, whoAggro)
 					Details.WhoAggroTimer.HitBy = "|cFFFFFF00First Hit|r: " .. (link or "") .. " from " .. (sourceName or "Unknown")
-					Details:Msg("(debug):", Details.WhoAggroTimer.HitBy)
+					Details:Msg(Details.WhoAggroTimer.HitBy)
 				end
 
 				Details:EntrarEmCombate(sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags)
