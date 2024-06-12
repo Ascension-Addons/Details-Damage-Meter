@@ -803,6 +803,16 @@ LIB_OPEN_RAID_SPEC_SPELL_LIST = {
 	[81379] = 	78, 	-- Mind Flay (Unbounded Mind Flay) (Rank 9) 
 	[977850] = 	78, 	-- Twilight Treason (Unbounded Mind Flay) (Rank RE) 
 	[977851] = 	78, 	-- Twilight Treason (Unbounded Mind Flay) (Rank RE) 
+	[15407] = 	78,		-- Mind Flay (Rank 1)
+	[17311] = 	78, 	-- Mind Flay (Rank 2)
+	[17312] = 	78, 	-- Mind Flay (Rank 3)
+	[17313] = 	78,		-- Mind Flay (Rank 4)
+	[17314] = 	78, 	-- Mind Flay (Rank 5)
+	[18807] = 	78, 	-- Mind Flay (Rank 6)
+	[25387] = 	78, 	-- Mind Flay (Rank 7)
+	[48155] = 	78, 	-- Mind Flay (Rank 8)
+	[48156] = 	78, 	-- Mind Flay (Rank 9)
+	[760148] = 	78, 	-- Void Eruption
 
 	-- Blood Death Knight [79]
 
