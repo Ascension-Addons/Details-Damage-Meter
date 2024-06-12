@@ -174,7 +174,7 @@ local ENUM_SPELL_TYPE = {
 
 LIB_OPEN_RAID_COOLDOWNS_INFO = {
 	--interrupts
-	-- Classless
+	-- [Classless]
 	[6552] =	 {class = "WARRIOR",	specs = {64, 65, 66},	cooldown = 12, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Pummel
 	[2139] =	 {class = "MAGE",		specs = {85, 86, 87},	cooldown = 40, silence = 5, talent = false, cooldownWithTalent = 30, 	cooldownTalentId = 435,   type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Counterspell
 	[955071] =	 {class = "MAGE",		specs = {85, 86, 87},	cooldown = 35, silence = 2, talent = false, cooldownWithTalent = 25, 	cooldownTalentId = 435,   type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Fizzle
@@ -184,49 +184,74 @@ LIB_OPEN_RAID_COOLDOWNS_INFO = {
 	[57994] =	 {class = "SHAMAN",		specs = {82, 83, 84},	cooldown = 22, silence = 2, talent = false, cooldownWithTalent = 16, 	cooldownTalentId = 1143,  type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Wind Shear
 	[47528] =	 {class = "DEATHKNIGHT",specs = {79, 80, 81},	cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Mind Freeze
 	[47476] =	 {class = "DEATHKNIGHT",specs = {79, 80, 81},	cooldown = 120,silence = 5, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Strangulate
-	[78675] =	 {class = "DRUID",		specs = {91},			cooldown = 50, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Solar Beam (balance)
+	[954523] =	 {class = "DRUID",		specs = {91},			cooldown = 50, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Solar Beam (balance)
 	[34490] =	 {class = "HUNTER",		specs = {71},			cooldown = 30, silence = 2, talent = 926,	cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Silencing Shot (Marksmanship)
-	[19647] =	 {class = "WARLOCK",	specs = {88, 89, 90},	cooldown = 60, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = 417	}, --Spell Lock (pet felhunter ability)
-	[1106552] =	 {class = "WARRIOR",	specs = {64, 65, 66},	cooldown = 12, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Pummel
-	[1102139] =	 {class = "MAGE",		specs = {85, 86, 87},	cooldown = 40, silence = 5, talent = false, cooldownWithTalent = 30, 	cooldownTalentId = 435,   type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Counterspell
-	[1115487] =	 {class = "PRIEST",		specs = {78},			cooldown = 45, silence = 4, talent = 552, 	cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Silence (shadow)
-	[1101766] =	 {class = "ROGUE",		specs = {73, 74, 75},	cooldown = 12, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Kick
-	[1157994] =	 {class = "SHAMAN",		specs = {82, 83, 84},	cooldown = 22, silence = 2, talent = false, cooldownWithTalent = 16, 	cooldownTalentId = 1143,  type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Wind Shear
-	[1147528] =	 {class = "DEATHKNIGHT",specs = {79, 80, 81},	cooldown = 15, silence = 3, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Mind Freeze
+	[19647] =	 {class = "WARLOCK",	specs = {88, 89, 90},	cooldown = 24, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = 417	}, --Spell Lock (pet felhunter ability)
+
+	-- [Reborn]
+	[1106552] =	 {class = "WARRIOR",	specs = {64, 65, 66},	cooldown = 10, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Pummel
+	[1102139] =	 {class = "MAGE",		specs = {85, 86, 87},	cooldown = 24, silence = 8, talent = false, cooldownWithTalent = false,	cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Counterspell
+	[1115487] =	 {class = "PRIEST",		specs = {78},			cooldown = 45, silence = 5, talent = false,	cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Silence (shadow)
+	[1101766] =	 {class = "ROGUE",		specs = {73, 74, 75},	cooldown = 10, silence = 5, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Kick
+	[1157994] =	 {class = "SHAMAN",		specs = {82, 83, 84},	cooldown = 6,  silence = 2, talent = false, cooldownWithTalent = false,	cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Wind Shear
+	[1147528] =	 {class = "DEATHKNIGHT",specs = {79, 80, 81},	cooldown = 10, silence = 4, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Mind Freeze
 	[1147476] =	 {class = "DEATHKNIGHT",specs = {79, 80, 81},	cooldown = 120,silence = 5, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Strangulate
-	[1178675] =	 {class = "DRUID",		specs = {91},			cooldown = 50, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Solar Beam (balance)
-	[1134490] =	 {class = "HUNTER",		specs = {71},			cooldown = 30, silence = 2, talent = 926,	cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Silencing Shot (Marksmanship)
-	[1119647] =	 {class = "WARLOCK",	specs = {88, 89, 90},	cooldown = 60, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = 417	}, --Spell Lock (pet felhunter ability)
+	[2304523] =	 {class = "DRUID",		specs = {91},			cooldown = 50, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Solar Beam (balance)
+	[1134490] =	 {class = "HUNTER",		specs = {71},			cooldown = 20, silence = 3, talent = false,	cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = false}, --Silencing Shot (Marksmanship)
+	[1119647] =	 {class = "WARLOCK",	specs = {88, 89, 90},	cooldown = 24, silence = 6, talent = false, cooldownWithTalent = false, cooldownTalentId = false, type = ENUM_SPELL_TYPE.Interrupt, charges = 1, pet = 417	}, --Spell Lock (pet felhunter ability)
 	
 	--paladin
 	-- 67 - Holy
 	-- 68 - Protection
 	-- 69 - Retribution
 
-	[31884] = 	{cooldown = 120, 	duration = 20, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.AttackCooldown}, --Avenging Wrath
-	[498] = 	{cooldown = 60, 	duration = 8, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Divine Protection
-	[642] = 	{cooldown = 300, 	duration = 8, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Divine Shield
-	[633] = 	{cooldown = 600, 	duration = false, 	specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.ExternalDefensive}, --Lay on Hands
-	[1022] = 	{cooldown = 300, 	duration = 10, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.ExternalDefensive}, --Blessing of Protection
-	[6940] = 	{cooldown = 120, 	duration = 12, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.ExternalDefensive}, --Blessing of Sacrifice
-	[31821] = 	{cooldown = 180, 	duration = 8, 		specs = {67},		 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.RaidDefensive}, --Aura Mastery
-	[1044] = 	{cooldown = 25, 	duration = 8, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalUtility}, --Blessing of Freedom
-	[853] = 	{cooldown = 60, 	duration = 6, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalUtility}, --Hammer of Justice
-	[31850] = 	{cooldown = 120, 	duration = 8, 		specs = {68}, 			talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Ardent Defender
+	-- [Classless]
+	[31884] = 	{cooldown = 120, 	duration = 15, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.AttackCooldown}, --Avenging Wrath [Classless]
+	[498] = 	{cooldown = 180, 	duration = 8, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Divine Protection [Classless]
+	[642] = 	{cooldown = 300, 	duration = 4, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Divine Shield [Classless]
+	[1022] = 	{cooldown = 300, 	duration = 6, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.ExternalDefensive}, --Hand of Protection [Classless]
+	[6940] = 	{cooldown = 120, 	duration = 12, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.ExternalDefensive}, --Hand of Sacrifice [Classless]
+	[31821] = 	{cooldown = 60, 	duration = 6, 		specs = {67},		 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.RaidDefensive}, --Aura Mastery [Classless]
+	[1044] = 	{cooldown = 35, 	duration = 6, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalUtility}, --Hand of Freedom [Classless]
+	[38152] = 	{cooldown = 120, 	duration = false, 	specs = {68}, 			talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Ardent Defender [Classless]
+	[31842] = 	{cooldown = 90, 	duration = 15, 		specs = {67}, 			talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalUtility}, --Divine Illumination [Classless]
 
+	-- [Reborn]
+	[1131884] = {cooldown = 180, 	duration = 20, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.AttackCooldown}, --Avenging Wrath
+	[1100498] = {cooldown = 180, 	duration = 12, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Divine Protection
+	[1100642] = {cooldown = 300, 	duration = 12, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Divine Shield
+	[1101022] = {cooldown = 300, 	duration = 6, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.ExternalDefensive}, --Hand of Protection
+	[1106940] = {cooldown = 120, 	duration = 12, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.ExternalDefensive}, --Hand of Sacrifice
+	[1131821] = {cooldown = 120, 	duration = 6, 		specs = {67},		 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.RaidDefensive}, --Aura Mastery
+	[1101044] = {cooldown = 25, 	duration = 6, 		specs = {68,67,69}, 	talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalUtility}, --Hand of Freedom
+	[1138152] = {cooldown = 120, 	duration = false, 	specs = {68}, 			talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Ardent Defender 
+	[1131842] = {cooldown = 180, 	duration = 15, 		specs = {67}, 			talent =false, charges = 1, class = "PALADIN", type = ENUM_SPELL_TYPE.PersonalUtility}, --Divine Illumination 
+	
 	--warrior
 	-- 64 - Arms
 	-- 65 - Fury
 	-- 66 - Protection
 
-	[227847] = 	{cooldown = 90, 	duration = 5, 		specs = {64},	 		talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.AttackCooldown}, --Bladestorm
-	[46924] = 	{cooldown = 60, 	duration = 4, 		specs = {64},		 	talent =22400, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.AttackCooldown}, --Bladestorm (talent)
-	[1719] = 	{cooldown = 90, 	duration = 10, 		specs = {64,65,66},		talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.AttackCooldown}, --Recklessness
-	[184364] = 	{cooldown = 120, 	duration = 8, 		specs = {64,65,66},		talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Enraged Regeneration
-	[12975] = 	{cooldown = 180, 	duration = 15, 		specs = {66}, 			talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Last Stand
-	[871] = 	{cooldown = 8, 		duration = 240, 	specs = {64,65,66}, 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Shield Wall
-	[64382]  = 	{cooldown = 180, 	duration = false, 	specs = {64,65,66}, 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalUtility}, --Shattering Throw
-	[5246]  = 	{cooldown = 90, 	duration = 8, 		specs = {64,65,66}, 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalUtility}, --Intimidating Shout
+	-- [Classless]
+	[46924] = 	{cooldown = 60, 	duration = 6, 		specs = {64},	 		talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.AttackCooldown}, --Bladestorm [Classless]
+	[1719] = 	{cooldown = 180, 	duration = 8, 		specs = {64,65,66},		talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.AttackCooldown}, --Recklessness [Classless]
+	[55694] = 	{cooldown = 180, 	duration = 10, 		specs = {64,65,66},		talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Enraged Regeneration [Classless]
+	[12975] = 	{cooldown = 120, 	duration = 20, 		specs = {66}, 			talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Last Stand [Classless]
+	[871] = 	{cooldown = 300, 	duration = 12, 		specs = {64,65,66}, 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Shield Wall [Classless]
+	[64382]  = 	{cooldown = 60, 	duration = false, 	specs = {64,65,66}, 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalUtility}, --Shattering Throw [Classless]
+	[5246]  = 	{cooldown = 30, 	duration = 5, 		specs = {64,65,66}, 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalUtility}, --Intimidating Shout [Classless]
+	[886380] = 	{cooldown = 180, 	duration = 12, 		specs = {64,65,66},	 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.AttackCooldown}, --Avatar [Classless]
+	[955062] = 	{cooldown = 60, 	duration = 15, 		specs = {64,65,66},	 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.RaidDefensive}, --Demoralizing Banner [Classless]
+	[954514] = 	{cooldown = 180, 	duration = 10, 		specs = {64,65,66},	 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.AttackCooldown}, --Skull Banner [Classless]
+
+	-- [Reborn]
+	[1146924] = {cooldown = 60, 	duration = 6, 		specs = {64},	 		talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.AttackCooldown}, --Bladestorm
+	[1101719] = {cooldown = 300, 	duration = 12, 		specs = {64,65,66},		talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.AttackCooldown}, --Recklessness 
+	[1155694] = {cooldown = 180, 	duration = 10, 		specs = {64,65,66},		talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Enraged Regeneration
+	[1112975] = {cooldown = 180, 	duration = 20, 		specs = {66}, 			talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Last Stand
+	[1100871] = {cooldown = 300, 	duration = 12, 		specs = {64,65,66}, 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalDefensive}, --Shield Wall
+	[1164382] = {cooldown = 300, 	duration = false, 	specs = {64,65,66}, 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalUtility}, --Shattering Throw
+	[1105246] = {cooldown = 120, 	duration = 8, 		specs = {64,65,66}, 	talent =false, charges = 1, class = "WARRIOR", type = ENUM_SPELL_TYPE.PersonalUtility}, --Intimidating Shout 
 
 	--warlock
 	-- 88 - Affliction
