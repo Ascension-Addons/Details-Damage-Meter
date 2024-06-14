@@ -543,6 +543,17 @@ function DF.table.setfrompath(t, path, value)
 	return false
 end
 
+---return the amount of keys in a table
+---@param t table
+---@return number
+function DF.table.countkeys(t)
+	local count = 0
+	for _ in pairs(t) do
+		count = count + 1
+	end
+	return count
+end
+
 ---find the value inside the table, and it it's not found, add it
 ---@param t table
 ---@param index integer|any

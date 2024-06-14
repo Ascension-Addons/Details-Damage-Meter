@@ -99,6 +99,7 @@ do
 
 	---@type table<number, customiteminfo>
 	local customItemList = {}
+	Details222.CustomItemList = customItemList
 
 	local iconSize = 14
 	local coords = {0.14, 0.86, 0.14, 0.86}
@@ -139,6 +140,24 @@ do
 		[8] = {name = Loc ["STRING_ENVIRONMENTAL_SLIME"], icon = [[Interface\ICONS\Ability_Creature_Poison_02]]},
 	}
 
+	function Details222.Pets.GetPetNameFromCustomSpells(petName, spellId, npcId)
+		---@type customiteminfo
+		local customItem = Details222.CustomItemList[spellId]
+		if (customItem and customItem.isSummon) then
+			local defaultName = customItem.defaultName
+			if (defaultName) then
+				petName = defaultName
+				if (customItem.nameExtra) then
+					petName = petName .. " " .. customItem.nameExtra
+				end
+
+				return petName
+			end
+		end
+
+		return petName
+	end
+	
 	if (LIB_OPEN_RAID_SPELL_CUSTOM_NAMES) then
 		for spellId, customTable in pairs(LIB_OPEN_RAID_SPELL_CUSTOM_NAMES) do
 			local customName = customTable.name
