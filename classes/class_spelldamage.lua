@@ -62,7 +62,7 @@ function classDamageSpellTable:NovaTabela(spellId, link, token)
 		extra = {}
 	}
 
-	if (token == "SPELL_PERIODIC_DAMAGE") then
+	if (token == "SPELL_PERIODIC_DAMAGE") and Details.combat_log.separate_dot_effects then
 		Details:SetAsDotSpell(spellId)
 	end
 

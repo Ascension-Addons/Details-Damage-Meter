@@ -4,7 +4,7 @@
 	local addonName, Details222 = ...
 	local healingAbility = Details.habilidade_cura
 
-	function healingAbility:NovaTabela(id)
+	function healingAbility:NovaTabela(id, link, token)
 		---@type spelltable
 		local spellTable = {
 			--spellId
@@ -39,6 +39,11 @@
 			targets_overheal = {},
 			targets_absorbs = {}
 		}
+
+		
+	if (token == "SPELL_PERIODIC_HEAL") and Details.combat_log.separate_hot_effects then
+		Details:SetAsHotSpell(id)
+	end
 
 		return spellTable
 	end

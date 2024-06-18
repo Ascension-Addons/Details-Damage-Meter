@@ -531,6 +531,14 @@
 				spellId = override_spellId[spellId] or spellId
 			end
 
+		--> otherwise check if the spellId is periodic, and if it is then get the first rank of the spell for (DoT) spells
+			if token == "SPELL_PERIODIC_DAMAGE" then
+				local firstRank = C_Spell.GetFirstRank(spellId)
+				if firstRank and firstRank ~= spellId then
+					spellId = firstRank
+				end
+			end
+
 		--> npcId check for ignored npcs
 		--> get the npcId from the cache, if it's not there then get it from the serial and add it to the cache
 			local npcId = npcid_cache[targetSerial] --target npc
@@ -1963,6 +1971,14 @@
 
 		if (is_using_spellId_override) then
 			spellId = override_spellId[spellId] or spellId
+		end
+
+		--> if its a periodic heal, use the first rank so it shows up at (HoT)
+		if token == "SPELL_PERIODIC_HEAL" then
+			local firstRank = C_Spell.GetFirstRank(spellId)
+			if firstRank then
+				spellId = firstRank
+			end
 		end
 
 		local effectiveHeal = absorbed

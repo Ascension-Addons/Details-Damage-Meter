@@ -332,4 +332,29 @@ do
 			rawset(Details.spellcache, spellId, {"Unknown DoT Spell? " .. Loc ["STRING_DOT"], rank, [[Interface\InventoryItems\WoWUnknownItem01]]})
 		end
 	end
+
+	--overwrite SpellInfo if the spell is a HoT, so Details.GetSpellInfo will return the name modified
+	function Details:SetAsHotSpell(spellId)
+		--do nothing if this spell already has a customization
+		if (defaultSpellCustomization[spellId]) then
+			return
+		end
+
+		--do nothing if the spell is already cached
+		local spellInfo = rawget(Details.spellcache, spellId)
+		if (spellInfo) then
+			return
+		end
+
+		local spellName, rank, spellIcon = Details.GetSpellInfo(spellId)
+		if (not spellName) then
+			spellName, rank, spellIcon = GetSpellInfo(spellId)
+		end
+
+		if (spellName) then
+			rawset(Details.spellcache, spellId, {spellName .. Loc ["STRING_HOT"], rank, spellIcon})
+		else
+			rawset(Details.spellcache, spellId, {"Unknown HoT Spell? " .. Loc ["STRING_HOT"], rank, [[Interface\InventoryItems\WoWUnknownItem01]]})
+		end
+	end
 end

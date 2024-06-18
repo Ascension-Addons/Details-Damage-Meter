@@ -7179,6 +7179,27 @@ do
                 desc = "Merges spells like Atonement and Awakened Faeline with their critical damage component.",
                 boxfirst = true,
             },
+            
+            {--separate DoT effects
+                type = "toggle",
+                get = function() return Details.combat_log.separate_dot_effects end,
+                set = function(self, fixedparam, value)
+                    Details.combat_log.separate_dot_effects = value
+                end,
+                name = "Separate Damage Over Time Effects",
+                desc = "If Enabled, spells which deal initial damage and then damage over time will be tracked separately.",
+                boxfirst = true,
+            },
+            {--separate HoT effects
+                type = "toggle",
+                get = function() return Details.combat_log.separate_hot_effects end,
+                set = function(self, fixedparam, value)
+                    Details.combat_log.separate_hot_effects = value
+                end,
+                name = "Separate Heal Over Time Effects",
+                desc = "If Enabled, spells which have initial healing and then heal over time will be tracked separately.",
+                boxfirst = true,
+            },
         }
 
         sectionFrame.sectionOptions = sectionOptions
