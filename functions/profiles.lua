@@ -1197,6 +1197,11 @@ local default_global_data = {
 		encounter_journal_cache = {}, --store a dump of the encounter journal
 		installed_skins_cache = {},
 
+		debug_options_panel = {
+			scaletable = {scale = 1},
+			position = {},
+		},
+
 		user_is_patreon_supporter = false,
 
 		show_warning_id1 = true,
