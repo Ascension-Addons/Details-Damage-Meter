@@ -486,7 +486,7 @@ function Details:CreateEventTrackerFrame(parentObject, name)
                 return name
             end
 
-            if guid:sub(1,6) ~= 'Player' then
+            if not GUIDIsPlayer(guid) then
                 return name
             end
 
@@ -494,9 +494,9 @@ function Details:CreateEventTrackerFrame(parentObject, name)
                 return name
             end
 
-            -- Example GUID: Player-0301-0D23FC41
-            -- We only care about the last part
-            local _,_, guid_end = string.split('-', guid)
+            -- Example GUID: 0xAABCCCDDDDEEEEEE
+            -- We only care about the EEEEEE
+            local guid_end = guid:sub(-6)
 
             return guid_end
         end
