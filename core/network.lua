@@ -370,11 +370,6 @@
 		end
 	end
 
-	function Details.network.HandleMissData(player, realm, coreVersion, data)
-		--soul rip from akaari's soul (LEGION ONLY)
-		--deprecated
-	end
-
 	function Details.network.ReceivedEnemyPlayer(player, realm, coreVersion, data)
 		--deprecated
 	end
@@ -393,8 +388,6 @@
 		[CONST_WIPE_CALL] = Details.network.Wipe_Call,
 
 		[CONST_GUILD_SYNC] = Details.network.GuildSync,
-
-		[CONST_ROGUE_SR] = Details.network.HandleMissData, --soul rip from akaari's soul (LEGION ONLY)
 
 		[CONST_PVP_ENEMY] = Details.network.ReceivedEnemyPlayer,
 
