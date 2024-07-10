@@ -314,7 +314,7 @@
 				--return false
 			end
 
-			local IDs = Details.storage:GetIDsToGuildSync()
+			local IDs = Details222.storage.GetIDsToGuildSync()
 
 			if (IDs and IDs [1]) then
 				local from = UnitName("player")
@@ -326,7 +326,7 @@
 			return true
 
 		elseif (type == "L") then --RoC - the player received the IDs list and send back which IDs he doesn't have
-			local missingIds = Details.storage:CheckMissingIDsToGuildSync(data)
+			local missingIds = Details222.storage.CheckMissingIDsToGuildSync(data)
 
 			if (missingIds and missingIds[1]) then
 				local from = UnitName ("player")
@@ -336,7 +336,7 @@
 			return true
 
 		elseif (type == "G") then --RoS - the 'server' send the encounter dps table to the player which requested
-			local encounterData = Details.storage:BuildEncounterDataToGuildSync(data)
+			local encounterData = Details222.storage.BuildEncounterDataToGuildSync(data)
 
 			if (encounterData and encounterData[1]) then
 				local task = C_Timer.NewTicker(4, function(task)
@@ -365,7 +365,7 @@
 			return true
 
 		elseif (type == "A") then --RoC - the player received the dps table and should now add it to the db
-			Details.storage:AddGuildSyncData(data, player)
+			Details222.storage.AddGuildSyncData(data, player)
 			return true
 		end
 	end

@@ -101,6 +101,14 @@
 			[666953] = true, --Outland Single Target Training Dummy
 		}
 
+		---@type details_storage_feature
+		---@diagnostic disable-next-line: missing-fields
+		local storage = {
+			DiffNames = {"normal", "heroic", "mythic", "ascended"},
+			DiffNamesHash = {normal = 1, heroic = 2, mythic = 3, ascended = 4},
+		}
+		Details222.storage = storage
+
 		--namespace for damage spells (spellTable)
 		Details222.DamageSpells = {}
 		--namespace for texture

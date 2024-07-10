@@ -177,8 +177,19 @@ local segmentTypeToString = {
 		return rawget(self, "is_trash")
 	end
 
+	local diffNumberToName = {
+		[1] = "normal",
+		[2] = "heroic",
+		[3] = "mythic",
+		[4] = "ascended",
+	}
+
 	function classCombat:GetDifficulty()
-		return self.is_boss and self.is_boss.diff
+		local bossInfo = self:GetBossInfo()
+		if (bossInfo) then
+			local difficultyId = bossInfo.diff
+			return difficultyId, diffNumberToName[difficultyId]
+		end
 	end
 
 	function classCombat:GetEncounterCleuID()
@@ -941,7 +952,7 @@ local segmentTypeToString = {
 
 	---return the total of a specific attribute, example: total damage, total healing, total resources, etc
 	---@param attribute number
-	---@param subAttribute number
+	---@param subAttribute number?
 	---@param onlyGroup boolean?
 	---@return number
 	function classCombat:GetTotal(attribute, subAttribute, onlyGroup)
