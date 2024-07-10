@@ -2163,8 +2163,8 @@ local iconFrame_OnEnter = function(self)
 			local diff, diffEngName = combat:GetDifficulty()
 			local attribute, subattribute = instance:GetDisplay()
 
-			--check if is a raid encounter and if is heroic or mythic
-			if (diff and (diff == 15 or diff == 16) and (attribute == 1 or attribute == 2)) then --might give errors
+			--check if is a raid encounter and if is mythic or ascended
+			if (diff and (diff == 2 or diff == 3) and (attribute == 1 or attribute == 2)) then --might give errors
 				local db = Details.OpenStorage()
 				if (db) then
 					---@type details_storage_unitresult, details_encounterkillinfo

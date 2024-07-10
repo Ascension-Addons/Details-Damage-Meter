@@ -872,10 +872,10 @@ end)
 local CONST_ADDONNAME_DATASTORAGE = "Details_DataStorage"
 
 local diffNumberToName = {
-	[1] = "normal",
-	[2] = "heroic",
-	[3] = "mythic",
-	[4] = "ascended",
+	[0] = "normal",
+	[1] = "heroic",
+	[2] = "mythic",
+	[3] = "ascended",
 }
 
 local createStorageTables = function()
@@ -1651,7 +1651,7 @@ end
 ---load the storage addon when the player leave combat, this function is also called from the parser when the player has its regen enabled
 function Details.ScheduleLoadStorage()
 	--check first if the storage is already loaded
-	if (C_AddOns.IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
+	if (IsAddOnLoaded(CONST_ADDONNAME_DATASTORAGE)) then
 		Details.schedule_storage_load = nil
 		Details222.storageLoaded = true
 		return

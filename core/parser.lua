@@ -395,16 +395,16 @@
 		--self is a timer reference from C_Timer
 
 		local diffNumberToName = {
-			[1] = "normal",
-			[2] = "heroic",
-			[3] = "mythic",
-			[4] = "ascended",
+			[0] = "normal",
+			[1] = "heroic",
+			[2] = "mythic",
+			[3] = "ascended",
 		}
 
 		local encounterID = self.Boss
 		local diff = self.Diff
 
-		if (diff == 1 or diff == 2 or diff == 3 or diff == 4) then --might give errors
+		if (diff == 0 or diff == 1 or diff == 2 or diff == 3) then --might give errors
 			local value, rank, combatTime = 0, 0, 0
 
 			if (encounterID == lastRecordFound.id and diff == lastRecordFound.diff) then

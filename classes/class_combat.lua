@@ -178,10 +178,10 @@ local segmentTypeToString = {
 	end
 
 	local diffNumberToName = {
-		[1] = "normal",
-		[2] = "heroic",
-		[3] = "mythic",
-		[4] = "ascended",
+		[0] = "normal",
+		[1] = "heroic",
+		[2] = "mythic",
+		[3] = "ascended",
 	}
 
 	function classCombat:GetDifficulty()

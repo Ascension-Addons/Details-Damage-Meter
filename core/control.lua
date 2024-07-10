@@ -526,7 +526,6 @@
 		--flag instance type
 		local zoneName, instanceType, difficultyID, difficultyName, _, _, _, zoneMapID = GetInstanceInfo()
 		currentCombat.instance_type = instanceType
-
 		if (not currentCombat.is_boss and bIsFromEncounterEnd and type(bIsFromEncounterEnd) == "table") then
 			local encounterID, encounterName, difficultyID, raidSize, endStatus = unpack(bIsFromEncounterEnd)
 			if (encounterID) then
@@ -730,7 +729,7 @@
 				if (IsInRaid()) then
 					local cleuID = currentCombat.is_boss.id
 					local diff = currentCombat.is_boss.diff
-					if (cleuID and diff == 16) then -- 16 mythic
+					if (cleuID and diff == 3) then -- 3 ascended
 						local raidData = Details.raid_data
 
 						--get or build mythic raid data table

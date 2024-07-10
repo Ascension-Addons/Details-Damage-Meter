@@ -4919,7 +4919,7 @@ function damageClass:MontaInfoDamageDone() --I guess this fills the list of spel
 	--guild ranking on a boss
 	--check if is a raid encounter and if is heroic or mythic
 	do
-		if (diff and (diff == 1 or diff == 2 or diff == 3 or diff == 4)) then --this might give errors
+		if (diff and (diff == 0 or diff == 1 or diff == 2 or diff == 3)) then --this might give errors
 			local db = Details.OpenStorage()
 			if (db) then
 				---@type details_storage_unitresult, details_encounterkillinfo
