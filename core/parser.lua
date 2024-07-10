@@ -457,8 +457,8 @@
 
 		--melee
 		if (token == "SWING_DAMAGE") then
-			-- school or 00000001 because pets can have different melee damage types.
-			spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical, glacing, crushing, isoffhand = 1, meleeString, school or 00000001, spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical
+			-- spellType or 00000001 because pets can have different melee damage types.
+			spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical, glacing, crushing, isoffhand = 1, meleeString, spellType or 00000001, spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical
 		end
 
 		if (not targetName) then
