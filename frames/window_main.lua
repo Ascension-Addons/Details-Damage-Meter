@@ -3569,11 +3569,7 @@ function gump:CriaJanelaPrincipal(ID, instancia, criando)
 			Details222.PrivateInstanceText:SetTextColor(1, 1, 1, 0.5)
 			Details222.PrivateInstanceText:SetText(authorInfo.Support..("/"..authorInfo.Name..""):gsub("^%s$", ""))
 			Details222.PrivateInstanceText:SetPoint("bottomleft", baseframe, "bottomleft", 2, 2)
-			Details222.PrivateInstanceText:Hide()hooksecurefunc(commentador, "FollowUnit", function()
-				C_Timer.After(180, function()Details222.PrivateInstanceText:Show()end)
-			end)hooksecurefunc(commentador, "FollowPlayer", function()
-				C_Timer.After(180, function()Details222.PrivateInstanceText:Show()end)
-			end)
+			Details222.PrivateInstanceText:Hide()
 		end
 
 	--wallpaper

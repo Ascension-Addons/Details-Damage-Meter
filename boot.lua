@@ -1273,17 +1273,6 @@ do
 			end
 		end
 
-		local bIsDump = false
-		local waitForSpellLoad = CreateFrame("frame")
-		if (C_EventUtils.IsEventValid("SPELL_TEXT_UPDATE")) then
-			waitForSpellLoad:RegisterEvent("SPELL_TEXT_UPDATE")
-			waitForSpellLoad:SetScript("OnEvent", function(self, event, spellId)
-				if (bIsDump) then
-					dumpt(spellId)
-				end
-			end)
-		end
-
 		function dumpt(value) --[[GLOBAL]]
 			--check if this is a spellId
 			local spellId = tonumber(value)
@@ -1292,7 +1281,6 @@ do
 				if (type(spellInfo[1]) == "string") then
 					local desc = C_Spell.GetSpellDescription and C_Spell.GetSpellDescription(spellId) or GetSpellDescription(spellId)
 					if (not desc or desc == "") then
-						bIsDump = true
 						return
 					end
 
@@ -1302,8 +1290,6 @@ do
 					else
 						return Details:Dump({desc, spellInfo})
 					end
-
-					bIsDump = false
 				end
 			end
 

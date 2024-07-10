@@ -65,12 +65,6 @@ function Details:StartMeUp()
 		--@deathTable: a table containing all the information about the player's death
 		Details.ShowDeathTooltipFunction = Details.ShowDeathTooltip
 
-		if (C_CVar) then
-			if (not InCombatLockdown()) then --disable for releases
-			C_CVar.SetCVar("cameraDistanceMaxZoomFactor", 2.6)
-			end
-		end
-
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --initialize
 
