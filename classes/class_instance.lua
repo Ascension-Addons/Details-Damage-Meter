@@ -2065,7 +2065,7 @@ function Details:RestauraJanela(index, temp, load_only)
 		--check if the skin used in the window is the default skin, check if statusbar is in use and if the color of the window is full white
 		if (self.skin == Details.default_skin_to_use and self.show_statusbar) then
 			if(self.color[1] == 1 and self.color[2] == 1 and self.color[3] == 1 and self.color[4] == 1) then
-				Details:Msg("error 0xFF85DD")
+				--Details:Msg("error 0xFF85DD")
 				self.skin = "no skin"
 				self:ChangeSkin(Details.default_skin_to_use)
 			end
