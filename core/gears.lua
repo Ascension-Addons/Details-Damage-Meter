@@ -861,7 +861,7 @@ end)
 ---@field totalkills table<string, table<encounterid, details_bosskillinfo>>
 
 ---@class details_storage_feature : table
----@field diffNames string[] {"normal", "heroic", "mythic"}
+---@field diffNames string[] {"normal", "heroic", "mythic", "ascended"}
 ---@field OpenRaidStorage fun():details_storage
 ---@field HaveDataForEncounter fun(difficulty:string, encounterId:number, guildName:string|boolean):boolean
 ---@field GetBestFromGuild fun(difficulty:string, encounterId:number, role:role, dps:boolean, guildName:string):actorname, details_storage_unitresult, details_encounterkillinfo
@@ -871,12 +871,7 @@ end)
 
 local CONST_ADDONNAME_DATASTORAGE = "Details_DataStorage"
 
-local diffNumberToName = {
-	[0] = "normal",
-	[1] = "heroic",
-	[2] = "mythic",
-	[3] = "ascended",
-}
+local diffNumberToName = Details222.storage.DiffIdToName
 
 local createStorageTables = function()
 	local storageDatabase = DetailsDataStorage
@@ -1787,9 +1782,9 @@ function Details.Database.StoreWipe(combat)
 
 	local _, _, _, _, _, _, _, mapID = GetInstanceInfo()
 
-	if (not Details:IsZoneIdFromCurrentExpansion(mapID)) then
+	if (not Details:IsZoneIdFromCurrentExpansion(mapID) and not Details222.storage.IsDebug) then
 		if (Details.debug) then
-			print("|cFFFFFF00Details! Storage|r: instance not allowed.")
+			print("|cFFFFFF00Details! Storage|r: instance not allowed.") --again
 		end
 		return
 	end
@@ -1836,14 +1831,10 @@ function Details.Database.StoreWipe(combat)
 	end
 end
 
-
----PAREI AQUI
-
-
 ---@param combat combat
 function Details.Database.StoreEncounter(combat)
 	combat = combat or Details:GetCurrentCombat()
-
+print(1)
 	if (not combat) then
 		if (Details.debug) then
 			print("|cFFFFFF00Details! Storage|r: combat not found.")
@@ -1853,13 +1844,15 @@ function Details.Database.StoreEncounter(combat)
 
 	local _, _, _, _, _, _, _, mapID = GetInstanceInfo()
 
-	if (not Details:IsZoneIdFromCurrentExpansion(mapID)) then
+	--Details:IsZoneIdFromCurrentExpansion(select(8, GetInstanceInfo()))
+
+	if (not Details:IsZoneIdFromCurrentExpansion(mapID) and not Details222.storage.IsDebug) then
 		if (Details.debug) then
 			print("|cFFFFFF00Details! Storage|r: instance not allowed.")
 		end
 		return
 	end
-
+	print(2)
 	local encounterInfo = combat:GetBossInfo()
 	local encounterId = encounterInfo and encounterInfo.id
 
@@ -1879,7 +1872,7 @@ function Details.Database.StoreEncounter(combat)
 	if (not savedData) then
 		return
 	end
-
+	print(3)
 	--[=[
 		savedData[mythic] = {
 			[encounterId] = { --indexed table
@@ -1919,7 +1912,7 @@ function Details.Database.StoreEncounter(combat)
 
 	--total kills in a boss on raid or dungeon
 	local totalkillsTable = Details.Database.GetBossKillsDB(savedData)
-
+	
 	--store total kills on this boss
 	--if the player is facing a raid boss
 	if (IsInRaid()) then
@@ -1935,7 +1928,7 @@ function Details.Database.StoreEncounter(combat)
 			dps_best_raid = 0,
 			dps_best_raid_when = 0
 		}
-
+		print(4)
 		---@type details_bosskillinfo
 		local bossData = totalkillsTable[encounterId][diff]
 		---@type combattime
@@ -1972,9 +1965,9 @@ function Details.Database.StoreEncounter(combat)
 			bossData.dps_best_raid_when = time()
 		end
 	end
-
+	print(5, diff)
 	--check for heroic and mythic
-	if (storageDebug or Details222.storage.DiffNamesHash[diff]) then
+	if (Details222.storage.IsDebug or Details222.storage.DiffNamesHash[diff]) then
 		--check the guild name
 		local match = 0
 		local guildName = GetGuildInfo("player")
@@ -1982,7 +1975,7 @@ function Details.Database.StoreEncounter(combat)
 
 		local cachedUnitIds = Details222.UnitIdCache.Raid
 
-		if (not storageDebug) then
+		if (not Details222.storage.IsDebug) then
 			if (guildName) then
 				for i = 1, raidSize do
 					local gName = GetGuildInfo(cachedUnitIds[i]) or ""
@@ -2020,6 +2013,8 @@ function Details.Database.StoreEncounter(combat)
 
 		local damageContainer = combat:GetContainer(DETAILS_ATTRIBUTE_DAMAGE)
 		local healingContainer = combat:GetContainer(DETAILS_ATTRIBUTE_HEAL)
+
+		print(6, diff)
 
 		for i = 1, GetNumGroupMembers() do
 			local role = UnitGroupRolesAssigned(cachedUnitIds[i])
@@ -2061,6 +2056,8 @@ function Details.Database.StoreEncounter(combat)
 				end
 			end
 		end
+
+		print(7, diff)
 
 		--add the encounter data
 		tinsert(allEncountersStored, combatResultData)

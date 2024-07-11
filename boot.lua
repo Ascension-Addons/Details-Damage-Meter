@@ -105,7 +105,9 @@
 		---@diagnostic disable-next-line: missing-fields
 		local storage = {
 			DiffNames = {"normal", "heroic", "mythic", "ascended"},
-			DiffNamesHash = {normal = 1, heroic = 2, mythic = 3, ascended = 4},
+			DiffNamesHash = {normal = 14, heroic = 2, mythic = 3, ascended = 4,},
+			DiffIdToName = {[1] = "normal", [2] = "heroic", [3] = "mythic", [4] = "ascended"},
+			IsDebug = false
 		}
 		Details222.storage = storage
 

@@ -177,18 +177,11 @@ local segmentTypeToString = {
 		return rawget(self, "is_trash")
 	end
 
-	local diffNumberToName = {
-		[0] = "normal",
-		[1] = "heroic",
-		[2] = "mythic",
-		[3] = "ascended",
-	}
-
 	function classCombat:GetDifficulty()
 		local bossInfo = self:GetBossInfo()
 		if (bossInfo) then
 			local difficultyId = bossInfo.diff
-			return difficultyId, diffNumberToName[difficultyId]
+			return difficultyId, Details222.storage.DiffIdToName[difficultyId]
 		end
 	end
 
