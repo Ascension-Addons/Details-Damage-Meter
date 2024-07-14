@@ -73,6 +73,8 @@
 			DamageSpellsCache = {}
 		}
 
+		Details222.StartUp = {}
+
 		Details222.Unknown = _G["UNKNOWN"]
 
 		--namespace color
@@ -115,7 +117,12 @@
 		Details222.DamageSpells = {}
 		--namespace for texture
 		Details222.Textures = {}
-		Details222.Debug = {}
+
+		Details222.Debug = {
+			DebugPets = false,
+			DebugPlayerPets = false,
+		}
+
 		Details222.Tvs = tvs
 		--namespace for pet
 		Details222.Pets = {}
