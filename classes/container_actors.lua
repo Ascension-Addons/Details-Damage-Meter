@@ -213,6 +213,7 @@ end
 						else
 							for playerName in actorName:gmatch("([^%s']+)") do
 								playerName = playerName:gsub(",", "")
+                                playerName = playerName:gsub("'s$", "")
 								local playerIsOnRaidCache = currentCombat.raid_roster[playerName]
 								if (playerIsOnRaidCache) then
 									ownerGUID = UnitGUID(playerName)
