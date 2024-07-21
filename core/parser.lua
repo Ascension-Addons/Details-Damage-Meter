@@ -181,6 +181,9 @@
 			[10060] = true, --power infusion
 		}
 
+		---@type table<spellid, boolean>
+		local ignoredWorldAuras = Details222.IgnoredWorldAuras
+
 		Details.CreditBuffToTarget = buffs_on_target
 
 		local empower_cache = {}
@@ -2328,6 +2331,10 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
 
 	function parser:buff(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, spellschool, auraType, amount, arg1, arg2, arg3)
+		if (ignoredWorldAuras[spellId]) then
+			return
+		end
+
 		--not yet well know about unnamed buff casters
 		if (not targetName) then
 			targetName = "[*] Unknown shield target"
@@ -2516,6 +2523,10 @@
 
 	--~refresh
 	function parser:buff_refresh(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, spellschool, tipo, amount)
+		if (ignoredWorldAuras[spellId]) then
+			return
+		end
+
 		if (not sourceName) then
 			sourceName = names_cache[spellName]
 			if (not sourceName) then
@@ -2594,6 +2605,10 @@
 
 	-- ~unbuff
 	function parser:unbuff(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, spellSchool, tipo, amount)
+		if (ignoredWorldAuras[spellId]) then
+			return
+		end
+
 		if (not sourceName) then
 			sourceName = names_cache[spellName]
 			if (not sourceName) then
@@ -2802,7 +2817,9 @@
 -----------------------------------------------------------------------------------------------------------------------------------------
 
 	function parser:add_bad_debuff_uptime(token, time, sourceGuid, sourceName, sourceFlags, targetGuid, targetName, targetFlags, targetsFlags2, spellId, spellName, spellSchool, sInOrOut, stackSize)
-		if (not targetName) then
+		if (ignoredWorldAuras[spellId]) then
+			return
+		elseif (not targetName) then
 			--no target name, just quit
 			return
 		elseif (not sourceName) then
@@ -2981,6 +2998,10 @@
 	---@param sAuraInOrOut string
 	---@param bAddToTarget boolean|nil not in use on debuffs at the moment
 	function parser:add_debuff_uptime(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, sAuraInOrOut, bAddToTarget)
+		if (ignoredWorldAuras[spellId]) then
+			return
+		end
+
 		_current_misc_container.need_refresh = true
 
 		local sourceActor = misc_cache[sourceName]
@@ -3023,6 +3044,10 @@
 	---@param bAddToTarget boolean? --special auras which has to be added to the caster and target
 	---@param bOverrideTime boolean?
 	function parser:add_buff_uptime(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, sAuraInOrOut, bAddToTarget, bOverrideTime)
+		if (ignoredWorldAuras[spellId]) then
+			return
+		end
+
 		_current_misc_container.need_refresh = true
 
 		local sourceActor = misc_cache[sourceName]

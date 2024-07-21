@@ -85,6 +85,8 @@ function Details222.StartUp.StartMeUp()
 
 	Details222.CreateAllDisplaysFrame()
 
+	Details222.AuraScan.FindAndIgnoreWorldAuras()
+
 	if (Details.ocd_tracker.show_options) then
 		Details:InitializeCDTrackerWindow()
 	else
