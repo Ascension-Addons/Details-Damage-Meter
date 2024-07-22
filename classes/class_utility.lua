@@ -1533,8 +1533,11 @@ function Details:CatchRaidBuffUptime(sOperationType) -- ~scan
 				end
 
 				for buffIndex = 1, 41 do
-					local name, _, _, _, _, _, _, unitCaster, _, _, spellId  = UnitAura(unitId, buffIndex, "HELPFUL")
+					local name, _, _, _, _, duration, _, unitCaster, _, _, spellId  = UnitAura(unitId, buffIndex, "HELPFUL")
 					if (name and unitCaster and UnitExists(unitCaster) and UnitExists(unitId) and UnitIsUnit(unitCaster, unitId)) then
+						if (duration == 3600) then
+							Details222.OneHourAuras[spellId] = true
+						end
 						Details.parser:add_buff_uptime(nil, cacheGetTime, playerGUID, playerName, 0x00000514, playerGUID, playerName, 0x00000514, 0x0, spellId, name, sOperationType)
 
 						if (sOperationType == "BUFF_UPTIME_IN") then
@@ -1598,7 +1601,11 @@ function Details:CatchRaidBuffUptime(sOperationType) -- ~scan
 
 								elseif (bUnitIsTheCaster) then
 									local playerGUID = UnitGUID(unitId)
-									if (playerGUID and auraInfo.duration ~= 3600) then
+									if (playerGUID) then
+										if (auraInfo.duration == 3600) then
+											Details222.OneHourAuras[spellId] = true
+										end
+
 										local playerName = Details:GetFullName(unitId)
 										if (sOperationType == "BUFF_UPTIME_IN") then
 											if (Details.PotionList[spellId]) then
@@ -1643,7 +1650,11 @@ function Details:CatchRaidBuffUptime(sOperationType) -- ~scan
 						else
 							local playerName = Details:GetFullName(unitId)
 							local playerGUID = UnitGUID(unitId)
-							if (playerGUID and auraInfo.duration ~= 3600) then
+							if (playerGUID) then
+								if (auraInfo.duration == 3600) then
+									Details222.OneHourAuras[spellId] = true
+								end
+
 								if (sOperationType == "BUFF_UPTIME_IN") then
 									if (Details.PotionList[spellId]) then
 										potUsage [playerName] = spellId
@@ -1685,20 +1696,23 @@ function Details:CatchRaidBuffUptime(sOperationType) -- ~scan
 		local focus_augmentation = {}
 
 		for buffIndex = 1, 41 do
-			local auraName, _, _, _, _, _, _, unitCaster, _, _, spellid = UnitAura ("player", buffIndex, "HELPFUL")
+			local auraName, _, _, _, _, duration, _, unitCaster, _, _, spellId = UnitAura ("player", buffIndex, "HELPFUL")
 			if (auraName and unitCaster and UnitExists(unitCaster) and UnitIsUnit(unitCaster, "player")) then
 				local playerName = Details.playername
 				local playerGUID = UnitGUID("player")
 
 				if (playerGUID) then
+					if (duration == 3600) then  --1hr buffs, record auras which has 1 hr of duration, hence they can be checked for 100% at the end of the combat
+						Details222.OneHourAuras[spellId] = true
+					end
 					if (sOperationType == "BUFF_UPTIME_IN") then
-						if (Details.PotionList [spellid]) then
+						if (Details.PotionList [spellId]) then
 							pot_usage [playerName] = spellid
-						elseif (runeIds [spellid]) then
+						elseif (runeIds [spellId]) then
 							focus_augmentation [playerName] = true
 						end
 					end
-					Details.parser:add_buff_uptime (nil, GetTime(), playerGUID, playerName, 0x00000417, playerGUID, playerName, 0x00000417, 0x0, spellid, auraName, sOperationType)
+					Details.parser:add_buff_uptime (nil, GetTime(), playerGUID, playerName, 0x00000417, playerGUID, playerName, 0x00000417, 0x0, spellId, auraName, sOperationType)
 				end
 			end
 		end
