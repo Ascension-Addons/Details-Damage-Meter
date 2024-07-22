@@ -607,9 +607,9 @@
 		if (not _in_combat) then --~startcombat ~combatstart
 			if (	token ~= "SPELL_PERIODIC_DAMAGE" and
 				(
-					(sourceFlags and bitBand(sourceFlags, AFFILIATION_GROUP) ~= 0 and UnitAffectingCombat(Details:Ambiguate(sourceName))) --error here, need to remove the realm from sourceName
+					(sourceFlags and bitBand(sourceFlags, AFFILIATION_GROUP) ~= 0 and UnitAffectingCombat(sourceName)) --error here, need to remove the realm from sourceName
 					or
-					(targetFlags and bitBand(targetFlags, AFFILIATION_GROUP) ~= 0 and UnitAffectingCombat(Details:Ambiguate(targetName)))
+					(targetFlags and bitBand(targetFlags, AFFILIATION_GROUP) ~= 0 and UnitAffectingCombat(targetName))
 					or
 					(not Details.in_group and sourceFlags and bitBand(sourceFlags, AFFILIATION_GROUP) ~= 0)
 				)
@@ -876,7 +876,7 @@
 
 				cacheAnything.arenaHealth[targetName] = thisEvent[5]
 			else
-				thisEvent[5] = UnitHealth(Details:Ambiguate(targetName))
+				thisEvent[5] = UnitHealth(targetName)
 			end
 
 			thisEvent[6] = sourceName --source name
@@ -977,7 +977,7 @@
 				thisEvent[2] = spellId --spellid || false if this is a battle ress line
 				thisEvent[3] = amount --amount of damage or healing
 				thisEvent[4] = time --parser time
-				thisEvent[5] = UnitHealth(Details:Ambiguate(targetName)) --current unit heal
+				thisEvent[5] = UnitHealth(targetName) --current unit heal
 				thisEvent[6] = sourceName --source name
 				thisEvent[7] = absorbed
 				thisEvent[8] = spellType or school
@@ -1223,7 +1223,7 @@
 		this_event [2] = spellId --spellid || false if this is a battle ress line
 		this_event [3] = amount --amount of damage or healing
 		this_event [4] = time --parser time
-		this_event [5] = UnitHealth(Details:Ambiguate(sourceName)) --current unit heal
+		this_event [5] = UnitHealth(sourceName) --current unit heal
 		this_event [6] = sourceName --source name
 		this_event [7] = absorbed
 		this_event [8] = school
@@ -1318,7 +1318,7 @@
 		this_event [2] = spellid --spellid || false if this is a battle ress line
 		this_event [3] = amount --amount of damage or healing
 		this_event [4] = time --parser time
-		this_event [5] = UnitHealth(Details:Ambiguate(who_name)) --current unit heal
+		this_event [5] = UnitHealth(who_name) --current unit heal
 		this_event [6] = who_name --source name
 		this_event [7] = absorbed
 		this_event [8] = school
@@ -1438,7 +1438,7 @@
 		this_event [2] = spellid --spellid || false if this is a battle ress line
 		this_event [3] = amount --amount of damage or healing
 		this_event [4] = time --parser time
-		this_event [5] = UnitHealth(Details:Ambiguate(alvo_name)) --current unit heal
+		this_event [5] = UnitHealth(alvo_name) --current unit heal
 		this_event [6] = who_name --source name
 		this_event [7] = absorbed
 		this_event [8] = spelltype or school
@@ -2139,7 +2139,7 @@
 				end
 				previousEvent[7] = previousEvent[7] or bIsShield
 				previousEvent[1] = false --true if this is a damage || false for healing
-				previousEvent[5] = UnitHealth(Details:Ambiguate(targetName))
+				previousEvent[5] = UnitHealth(targetName)
 				previousEvent[11] = (previousEvent[11] or 0) + 1 --attempt to perform arithmetic on a boolean value (during battlegrounds - fix 02 Nov 2023)
 			else
 				local thisEvent = t[i]
@@ -2163,7 +2163,7 @@
 						thisEvent[5] = 0
 					end
 				else
-					thisEvent[5] = UnitHealth(Details:Ambiguate(targetName))
+					thisEvent[5] = UnitHealth(targetName)
 				end
 
 				thisEvent[6] = sourceName
@@ -2304,7 +2304,7 @@
 		this_event [2] = spellid --spellid || false if this is a battle ress line
 		this_event [3] = amount --amount of damage or healing
 		this_event [4] = time --parser time
-		this_event [5] = UnitHealth(Details:Ambiguate(alvo_name)) --current unit heal
+		this_event [5] = UnitHealth(alvo_name) --current unit heal
 		this_event [6] = who_name --source name
 		this_event [7] = is_shield
 		this_event [8] = absorbed
@@ -2409,7 +2409,7 @@
 				thisEvent[2] = spellId --spellid
 				thisEvent[3] = 1
 				thisEvent[4] = time --parser time
-				thisEvent[5] = UnitHealth(Details:Ambiguate(targetName)) --current unit heal
+				thisEvent[5] = UnitHealth(targetName) --current unit heal
 				thisEvent[6] = sourceName --source name
 				thisEvent[7] = false
 				thisEvent[8] = false
@@ -2890,7 +2890,7 @@
 					thisEvent[2] = spellId --spellid
 					thisEvent[3] = 1
 					thisEvent[4] = time --parser time
-					thisEvent[5] = UnitHealth(Details:Ambiguate(targetName)) --current unit heal
+					thisEvent[5] = UnitHealth(targetName) --current unit heal
 					thisEvent[6] = sourceName --source name
 					thisEvent[7] = false
 					thisEvent[8] = false
@@ -2950,7 +2950,7 @@
 						thisEvent[2] = spellId --spellid
 						thisEvent[3] = stackSize or 1
 						thisEvent[4] = time --parser time
-						thisEvent[5] = UnitHealth(Details:Ambiguate(targetName)) --current unit heal
+						thisEvent[5] = UnitHealth(targetName) --current unit heal
 						thisEvent[6] = sourceName --source name
 						thisEvent[7] = false
 						thisEvent[8] = false
@@ -3425,7 +3425,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 				thisEvent[2] = spellId --spellid || false if this is a battle ress line
 				thisEvent[3] = 1 --amount of damage or healing
 				thisEvent[4] = time
-				thisEvent[5] = UnitHealth(Details:Ambiguate(sourceName))
+				thisEvent[5] = UnitHealth(sourceName)
 				thisEvent[6] = sourceName
 
 				i = i + 1
@@ -3888,7 +3888,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 							spellId,
 							1,
 							time,
-							UnitHealth(Details:Ambiguate(targetName)),
+							UnitHealth(targetName),
 							sourceName
 						})
 						break
@@ -4031,7 +4031,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			_current_combat.frags_need_refresh = true
 
 		--player death
-		elseif (not UnitIsFeignDeath(Details:Ambiguate(targetName))) then
+		elseif (not UnitIsFeignDeath(targetName)) then
 			if (
 				--player in your group
 				(bitBand(targetFlags, AFFILIATION_GROUP) ~= 0 or (damageActor and damageActor.grupo)) and
@@ -4240,7 +4240,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 						maxHealth = 0
 					end
 				else
-					maxHealth = UnitHealthMax(Details:Ambiguate(thisPlayer.nome))
+					maxHealth = UnitHealthMax(thisPlayer.nome)
 				end
 
 				local playerDeathTable
@@ -6600,7 +6600,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 				actor.classe = classToken or "UNKNOW"
 
 			elseif (name ~= "Unknown" and type(name) == "string" and string.len(name) > 1) then
-				local guid = UnitGUID(Details:Ambiguate(name))
+				local guid = UnitGUID(name)
 				if (guid) then
 					local flag
 					if (Details.faction_id == faction) then --is from the same faction
