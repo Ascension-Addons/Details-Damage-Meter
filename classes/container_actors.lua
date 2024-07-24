@@ -200,8 +200,14 @@ end
 		pet_tooltip_frame:SetOwner(WorldFrame, "ANCHOR_NONE")
 		pet_tooltip_frame:SetHyperlink(("unit:" .. petGUID) or "")
 
-		local line = _G['DetailsPetOwnerFinderTextLeft' .. (2 + cbMode)]
-		lineText = line and line:GetText()
+            local line = _G['DetailsPetOwnerFinderTextLeft' .. (2 + cbMode)]
+            lineText = line and line:GetText()
+
+            if (not lineText or lineText == '') then
+                line = _G['DetailsPetOwnerFinderTextLeft1']
+                lineText = line and line:GetText()
+            end
+        end
 
         if (lineText) then
             for i=1, #unitNameTitles do
