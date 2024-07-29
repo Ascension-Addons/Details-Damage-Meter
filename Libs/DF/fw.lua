@@ -1,6 +1,6 @@
 
 
-local dversion = 551
+local dversion = 553
 local major, minor = "DetailsFramework-1.0", dversion
 local DF, oldminor = LibStub:NewLibrary(major, minor)
 
@@ -2505,6 +2505,9 @@ local templateOnLeave = function(frame)
 	end
 end
 
+DF.TemplateOnEnter = templateOnEnter
+DF.TemplateOnLeave = templateOnLeave
+
 ---set a details framework template into a regular frame
 ---@param self table
 ---@param frame uiobject
@@ -2630,10 +2633,10 @@ DF.dropdown_templates["OPTIONS_DROPDOWN_TEMPLATE"] = {
 		tile = true
 	},
 
-	backdropcolor = {1, 1, 1, .7},
-	backdropbordercolor = {0, 0, 0, 1},
-	onentercolor = {1, 1, 1, .9},
-	onenterbordercolor = {1, 1, 1, 1},
+	backdropcolor = {0.1, 0.1, 0.1, .7},
+	onentercolor = {0.3, 0.3, 0.3, .7},
+	backdropbordercolor = {0, 0, 0, .7},
+	onenterbordercolor = {0.3, 0.3, 0.3, 0.8},
 
 	dropicon = "Interface\\BUTTONS\\arrow-Down-Down",
 	dropiconsize = {16, 16},

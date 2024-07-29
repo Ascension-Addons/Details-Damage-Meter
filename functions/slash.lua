@@ -1539,7 +1539,7 @@ function SlashCmdList.DETAILS (msg, editbox)
 	elseif (msg == "generateracialslist") then
 		Details.GenerateRacialSpellList()
 
-	elseif (msg == "survey") then
+	elseif (msg == "spellcat") then
 		Details.Survey.OpenSurveyPanel()
 
 	else

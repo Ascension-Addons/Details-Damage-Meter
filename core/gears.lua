@@ -2724,6 +2724,29 @@ function Details.FillTableWithPlayerSpells(completeListOfSpells)
             end
         end
     end
+
+    local getNumPetSpells = function()
+        --'HasPetSpells' contradicts the name and return the amount of pet spells available instead of a boolean
+        return HasPetSpells()
+    end
+
+    --get pet spells from the pet spellbook
+    local numPetSpells = getNumPetSpells()
+    if (numPetSpells) then
+        for i = 1, numPetSpells do
+            local spellName, _, unmaskedSpellId = GetSpellBookItemName(i, spellBookPetEnum)
+            if (unmaskedSpellId) then
+                unmaskedSpellId = GetOverrideSpell(unmaskedSpellId)
+                local bIsPassive = IsPassiveSpell(i, spellBookPetEnum)
+                if (spellName and not bIsPassive) then
+                    completeListOfSpells[unmaskedSpellId] = true
+                end
+            end
+        end
+    end
+
+    --dumpt(completeListOfSpells)
+    return completeListOfSpells
 end
 
 function Details.SavePlayTimeOnClass()
