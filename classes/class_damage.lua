@@ -3367,7 +3367,7 @@ function Details:SetClassIcon(texture, instance, class) --[[exported]] --~icons
 
 		local localizedClass, englishClass
 		if (self.serial ~= "") then
-			localizedClass, englishClass = GetPlayerInfoByGUID(self.serial)
+			localizedClass, englishClass = GetPlayerInfoByGUID(self.serial or "")
 		end
 
 		if (englishClass) then
