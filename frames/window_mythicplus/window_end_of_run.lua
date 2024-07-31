@@ -52,7 +52,7 @@ end
 
 --debug
 _G.MythicDungeonFrames = mythicDungeonFrames
---/run _G.MythicDungeonFrames.ShowEndOfMythicPlusPanel(true)
+--/run _G.MythicDungeonFrames.ShowEndOfMythicPlusPanel()
 
 ---@class animatedtexture : texture, df_frameshake
 ---@field CreateRandomBounceSettings function

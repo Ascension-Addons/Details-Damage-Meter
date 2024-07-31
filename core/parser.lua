@@ -354,6 +354,7 @@
 		local spell_create_is_summon = {
 			[34600] = true, -- snake trap
 		}
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --internal functions
 
@@ -630,6 +631,8 @@
 					Details:Msg(Details.WhoAggroTimer.HitBy)
 				end
 
+				--local spellInfo = C_Spell.GetSpellInfo(spellId)
+				--print("1 spell:", spellId, spellInfo.name)
 				Details222.StartCombat(sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags)
 			else
 				--entrar em combate se for dot e for do jogador e o ultimo combate ter sido a mais de 10 segundos atr�s
@@ -638,8 +641,9 @@
 						return
 					end
 
-					--faz o calculo dos 10 segundos
+					--can't start a combat with a dot with the latest combat finished less than 10 seconds ago
 					if (Details.last_combat_time + 10 < _tempo) then
+						--print("2 spell:", spellId)
 						Details222.StartCombat(sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags)
 					end
 				end
