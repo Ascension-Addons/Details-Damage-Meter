@@ -6584,12 +6584,14 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 					end
 
 					actor = _current_damage_container:GetOrCreateActor (guid, name, flag, true)
-					actor.total = Details:GetOrderNumber()
-					actor.classe = classToken or "UNKNOW"
-
-					if (flag == 0x548) then
-						--oponent
-						actor.enemy = true
+					if (actor) then
+						actor.total = Details:GetOrderNumber()
+						actor.classe = classToken or "UNKNOW"
+						if (flag == 0x548) then
+							--oponent
+							actor.enemy = true
+						end
+						actor.made_by_pvpparser = true
 					end
 				end
 			end
@@ -6614,12 +6616,14 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 					end
 
 					actor = _current_heal_container:GetOrCreateActor (guid, name, flag, true)
-					actor.total = Details:GetOrderNumber()
-					actor.classe = classToken or "UNKNOW"
-
-					if (flag == 0x548) then
-						--oponent
-						actor.enemy = true
+					if (actor) then
+						actor.total = Details:GetOrderNumber()
+						actor.classe = classToken or "UNKNOW"
+						if (flag == 0x548) then
+							--oponent
+							actor.enemy = true
+						end
+						actor.made_by_pvpparser = true
 					end
 				end
 			end
