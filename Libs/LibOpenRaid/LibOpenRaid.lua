@@ -31,7 +31,7 @@ LIB_OPEN_RAID_CAN_LOAD = false
 
 local major = "LibOpenRaid-1.0"
 
-local CONST_LIB_VERSION = 134
+local CONST_LIB_VERSION = 136
 
 if (LIB_OPEN_RAID_MAX_VERSION) then
     if (CONST_LIB_VERSION <= LIB_OPEN_RAID_MAX_VERSION) then
