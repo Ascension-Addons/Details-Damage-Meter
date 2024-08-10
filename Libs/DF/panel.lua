@@ -5276,6 +5276,10 @@ detailsFramework.TimeLineFunctions = {
 		self.data = data
 		self:RefreshTimeLine()
 	end,
+
+	GetData = function(self)
+		return self.data
+	end,
 }
 
 --creates a regular scroll in horizontal position
