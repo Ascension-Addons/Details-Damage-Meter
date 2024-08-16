@@ -943,6 +943,8 @@ local default_profile = {
 
 			--height used on tooltips at displays such as damage taken by spell
 			line_height = 17,
+
+			show_border_shadow = true, --from spell tooltips from the main window
 		},
 
 	--new window system
@@ -1451,7 +1453,7 @@ local default_global_data = {
 			last_mythicrun_chart = {},
 			mythicrun_chart_frame = {},
 			mythicrun_chart_frame_minimized = {},
-			finished_run_frame = {},
+			finished_run_panel = {}, --save window position
 			finished_run_frame_options = {
 				orientation = "horizontal",
 				grow_direction = "left",
@@ -1861,7 +1863,7 @@ function Details:ImportProfile (profileString, newProfileName, bImportAutoRunCod
 		mythicPlusSettings.last_mythicrun_chart = {}
 		mythicPlusSettings.mythicrun_chart_frame = {}
 		mythicPlusSettings.mythicrun_chart_frame_minimized = {}
-		mythicPlusSettings.finished_run_frame = {}
+		mythicPlusSettings.finished_run_panel = {}
 
 		--make the max amount of segments be 25
 		Details.segments_amount = 25
