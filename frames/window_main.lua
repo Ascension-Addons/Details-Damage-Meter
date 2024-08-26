@@ -9616,7 +9616,7 @@ function gump:CriaCabecalho (baseframe, instancia)
 		end
 	end
 
-	baseframe.cabecalho.modo_selecao = gump:NewButton(baseframe, nil, "DetailsModeButton"..instancia.meu_id, nil, 16, 16, modeSelector_OnClick, nil, nil, [[Interface\AddOns\Details\images\modo_icone]])
+	baseframe.cabecalho.modo_selecao = gump:NewButton(baseframe, nil, "DetailsModeButton"..instancia.meu_id, nil, 16, 16, modeSelector_OnClick, nil, nil, [[Interface\AddOns\Details\images\modo_icones]])
 	baseframe.cabecalho.modo_selecao:SetPoint("bottomleft", baseframe.cabecalho.ball, "bottomright", instancia.menu_anchor [1], instancia.menu_anchor [2])
 	baseframe.cabecalho.modo_selecao:SetFrameLevel(baseframe:GetFrameLevel()+5)
 	baseframe.cabecalho.modo_selecao.widget._instance = instancia

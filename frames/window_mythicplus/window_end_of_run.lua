@@ -1060,7 +1060,7 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 		readyFrame:Hide()
 
 		local backgroundGradient = readyFrame:CreateTexture("$parentBackgroundGradient", "background", nil, 0)
-		backgroundGradient:SetTexture([[Interface\AddOns\Details\images\gradient_black_transparent.png]], nil, nil, "TRILINEAR")
+		backgroundGradient:SetTexture([[Interface\AddOns\Details\images\gradient_black_transparent]], nil, nil, "TRILINEAR")
 		backgroundGradient:SetPoint("topleft", readyFrame, "topleft", 0, 0)
 		backgroundGradient:SetPoint("bottomright", readyFrame, "bottomright", 0, 0)
 		backgroundGradient:SetWidth(readyFrame:GetWidth())

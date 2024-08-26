@@ -207,7 +207,6 @@ end
                 line = _G['DetailsPetOwnerFinderTextLeft1']
                 lineText = line and line:GetText()
             end
-        end
 
         if (lineText) then
             for i=1, #unitNameTitles do

@@ -799,7 +799,7 @@ function Details:CreateBreakdownWindow()
 	breakdownWindowFrame.SummaryWindowWidgets:Hide()
 
 	local scaleBar = detailsFramework:CreateScaleBar(breakdownWindowFrame, Details.player_details_window)
-	scaleBar.label:AdjustPointsOffset(-3, 1)
+	scaleBar.label:AdjustPointOffset(-3, 1)
 	scaleBar.label:SetTextColor(0.8902, 0.7294, 0.0157, 1)
 	scaleBar.label:SetIgnoreParentAlpha(true)
 	breakdownWindowFrame:SetScale(Details.player_details_window.scale)

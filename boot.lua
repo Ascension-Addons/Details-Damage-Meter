@@ -1240,8 +1240,8 @@ do
 		---@type table
 		local SharedMedia = LibStub:GetLibrary ("LibSharedMedia-3.0")
 		--default bars
-		SharedMedia:Register("statusbar", "Details Hyanda Reverse", [[Interface\AddOns\Details\images\bar_textures\bar_hyanda_reverse.png]])
-		SharedMedia:Register("statusbar", "You Are the Best!", [[Interface\AddOns\Details\images\bar_textures\bar_best.png]])
+		SharedMedia:Register("statusbar", "Details Hyanda Reverse", [[Interface\AddOns\Details\images\bar_textures\bar_hyanda_reverse]])
+		SharedMedia:Register("statusbar", "You Are the Best!", [[Interface\AddOns\Details\images\bar_textures\bar_best]])
 		SharedMedia:Register("statusbar", "Details Hyanda", [[Interface\AddOns\Details\images\bar_hyanda]])
 
 		SharedMedia:Register("statusbar", "Details D'ictum", [[Interface\AddOns\Details\images\bar4]])
