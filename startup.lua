@@ -71,7 +71,7 @@ function Details222.StartUp.StartMeUp()
 	Details:CreatePluginWindowContainer()
 	Details:InitializeForge() --to install into the container plugin
 	Details:InitializeRaidHistoryWindow()
-	--Details:InitializeOptionsWindow()
+	--Details:InitializeOptionsWindow() --debug, uncoment to open options window on startup
 
 	C_Timer.After(2, function()
 		Details:InitializeAuraCreationWindow()
@@ -117,7 +117,7 @@ function Details222.StartUp.StartMeUp()
 	end
 	Details:GetLowerInstanceNumber()
 
-	--start time machine
+	--start time machine, the time machine controls the activity time of players
 	Details222.TimeMachine.Start()
 
 	--update abbreviation shortcut
@@ -127,7 +127,6 @@ function Details222.StartUp.StartMeUp()
 	Details.atributo_misc:UpdateSelectedToKFunction()
 	Details.atributo_custom:UpdateSelectedToKFunction()
 
-	--start instances updater
 	Details:CheckSwitchOnLogon()
 
 	function Details:ScheduledWindowUpdate(bIsForced)
@@ -147,6 +146,7 @@ function Details222.StartUp.StartMeUp()
 		Details.scheduled_window_update = Details.Schedules.NewTimer(time or 1, Details.ScheduledWindowUpdate, Details, bIsForced)
 	end
 
+	--do the first refresh here, not waiting for the regular refresh schedule to kick in
 	local bForceRefresh = true
 	Details:RefreshMainWindow(-1, bForceRefresh)
 	Details:RefreshUpdater()
@@ -455,7 +455,7 @@ function Details222.StartUp.StartMeUp()
 	--restore mythic dungeon state
 	Details:RestoreState_CurrentMythicDungeonRun()
 
-	--open profiler
+	--open profiler (will only open in the first time the character is logged in)
 	Details:OpenProfiler()
 
 	--start announcers
@@ -524,13 +524,6 @@ function Details222.StartUp.StartMeUp()
 	
 	--embed windows on the chat window
 	Details.chat_embed:CheckChatEmbed(true)
-
-	if (Details.player_details_window.skin ~= "ElvUI") then --obsolete
-		local setDefaultSkinOnPlayerBreakdownWindow = function()
-			Details:ApplyPDWSkin("ElvUI")
-		end
-		C_Timer.After(2, setDefaultSkinOnPlayerBreakdownWindow)
-	end
 
 	--coach feature startup
 	Details.Coach.StartUp()
@@ -619,11 +612,6 @@ function Details222.StartUp.StartMeUp()
 	if (Details.time_type == 3 or not Details.time_type) then
 		Details.time_type = 2
 	end
-
-	--clear overall data on new session
-	--if (Details.overall_clear_logout) then --this is suppose to be in the load data file
-	--	Details.tabela_overall = Details.combate:NovaTabela()
-	--end
 
 	--hide the panel shown by pressing the right mouse button on the title bar when a cooltip is opened
 	hooksecurefunc(GameCooltip, "SetMyPoint", function()
