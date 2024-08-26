@@ -197,27 +197,11 @@ end
         local ownerGUID, ownerName, lineText
 
 		local cbMode = tonumber(GetCVar("colorblindMode")) or 0
-        if (bIsDragonflightOrAbove) then
-            local tooltipData = C_TooltipInfo.GetHyperlink('unit:'.. petGUID)
-            if (tooltipData) then
-                if (tooltipData.lines[1].leftText == '') then -- Assume this is an Akaari's soul / Storm Earth Fire tooltip
-                    ownerGUID = tooltipData.guid
-                elseif (tooltipData.lines[1].leftText == petName) then
-                    local lineTwo = tooltipData.lines[2 + cbMode]
-                    if (lineTwo.type == 16 and lineTwo.guid) then
-                        ownerGUID = lineTwo.guid
-                    else
-                        lineText = lineTwo.leftText
-                    end
-                end
-            end
-        else
-            pet_tooltip_frame:SetOwner(WorldFrame, "ANCHOR_NONE")
-            pet_tooltip_frame:SetHyperlink(("unit:" .. petGUID) or "")
+		pet_tooltip_frame:SetOwner(WorldFrame, "ANCHOR_NONE")
+		pet_tooltip_frame:SetHyperlink(("unit:" .. petGUID) or "")
 
-            local line = _G['DetailsPetOwnerFinderTextLeft' .. (2 + cbMode)]
-            lineText = line and line:GetText()
-        end
+		local line = _G['DetailsPetOwnerFinderTextLeft' .. (2 + cbMode)]
+		lineText = line and line:GetText()
 
         if (lineText) then
             for i=1, #unitNameTitles do
@@ -242,7 +226,7 @@ end
             if (isInRaid) then
                 return UnitGUID(ownerName), ownerName, 0x514
             end
-        elseif (ownerGUID and ownerGUID:sub(1,6) == 'Player') then
+        elseif (ownerGUID and GUIDIsPlayer(ownerGUID)) then
             local playerGUID = ownerGUID
             local actorObject = Details:GetActorFromCache(playerGUID) --quick cache only exists during conbat
             if (actorObject) then
