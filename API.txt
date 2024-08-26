@@ -1,7 +1,7 @@
 This is a short document for Details! API, describing attributes, combat, container, actor.
 It still is incomplete, we are working on.
 
-This is a diagram showing the structure: http://i.imgur.com/vyTjpFh.png
+This is a diagram showing the structure: http://i.imgur.com/vyTjpFh
 
 
 

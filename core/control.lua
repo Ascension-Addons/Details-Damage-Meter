@@ -1341,7 +1341,7 @@
 	end
 
 	local bgColor, borderColor = {0, 0, 0, 0.8}, {0, 0, 0, 0.5} --{0.37, 0.37, 0.37, .75}, {.30, .30, .30, .3}
-	local backdrop = {bgFile = [[Interface\AddOns\Details\images\background83.png]], edgeFile = [[Interface\Buttons\WHITE8X8]], tile=true,
+	local backdrop = {bgFile = [[Interface\AddOns\Details\images\background83]], edgeFile = [[Interface\Buttons\WHITE8X8]], tile=true,
 	edgeSize = 1, tileSize = 64, insets = {left = 0, right = 0, top = 0, bottom = 0}}
 
 	function Details:FormatCooltipForSpells()
@@ -1351,7 +1351,7 @@
 		GameCooltip:SetType("tooltip")
 
 		GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_background_dark_withline]])
-		--GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_textures\bar_rounded.png]])
+		--GameCooltip:SetOption("StatusBarTexture", [[Interface\AddOns\Details\images\bar_textures\bar_rounded]])
 
 		GameCooltip:SetOption("TextSize", Details.tooltip.fontsize)
 		GameCooltip:SetOption("TextFont",  Details.tooltip.fontface)
@@ -1466,7 +1466,7 @@
 
 			if (not Details.GameCooltipFrame1Shadow) then
 				Details.GameCooltipFrame1Shadow = GameCooltipFrame1:CreateTexture(nil, "background")
-				Details.GameCooltipFrame1Shadow:SetTexture([[Interface\AddOns\Details\images\shadow_square.png]], nil, nil, "TRILINEAR")
+				Details.GameCooltipFrame1Shadow:SetTexture([[Interface\AddOns\Details\images\shadow_square]], nil, nil, "TRILINEAR")
 				local offset = 4
 				Details.GameCooltipFrame1Shadow:SetPoint("topleft", GameCooltipFrame1, "topleft", -offset, offset)
 				Details.GameCooltipFrame1Shadow:SetPoint("bottomright", GameCooltipFrame1, "bottomright", offset, -offset)
