@@ -2620,7 +2620,7 @@
 				RunNextFrame(function()
 					if (shield_cache [targetName] and shield_cache [targetName][spellId] and shield_cache [targetName][spellId][sourceName]) then
 						amount = shield_cache[targetName][spellId][sourceName]
-						shield_cache[targetName].totalAbsorb = UnitGetTotalAbsorbs(targetName)
+						shield_cache[targetName].totalAbsorb = (UnitGetTotalAbsorbs(targetName) or 0)
 						local overheal = 0
 
 						shield_cache [targetName][spellId][sourceName] = 0
