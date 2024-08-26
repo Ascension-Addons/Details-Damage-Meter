@@ -801,7 +801,9 @@ function Details:CreateBreakdownWindow()
 	local scaleBar = detailsFramework:CreateScaleBar(breakdownWindowFrame, Details.player_details_window)
 	scaleBar.label:AdjustPointOffset(-3, 1)
 	scaleBar.label:SetTextColor(0.8902, 0.7294, 0.0157, 1)
-	scaleBar.label:SetIgnoreParentAlpha(true)
+	if scaleBar.label.SetIgnoreParentAlpha then
+		scaleBar.label:SetIgnoreParentAlpha(true)
+	end
 	breakdownWindowFrame:SetScale(Details.player_details_window.scale)
 
 	--1, 0.8235, 0, 1 - text color of the label of the scale bar | plugins text color: 0.8902, 0.7294, 0.0157, 1 | 0.8902, 0.7294, 0.0157, 1
