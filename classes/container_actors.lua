@@ -83,7 +83,7 @@ function Details222.Pets.AkaarisSoulOwner(petGUID)
 		do
 			local ownerGUID = tooltipData.guid --tooltipData.guid seems to exists on all akari soul tooltips and point to the owner guid
 			if (ownerGUID) then
-				if (ownerGUID:find("^P")) then
+				if (ownerGUID:find("^Pl")) then
 					local playerGUID = ownerGUID
 					local actorObject = Details:GetActorFromCache(playerGUID) --quick cache only exists during conbat
 					if (actorObject) then
@@ -105,7 +105,7 @@ function Details222.Pets.AkaarisSoulOwner(petGUID)
 					local lineData = tooltipData.lines[i]
 					if (lineData.unitToken) then --unit token seems to exists when the add belongs to the "player"
 						local ownerGUID = UnitGUID(lineData.unitToken)
-						if (ownerGUID and ownerGUID:find("^P")) then
+						if (ownerGUID and ownerGUID:find("^Pl")) then
 							local playerGUID = ownerGUID
 							local actorObject = Details:GetActorFromCache(playerGUID) --quick cache only exists during conbat
 							if (actorObject) then

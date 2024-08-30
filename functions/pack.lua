@@ -371,8 +371,10 @@ local packActorSerial = function(actor)
         local npcId = GetCreatureIDFromGUID(serial) or 0
         return "C" .. npcId
 
-    elseif (GUIDIsPlayer(serial) == 0) then
+    elseif (GUIDIsPlayer(serial)) then
         return "P"
+    elseif (GUIDIsPet(serial)) then
+        return "Pe"
     end
 end
 
@@ -381,6 +383,9 @@ local unpackActorSerial = function(serialNumber)
     if (serialNumber:match("^P")) then
         
         return Details.packfunctions.CreatePlayerGUID(0, 0, 0, Details.packFunctions.GenerateSerialNumber())
+
+    elseif (serialNumber:match("^Pe")) then
+        return Details.packfunctions.CreatePetGUID(0, serialNumber:gsub("Pe", ""), Details.packFunctions.GenerateSerialNumber())
 
     elseif (serialNumber:match("^C")) then
         return Details.packfunctions.CreateNPCGUID(0, 0, serialNumber:gsub("C", ""), Details.packFunctions.GenerateSerialNumber())
