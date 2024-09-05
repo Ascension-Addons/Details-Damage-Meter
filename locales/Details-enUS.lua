@@ -1265,6 +1265,7 @@ L["STRING_OPTIONS_TOOLTIPS_FONTCOLOR_DESC"] = "Change the color used on tooltip 
 L["STRING_OPTIONS_TOOLTIPS_FONTFACE"] = ""
 L["STRING_OPTIONS_TOOLTIPS_FONTFACE_DESC"] = "Choose the font used on tooltip texts."
 L["STRING_OPTIONS_TOOLTIPS_FONTSHADOW_DESC"] = "Enable or disable the shadow in the text."
+L["STRING_OPTIONS_TEXT_OUTLINE"] = "Text Outline"
 --[[Translation missing --]]
 L["STRING_OPTIONS_TOOLTIPS_FONTSIZE"] = ""
 L["STRING_OPTIONS_TOOLTIPS_FONTSIZE_DESC"] = "Increase or decrease the size of tooltip texts"
@@ -1729,3 +1730,6 @@ L["STRING_WIPE_ERROR1"] = "a wipe already has been call."
 L["STRING_WIPE_ERROR2"] = "we aren't in a raid encounter."
 L["STRING_WIPE_ERROR3"] = "couldn't end the encounter."
 L["STRING_YES"] = "Yes"
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME"] = "Auto Close Time"
+L["STRING_OPTIONS_MPLUS_AUTO_CLOSE_TIME_DESC"] = "Time to auto close the run panel."
+
