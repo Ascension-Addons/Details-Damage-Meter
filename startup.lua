@@ -351,12 +351,6 @@ function Details222.StartUp.StartMeUp()
 			Details:AddDefaultCustomDisplays()
 		end
 		Details:FillUserCustomSpells()
-
-		if (C_CVar) then
-			if (not InCombatLockdown() and DetailsFramework.IsDragonflightAndBeyond()) then
-				C_CVar.SetCVar("cameraDistanceMaxZoomFactor", 2.6)
-			end
-		end
 	end
 
 	--check is this is the first run of this version

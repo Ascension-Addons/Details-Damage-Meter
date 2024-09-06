@@ -1873,8 +1873,8 @@ end
 
 ---@param combat combat
 function Details.Database.StoreEncounter(combat)
-	--stop execution if the expansion isn't retail
-	if (not detailsFramework:IsDragonflightAndBeyond()) then
+	-- TODO: disable on ascension until time to solve 
+	if true then
 		return
 	end
 
