@@ -83,7 +83,6 @@ _G.MythicDungeonFrames = mythicDungeonFrames
 
 ---@class playerbanner : frame
 ---@field index number
----@field BackgroundBannerMaskTexture texture
 ---@field BackgroundBannerGradient texture
 ---@field FadeInAnimation animationgroup
 ---@field BackgroundShowAnim animationgroup
@@ -420,20 +419,12 @@ local createPlayerBanner = function(parent, name, index)
 		backgroundBannerTexture:SetVertexColor(r, g, b)
 		backgroundBannerTexture:SetAlpha(0.95)
 
-		--backdrop gradient from bottom to top
-		local maskTexture = playerBanner:CreateMaskTexture("$parentBackgroundBannerMaskTexture", "artwork")
-		maskTexture:SetTexture([[Interface\AddOns\Details\images\end_of_mplus_banner_mask]])
-		maskTexture:SetPoint("topright", backgroundBannerTexture, "topright", 0, 0)
-		maskTexture:SetSize(backgroundBannerTexture:GetSize())
-		playerBanner.BackgroundBannerMaskTexture = maskTexture
-
 		---@type df_gradienttable
 		local gradientTable = {gradient = "vertical", fromColor = {0.01, 0.01, 0.01, 0.5}, toColor = "transparent"}
 		local gradientBelowTheLine = detailsFramework:CreateTexture(playerBanner, gradientTable, 1, 64, "background", {0, 1, 0, 1}, "BackgroundGradient", "$parentBackgroundGradient")
 		gradientBelowTheLine:SetDrawLayer("background", 1)
 		gradientBelowTheLine:SetPoint("bottomleft", backgroundBannerTexture, "bottomleft", 0, 0)
 		gradientBelowTheLine:SetPoint("bottomright", backgroundBannerTexture, "bottomright", 0, 0)
-		gradientBelowTheLine:AddMaskTexture(maskTexture)
 		playerBanner.BackgroundBannerGradient = gradientBelowTheLine
 
 		local dungeonBackdropTexture = playerBanner:CreateTexture("$parentDungeonBackdropTexture", "background", nil, 0)
@@ -449,7 +440,6 @@ local createPlayerBanner = function(parent, name, index)
 		local topCoord = (topStart + ((playerBanner.index - 1) * pixelsPerImage)) / 512
 		local bottomCoord = (topStart + (playerBanner.index * pixelsPerImage)) / 512
 		dungeonBackdropTexture:SetTexCoord(35/512, 291/512, topCoord, bottomCoord)
-		dungeonBackdropTexture:AddMaskTexture(maskTexture)
 		playerBanner.DungeonBackdropTexture = dungeonBackdropTexture
 
 		return backgroundBannerTexture
@@ -1194,7 +1184,8 @@ function mythicDungeonFrames.ShowEndOfMythicPlusPanel()
 			yellowFlash:SetBlendMode("ADD")
 			readyFrame.YellowFlash = yellowFlash
 
-			readyFrame.Level = mythicDungeonFrames.ReadyFrameTop:CreateFontString("$parentLevelText", "overlay", "GameFontNormalWTF2Outline")
+			readyFrame.Level = mythicDungeonFrames.ReadyFrameTop:CreateFontString("$parentLevelText", "overlay", "SystemFont_OutlineThick_WTF")
+			readyFrame.Level:SetTextColor(1, 0.82, 0)
 			--readyFrame.Level:SetPoint("center", readyFrame.YellowSpikeCircle, "center", 0, 0)
 			--readyFrame.Level:SetText("")
 
