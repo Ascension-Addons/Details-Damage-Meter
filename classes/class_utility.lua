@@ -1582,7 +1582,7 @@ function Details:CatchRaidBuffUptime(sOperationType) -- ~scan
 			local unitId = "party" .. groupIndex
 			for buffIndex = 1, 41 do
 				if (UnitExists(unitId)) then
-					local name, _, _, _, _, _, _, unitCaster, _, _, spellId  = UnitAura(unitId, buffIndex, 'HELPFUL')
+					local auraName, _, _, _, _, duration, _, unitCaster, _, _, spellId  = UnitAura(unitId, buffIndex, 'HELPFUL')
 					if (auraName) then
 						if (UnitExists(unitCaster)) then
 							local bBuffIsPlacedOnTarget = Details.CreditBuffToTarget[spellId]
@@ -1603,7 +1603,7 @@ function Details:CatchRaidBuffUptime(sOperationType) -- ~scan
 								elseif (bUnitIsTheCaster) then
 									local playerGUID = UnitGUID(unitId)
 									if (playerGUID) then
-										if (auraInfo.duration == 3600) then
+										if (duration == 3600) then
 											Details222.OneHourAuras[spellId] = true
 										end
 
@@ -1631,7 +1631,7 @@ function Details:CatchRaidBuffUptime(sOperationType) -- ~scan
 		--player it self(while in a party that isn't a raid group)
 		local unitId = "player"
 		for buffIndex = 1, 41 do
-			local auraName, _, _, _, _, _, _, unitCaster, _, _, spellId = UnitAura(unitId, buffIndex, 'HELPFUL')
+			local auraName, _, _, _, _, duration, _, unitCaster, _, _, spellId = UnitAura(unitId, buffIndex, 'HELPFUL')
 			if (auraName) then
 				if (UnitExists(unitCaster)) then -- and unitCaster and UnitExists(unitCaster) and UnitIsUnit(unitCaster, unitId)
 					local bBuffIsPlacedOnTarget = Details.CreditBuffToTarget[spellId]
@@ -1652,7 +1652,7 @@ function Details:CatchRaidBuffUptime(sOperationType) -- ~scan
 							local playerName = Details:GetFullName(unitId)
 							local playerGUID = UnitGUID(unitId)
 							if (playerGUID) then
-								if (auraInfo.duration == 3600) then
+								if (duration == 3600) then
 									Details222.OneHourAuras[spellId] = true
 								end
 
