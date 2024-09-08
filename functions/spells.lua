@@ -25,8 +25,13 @@ do
 
 
 	-- redirect AbsorbSpells to check IsAbsorbSpell
-	-- only true if mask = 127 (absorbs all schools/phys)
-	_detalhes.AbsorbSpells = setmetatable({}, { __index = function(t,k) local isAbsorb, mask = IsAbsorbSpell(k) return isAbsorb and mask == 127  end })
+	_detalhes.AbsorbSpells = setmetatable({}, { __index = function(t,k) local isAbsorb, mask = IsAbsorbSpell(k) return isAbsorb end })
+
+	-- checks if a spell absorbs a specific school
+	_detalhes.IsAbsorbSpellSchool = function(spellID, school)
+		local isAbsorb, mask = IsAbsorbSpell(spellID)
+		return isAbsorb and mask and (mask == 127 or bit.contains(mask, school))
+	end
 
 	local allowedCooldownTypes = { --LIB_OPEN_RAID_COOLDOWNS_INFO types
 		[1] = false, --attack

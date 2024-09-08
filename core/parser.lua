@@ -1931,16 +1931,30 @@
 	end
 
 	function parser:heal_absorb(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, spellSchool, shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, shieldOwnerFlags2, shieldSpellId, shieldName, shieldType, amount)
+		if not amount or amount <= 0 then
+			return
+		end
+
 		if not shield_cache[targetName] or not shield_cache[targetName].absorbList then
 			return
 		end
-		local found_absorb = shield_cache[targetName].absorbList[1]
+		local absorbList = shield_cache[targetName].absorbList 
 
-		if not found_absorb then -- we have no absorb, think dmg funcs take care of this
+		if not absorbList or not absorbList[1] then
 			return
 		end
 
-		if not amount or amount <= 0 then
+		local found_absorb 
+
+		for i = 1, #absorbList do
+			local absorb = shield_cache[targetName].absorbList[i]
+			if Details.IsAbsorbSpellSchool(absorb[1], spellSchool) then
+				found_absorb = absorb
+				break
+			end
+		end
+
+		if not found_absorb then -- we have no absorb, think dmg funcs take care of this
 			return
 		end
 
@@ -1968,6 +1982,9 @@
 			absorbAmount = absorbAmount - amount
 			shield_cache[targetName].totalAbsorb = math.max(shield_cache[targetName].totalAbsorb - amount, 0)
 			shield_cache[targetName][shieldSpellId][shieldOwnerName] = absorbAmount
+			return parser:heal(token, time, shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, targetSerial, targetName, targetFlags, targetFlags2, shieldSpellId, shieldName, shieldType, amount, 0, 0, nil, true)
+		else
+			-- this absorb isnt tracked by UnitGetTotalAbsorb, probably school specific. Just award full amount 
 			return parser:heal(token, time, shieldOwnerSerial, shieldOwnerName, shieldOwnerFlags, targetSerial, targetName, targetFlags, targetFlags2, shieldSpellId, shieldName, shieldType, amount, 0, 0, nil, true)
 		end
 	end
