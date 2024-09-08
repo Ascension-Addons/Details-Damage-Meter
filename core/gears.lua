@@ -742,7 +742,7 @@ local hasGroupMemberInCombat = function()
 			end
 		end
 	else
-		local amountOfPartyMembers = GetNumGroupMembers() + 1
+		local amountOfPartyMembers = GetNumGroupMembers()
 		for i, unitId in ipairs(Details222.UnitIdCache.Party) do
 			if (i <= amountOfPartyMembers) then
 				if (UnitAffectingCombat(unitId)) then
