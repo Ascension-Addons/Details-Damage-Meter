@@ -19,6 +19,6 @@
 	function habilidade_energy:Add(serial, nome, flag, amount, who_nome, powertype, overpower)
 		self.counter = self.counter + 1
 		self.total = self.total + amount
-		self.totalover = self.totalover + overpower
+		self.totalover = 0
 		self.targets[nome] = (self.targets[nome] or 0) + amount
 	end

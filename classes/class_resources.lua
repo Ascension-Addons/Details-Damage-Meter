@@ -1017,18 +1017,10 @@ function atributo_energy:ToolTipRegenRecebido (instancia, numero, barra, keydown
 	for i = 1, #allGeneratorSpells do
 		local thisGenerator = allGeneratorSpells [i]
 		local spellName, _, spellIcon = _GetSpellInfo(thisGenerator[1].id)
-		GameCooltip:AddLine(spellName, FormatTooltipNumber (_,  thisGenerator[2]) .. " (|cFFFF5555overflow: " .. FormatTooltipNumber (_,  thisGenerator[3]) .. "|r | " .. _cstr ("%.1f", (thisGenerator[2] / allGenerated) * 100).."%)")
+		GameCooltip:AddLine(spellName, FormatTooltipNumber (_,  thisGenerator[2]))
 		GameCooltip:AddIcon (spellIcon, nil, nil, icon_size.W, icon_size.H, .1, .9, .1, .9)
 		_detalhes:AddTooltipBackgroundStatusbar()
 	end
-
-	--auto regen overflow
-	_detalhes:AddTooltipSpellHeaderText (self.nome .. " Auto Regen Overflow", headerColor, 1, [[Interface\CHARACTERFRAME\Disconnect-Icon]], 0.3, 0.7, 0.3, 0.7)
-	_detalhes:AddTooltipHeaderStatusbar (r, g, b, 1)
-
-	GameCooltip:AddLine("Auto Regen Overflow", FormatTooltipNumber (_,  self.passiveover) .. " ( " .. _cstr ("%.1f",  self.passiveover / (self.passiveover + self.total) * 100)  .. "%)")
-	GameCooltip:AddIcon ([[Interface\COMMON\Indicator-Red]], nil, nil, icon_size.W, icon_size.H)
-	_detalhes:AddTooltipBackgroundStatusbar()
 
 	return true
 end

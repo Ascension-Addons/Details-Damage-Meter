@@ -3298,7 +3298,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 	end
 
 	-- ~energy ~resource
-	function parser:energize (token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, spellType, amount, overpower, powerType, altpower)
+	function parser:energize (token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, targetFlags2, spellId, spellName, spellType, amount, powerType)
 		if (not sourceName) then
 			sourceName = "[*] " .. spellName
 		elseif (not targetName) then
@@ -3375,7 +3375,6 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 			--regen produced amount
 			sourceActor.total = sourceActor.total + amount
-			sourceActor.totalover = sourceActor.totalover + overpower
 
 			--target regenerated amount
 			targetActor.received = targetActor.received + amount
@@ -3392,7 +3391,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 			end
 
 			--return spell:Add (alvo_serial, alvo_name, alvo_flags, amount, who_name, powertype)
-			return _spell_energy_func (spellTable, targetSerial, targetName, targetFlags, amount, sourceName, powerType, overpower)
+			return _spell_energy_func (spellTable, targetSerial, targetName, targetFlags, amount, sourceName, powerType)
 		else
 			--is a resource
 			sourceActor.resource = sourceActor.resource + resourceAmount
