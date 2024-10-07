@@ -19,8 +19,8 @@
 		local addonName, Details222 = ...
 		local version = GetBuildInfo()
 
-		Details.build_counter = 12888
-		Details.alpha_build_counter = 12888 --if this is higher than the regular counter, use it instead
+		Details.build_counter = 12889
+		Details.alpha_build_counter = 12889 --if this is higher than the regular counter, use it instead
 		Details.dont_open_news = true
 		Details.game_version = version
 		Details.userversion = version .. " " .. Details.build_counter
@@ -223,6 +223,9 @@ do
 	local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
 
 	local news = {
+		{"Ascension.12889.160", "October 7th, 2024"},
+		"Fixes for mana regen and other resource tracking.",
+
 		{"Ascension.12888.160", "September 5th, 2024"},
 		"Initial Release of TWW Backported Details! v11.0.12888.160",
 	}
