@@ -1759,6 +1759,13 @@
 -- https://github.com/TrinityCore/TrinityCore/blob/d81a9e5bc3b3e13b47332b3e7817bd0a0b228cbc/src/server/game/Spells/Auras/SpellAuraEffects.h#L313-L367
 	-- absorb order from trinitycore
 	local function AbsorbAuraOrderPred(a, b)
+		if a and not b then
+			return true 
+		end
+
+		if b and not a then
+			return false
+		end
 
 		local spellA = a[1]
 		local spellB = b[2]
