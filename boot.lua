@@ -19,8 +19,8 @@
 		local addonName, Details222 = ...
 		local version = GetBuildInfo()
 
-		Details.build_counter = 12889
-		Details.alpha_build_counter = 12889 --if this is higher than the regular counter, use it instead
+		Details.build_counter = 12890
+		Details.alpha_build_counter = 12890 --if this is higher than the regular counter, use it instead
 		Details.dont_open_news = true
 		Details.game_version = version
 		Details.userversion = version .. " " .. Details.build_counter
@@ -223,6 +223,10 @@ do
 	local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
 
 	local news = {
+		{"Ascension.12890.160", "October 18th, 2024"},
+		"Potential fix for lua error spam caused by Absorb tracking",
+		"Fixed an issue preventing the \"Everything\" Mode from tracking players not in your group.",
+
 		{"Ascension.12889.160", "October 7th, 2024"},
 		"Fixes for mana regen and other resource tracking.",
 
