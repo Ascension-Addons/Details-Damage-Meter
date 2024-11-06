@@ -238,7 +238,7 @@ function DetailsMythicPlusFrame.EventListener.OnDetailsEvent(contextObject, even
 
                     --tag the combat as mythic dungeon trash
                     local instanceMapID = activeKeystone and activeKeystone.dungeonID
-                    local zoneName = instanceMapID and GetLFGDungeonInfoByID(instanceMapID)
+                    local zoneName = instanceMapID and GetLFGDungeonInfo(instanceMapID)
 
                     ---@type mythicdungeoninfo
                     local mythicPlusInfo = {
