@@ -223,6 +223,9 @@ do
 	local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
 
 	local news = {
+		{"Ascension.12891.160", "November 5th, 2024"},
+		"Fix absorb tracking",
+
 		{"Ascension.12890.160", "October 18th, 2024"},
 		"Potential fix for lua error spam caused by Absorb tracking",
 		"Fixed an issue preventing the \"Everything\" Mode from tracking players not in your group.",
