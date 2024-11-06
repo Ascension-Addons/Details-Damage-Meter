@@ -768,6 +768,7 @@
 	--group checks and avoidance
 
 		if (absorbed) then
+			parser:heal_absorb(token, time, sourceSerial, sourceName, sourceFlags, targetSerial, targetName, targetFlags, 0, spellId, spellName, spellType, nil, nil, nil, nil, nil, nil, nil, absorbed)
 			amount = absorbed + (amount or 0)
 		end
 
