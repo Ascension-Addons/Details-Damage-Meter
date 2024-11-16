@@ -1760,14 +1760,15 @@
 -- https://github.com/TrinityCore/TrinityCore/blob/d81a9e5bc3b3e13b47332b3e7817bd0a0b228cbc/src/server/game/Spells/Auras/SpellAuraEffects.h#L313-L367
 	-- absorb order from trinitycore
 	local function AbsorbAuraOrderPred(a, b)
-		if a and not b then
-			return true 
-		end
-
-		if b and not a then
+		if a == nil and b == nil then
 			return false
 		end
-
+		if a == nil then
+			return false
+		end
+		if b == nil then
+			return true
+		end
 		local spellA = a[1]
 		local spellB = b[2]
 
@@ -2509,7 +2510,7 @@
 						if not buffExpTime then
 							buffName, buffTexture, buffCount, buffAuraType, buffDuration, buffExpTime, buffSourceUnit, buffIsStealable, buffShouldConsolidate, buffSpellId = Details:FindBuffCastedByUnitName(sourceName, spellId, sourceName)
 						end
-						shield_cache[targetName].absorbList[#shield_cache[targetName].absorbList + 1] = { spellId, sourceName, sourceSerial, sourceFlags, spellName, spellschool, time, buffExpTime or math.huge }
+						table.insert(shield_cache[targetName].absorbList, { spellId, sourceName, sourceSerial, sourceFlags, spellName, spellschool, time, buffExpTime or math.huge })
 						table.sort(shield_cache[targetName].absorbList, AbsorbAuraOrderPred)
 					end 
 				end)
