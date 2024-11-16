@@ -110,8 +110,8 @@ function DetailsMythicPlusFrame.MythicDungeonFinished(fromZoneLeft)
         Details.MythicPlus.IsRestoredState = nil
 
 		--the run is valid, schedule to open the chart window
-		Details.mythic_plus.delay_to_show_graphic = 1
-		C_Timer.After(Details.mythic_plus.delay_to_show_graphic, mythicDungeonFrames.ShowEndOfMythicPlusPanel)
+		--Details.mythic_plus.delay_to_show_graphic = 1
+		--C_Timer.After(Details.mythic_plus.delay_to_show_graphic, mythicDungeonFrames.ShowEndOfMythicPlusPanel)
 
         --shutdown parser for a few seconds to avoid opening new segments after the run ends
         if (not fromZoneLeft) then
