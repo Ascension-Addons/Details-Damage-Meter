@@ -223,6 +223,11 @@ do
 	local Loc = _G.LibStub("AceLocale-3.0"):GetLocale("Details")
 
 	local news = {
+		{"Ascension.12893.160", "December 9th, 2024"},
+		"Added Separate Extra Attacks option in Options -> Combat Log -> Parser Options.",
+		" - Separates on hit effects such as Fiery Weapon as uniquely tracked spells.",
+		"Cont. Possible fix for errors during combat related to absorb spells sorting.",
+
 		{"Ascension.12892.160", "November 15th, 2024"},
 		"Possible fix for errors during combat related to absorb spells sorting.",
 		"Removed end of run window from Mythic Plus for the time being since it was causing lua errors and did not work.",

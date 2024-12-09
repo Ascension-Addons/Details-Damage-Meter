@@ -1780,21 +1780,22 @@
 -- https://github.com/TrinityCore/TrinityCore/blob/d81a9e5bc3b3e13b47332b3e7817bd0a0b228cbc/src/server/game/Spells/Auras/SpellAuraEffects.h#L313-L367
 	-- absorb order from trinitycore
 	local function AbsorbAuraOrderPred(a, b)
-		if a == nil and b == nil then
-			return false
-		end
-		if a == nil then
-			return false
-		end
-		if b == nil then
-			return true
-		end
-		local spellA = a[1]
-		local spellB = b[2]
+		local spellA, _, _, _, spellNameA, _, timeA, buffExpTimeA = unpack(a)
+		local spellB, _, _, _, spellNameB, _, timeB, buffExpTimeB = unpack(b)
 
 		-- puts oldest absorb first if there is two with the same id.
 		if spellA == spellB then
-			return a[7] < b[7]
+			if timeA ~= timeB then
+				return timeA < timeB
+			end
+
+			if buffExpTimeA ~= buffExpTimeB then
+				return buffExpTimeA < buffExpTimeB
+			end
+
+			if spellNameA ~= spellNameB then
+				return spellNameA < spellNameB
+			end
 		end
 
 		-- twin val'kyr light essence
@@ -1878,7 +1879,19 @@
 		end
 
 		-- sort oldest buffs to the top
-		return a[7] < b[7]
+		if timeA ~= timeB then
+			return timeA < timeB
+		end
+
+		if buffExpTimeA ~= buffExpTimeB then
+			return buffExpTimeA < buffExpTimeB
+		end
+
+		if spellNameA ~= spellNameB then
+			return spellNameA < spellNameB
+		end
+
+		return true
 	end
 
 	local ignored_shields = {
