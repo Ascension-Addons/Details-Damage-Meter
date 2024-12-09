@@ -7283,6 +7283,16 @@ do
                 desc = "If Enabled, spells which have initial healing and then heal over time will be tracked separately.",
                 boxfirst = true,
             },
+            {--separate Extra Attacks effects
+              type = "toggle",
+              get = function() return Details.combat_log.separate_extra_attacks end,
+              set = function(self, fixedparam, value)
+                  Details.combat_log.separate_extra_attacks = value
+              end,
+              name = "Separate Extra Attacks",
+              desc = "If Enabled, procs that trigger extra attacks will be tracked seperately.",
+              boxfirst = true,
+            },
         }
 
         sectionFrame.sectionOptions = sectionOptions

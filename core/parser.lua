@@ -354,7 +354,8 @@
 		local spell_create_is_summon = {
 			[34600] = true, -- snake trap
 		}
-
+		
+	Details.extra_attack = Details.extra_attack or {}
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --internal functions
 
@@ -467,6 +468,19 @@
 		if (token == "SWING_DAMAGE") then
 			-- spellType or 00000001 because pets can have different melee damage types.
 			spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical, glacing, crushing, isoffhand = 1, meleeString, spellType or 00000001, spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical
+			if Details.combat_log.separate_extra_attacks and Details.extra_attack[sourceSerial] and #(Details.extra_attack[sourceSerial])>0 then
+				local extraAttackData = Details.extra_attack[sourceSerial][#Details.extra_attack[sourceSerial]] 
+				spellId = extraAttackData[1]
+				spellName = extraAttackData[2]
+				extraAttackData[3] = extraAttackData[3] -1 -- Amount of Extra attacks e.x Ironfoe gives 2 attacks
+				if extraAttackData[3] == 0 then
+					table.remove(Details.extra_attack[sourceSerial]) -- remove table entry if no extra attacks remain on the proc
+				end
+			end
+		end
+		if (Details.combat_log.separate_extra_attacks and token == "SPELL_EXTRA_ATTACKS") then
+			if not Details.extra_attack[sourceSerial] then Details.extra_attack[sourceSerial] = {} end
+			table.insert(Details.extra_attack[sourceSerial],{spellId,spellName,amount})
 		end
 
 		if (not targetName) then
@@ -4548,7 +4562,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 		--retail
 		if (capture_type == "damage") then
 			token_list ["SPELL_PERIODIC_DAMAGE"] = parser.spell_dmg
-			token_list ["SPELL_EXTRA_ATTACKS"] = nil --parser.spell_dmg_extra_attacks
+			token_list ["SPELL_EXTRA_ATTACKS"] = parser.spell_dmg --parser.spell_dmg_extra_attacks
 			token_list ["SPELL_DAMAGE"] = parser.spell_dmg
 			token_list ["SPELL_BUILDING_DAMAGE"] = parser.spell_dmg
 			token_list ["SWING_DAMAGE"] = parser.spell_dmg --parser.swing
@@ -4602,7 +4616,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 	parser.original_functions = {
 		["spell_dmg"] = parser.spell_dmg,
-		["spell_dmg_extra_attacks"] = nil, --parser.spell_dmg_extra_attacks,
+		["spell_dmg_extra_attacks"] = parser.spell_dmg, --parser.spell_dmg_extra_attacks,
 		["swing"] = parser.spell_dmg, --parser.swing,
 		["range"] = parser.spell_dmg, --parser.range,
 		["rangemissed"] = parser.rangemissed,
@@ -4640,7 +4654,7 @@ local SPELL_POWER_PAIN = SPELL_POWER_PAIN or (PowerEnum and PowerEnum.Pain) or 1
 
 	local all_parser_tokens = {
 		["SPELL_PERIODIC_DAMAGE"] = "spell_dmg",
-		["SPELL_EXTRA_ATTACKS"] = nil, --"spell_dmg_extra_attacks",
+		["SPELL_EXTRA_ATTACKS"] = "spell_dmg", --"spell_dmg_extra_attacks",
 		["SPELL_DAMAGE"] = "spell_dmg",
 		["SPELL_BUILDING_DAMAGE"] = "spell_dmg",
 		["SWING_DAMAGE"] = "spell_dmg", --"swing"

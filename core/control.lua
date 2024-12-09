@@ -316,6 +316,7 @@
 
 	-- ~start
 	function Details222.StartCombat(...)
+		Details.extra_attack = {} -- Reset Extra Attacks tracker ( used in parser.lua 470)
 		if (Details.debug) then
 			Details:Msg("(debug) |cFFFFFF00started a new combat|r|cFFFF7700", Details.encounter_table and Details.encounter_table.name or "")
 			--local from = debugstack(2, 1, 0)
