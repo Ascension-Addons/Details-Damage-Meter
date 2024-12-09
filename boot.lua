@@ -377,6 +377,8 @@ do
 			_detalhes.cache_damage_group = {}
 			_detalhes.cache_healing_group = {}
 			_detalhes.cache_npc_ids = {}
+		-- extra attack cache
+			_detalhes.cache_extra_attack = {}
 		--cache de specs
 			_detalhes.cached_specs = {}
 			_detalhes.cached_talents = {}

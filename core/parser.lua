@@ -354,8 +354,6 @@
 		local spell_create_is_summon = {
 			[34600] = true, -- snake trap
 		}
-		
-	Details.extra_attack = Details.extra_attack or {}
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 --internal functions
 
@@ -468,19 +466,27 @@
 		if (token == "SWING_DAMAGE") then
 			-- spellType or 00000001 because pets can have different melee damage types.
 			spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical, glacing, crushing, isoffhand = 1, meleeString, spellType or 00000001, spellId, spellName, spellType, amount, overkill, school, resisted, blocked, absorbed, critical
-			if Details.combat_log.separate_extra_attacks and Details.extra_attack[sourceSerial] and #(Details.extra_attack[sourceSerial])>0 then
-				local extraAttackData = Details.extra_attack[sourceSerial][#Details.extra_attack[sourceSerial]] 
-				spellId = extraAttackData[1]
-				spellName = extraAttackData[2]
-				extraAttackData[3] = extraAttackData[3] -1 -- Amount of Extra attacks e.x Ironfoe gives 2 attacks
-				if extraAttackData[3] == 0 then
-					table.remove(Details.extra_attack[sourceSerial]) -- remove table entry if no extra attacks remain on the proc
+			if Details.combat_log.separate_extra_attacks then
+				local extraAttacks = Details.cache_extra_attack[sourceSerial]
+				local numExtraAttacks = extraAttacks and #extraAttacks
+				if extraAttacks and numExtraAttacks > 0 then
+					local extraAttackData = extraAttacks[numExtraAttacks] 
+					spellId = extraAttackData[1]
+					spellName = extraAttackData[2]
+					extraAttackData[3] = extraAttackData[3] - 1 -- Amount of Extra attacks e.x Ironfoe gives 2 attacks
+					if extraAttackData[3] == 0 then
+						table.remove(extraAttacks) -- remove table entry if no extra attacks remain on the proc
+					end
 				end
 			end
 		end
 		if (Details.combat_log.separate_extra_attacks and token == "SPELL_EXTRA_ATTACKS") then
-			if not Details.extra_attack[sourceSerial] then Details.extra_attack[sourceSerial] = {} end
-			table.insert(Details.extra_attack[sourceSerial],{spellId,spellName,amount})
+			local extraAttacks = Details.cache_extra_attack[sourceSerial]
+			if not extraAttacks then
+				extraAttacks = {}
+				Details.cache_extra_attack[sourceSerial] = extraAttacks
+			end
+			table.insert(extraAttacks,{ spellId, spellName, amount})
 		end
 
 		if (not targetName) then
