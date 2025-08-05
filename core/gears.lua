@@ -2706,7 +2706,12 @@ for _, class in ipairs(CLASS_SORT_ORDER) do
     local specs = C_ClassInfo.GetAllSpecs(class)
     for _, spec in ipairs(specs) do
         local specInfo = C_ClassInfo.GetSpecInfo(class, spec)
-		local thumbnail = ClassTalentUtil.GetThumbnailAtlas(class, spec)
+		local thumbnail
+		if ClassTalentUtil then
+			thumbnail = ClassTalentUtil.GetThumbnailAtlas(class, spec)
+		else
+			thumbnail = CharacterAdvancementUtil.GetThumbnailAtlas(class, spec)
+		end
 		Details.validSpecIds[specInfo.ID] = true
         Details.specToRole[specInfo.ID] = GetRoleFromSpecInfo(specInfo)
 		Details.textureToSpec[thumbnail] = specInfo.ID
