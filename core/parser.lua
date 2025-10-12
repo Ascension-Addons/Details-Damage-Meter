@@ -349,6 +349,8 @@
 		local sub_pet_ids = {
 			[15352] = true, -- earth elemental
 			[15438] = true, -- fire elemental
+			[1115352] = true, -- earth elemental
+			[1115438] = true, -- fire elemental
 		}
 		
 		local spell_create_is_summon = {
