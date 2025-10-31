@@ -16,10 +16,11 @@ local detailsFramework = DetailsFramework
 --lua locals
 local ceil = math.ceil
 local floor = math.floor
-local ipairs = ipairs
+local ipairs = ipairs		
 local pairs = pairs
 local abs = _G.abs
 local unpack = unpack
+local _math_max = math.max
 --api locals
 local CreateFrame = CreateFrame
 local GetTime = GetTime
