@@ -635,9 +635,11 @@ local segmentTypeToString = {
 
 				table.sort(damageTakenArray, Details.Sort2)
 
-				local targetName = damageTakenArray[1][1]
-				if (targetName) then
-					return targetName
+				if (damageTakenArray[1]) then
+					local targetName = damageTakenArray[1][1]
+					if (targetName) then
+						return targetName
+					end
 				end
 			end
 		end
