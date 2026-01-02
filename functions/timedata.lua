@@ -535,7 +535,9 @@
 	end
 
 	function Details:BrokerTick()
-		Details.databroker.text = parse_broker_text()
+		if Details.databroker then
+			Details.databroker.text = parse_broker_text()
+		end
 	end
 
 	function Details:SetDataBrokerText (text)
